@@ -1,4 +1,4 @@
-package Classes;
+package Servidor;
 
 public class Criptografia {
 
@@ -26,17 +26,17 @@ public class Criptografia {
         }
     }
 
-    public String criptografar(String texto) {
-        String textoCriptografado = "";
+    public String descriptografar(String textoCriptografado) {
+        String textoDescriptografado = "";
         int x = 0, y = 0;
 
-        for (int i = 0; i < texto.length(); i++) {
-            x = alfabetosEixos[0].indexOf(texto.charAt(i));
-            y = alfabetosEixos[1].indexOf(chave.charAt(i));
+        for (int i = 0; i < textoCriptografado.length(); i++) {
+            x = alfabetosEixos[1].indexOf(String.valueOf(chave.charAt(i)));
+            y = matrizLetras[x].indexOf(String.valueOf(textoCriptografado.charAt(i)));
 
-            textoCriptografado += matrizLetras[y].charAt(x);
+            textoDescriptografado += alfabetosEixos[0].charAt(y);
         }
 
-        return textoCriptografado;
+        return textoDescriptografado;
     }
 }

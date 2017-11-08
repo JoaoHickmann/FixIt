@@ -2,7 +2,6 @@ package Servidor;
 
 import Classes.Chamado;
 import Classes.Computador;
-import Classes.Criptografia;
 import Classes.Problema;
 import Classes.Sala;
 import Classes.Usuario;
@@ -43,7 +42,7 @@ public class TrataCliente extends Thread {
                     String sql;
                     ResultSet rs;
                     Usuario usuario;
-                    Chamado chamada;
+                    Chamado chamado;
                     Computador computador;
                     Problema problema;
                     Sala sala;
@@ -94,22 +93,22 @@ public class TrataCliente extends Thread {
                         out.writeObject(Servidor.AtualizaTabela(sql));
                     } else if (operacao.equals("AtenderChamado")) {
                         out.writeObject(1);
-                        chamada = (Chamado) in.readObject();
+                        chamado = (Chamado) in.readObject();
 
-                        sql = "UPDATE chamadas"
-                                + " SET id_usuario_administrador = " + chamada.getID_Administrador()
+                        sql = "UPDATE chamados"
+                                + " SET id_usuario_administrador = " + chamado.getID_Administrador()
                                 + "   , status = 2"
-                                + " WHERE id_chamada = " + chamada.getID_Chamado();
+                                + " WHERE id_chamado = " + chamado.getID_Chamado();
 
                         out.writeObject(Servidor.AtualizaTabela(sql));
                     } else if (operacao.equals("FinalizarChamado")) {
                         out.writeObject(1);
-                        chamada = (Chamado) in.readObject();
+                        chamado = (Chamado) in.readObject();
 
-                        sql = "UPDATE chamadas"
+                        sql = "UPDATE chamados"
                                 + " SET status = 3"
                                 + "   , data_final = CURRENT_TIMESTAMP"
-                                + " WHERE id_chamada = " + chamada.getID_Chamado();
+                                + " WHERE id_chamado = " + chamado.getID_Chamado();
 
                         out.writeObject(Servidor.AtualizaTabela(sql));
                     } else if (operacao.equals("EsqueceuSenha")) {
@@ -223,10 +222,10 @@ public class TrataCliente extends Thread {
 
                         out.writeObject(salas);
                     } else if (operacao.equals("Chamados")) {
-                        sql = " SELECT C.id_chamada, U.nome, C.data_inicial, C.data_final,"
+                        sql = " SELECT C.id_chamado, U.nome, C.data_inicial, C.data_final,"
                                 + "    C.id_computador, CO.id_sala, P.tipo,"
                                 + "    P.descricao, C.observacao, C.status, A.nome"
-                                + " FROM chamadas C"
+                                + " FROM chamados C"
                                 + " INNER JOIN usuarios U ON U.id_usuario = C.id_usuario"
                                 + " INNER JOIN computadores CO ON CO.id_computador = C.id_computador"
                                 + " INNER JOIN problemas P ON P.id_problema = C.id_problema"
@@ -258,10 +257,10 @@ public class TrataCliente extends Thread {
 
                         out.writeObject(chamados);
                     } else if (operacao.equals("MeusChamados")) {
-                        sql = " SELECT C.id_chamada, U.nome, C.data_inicial, C.data_final,"
+                        sql = " SELECT C.id_chamado, U.nome, C.data_inicial, C.data_final,"
                                 + "    C.id_computador, CO.id_sala, P.tipo,"
                                 + "    P.descricao, C.observacao, C.status, A.nome"
-                                + " FROM chamadas C"
+                                + " FROM chamados C"
                                 + " INNER JOIN usuarios U ON U.id_usuario = C.id_usuario"
                                 + " INNER JOIN computadores CO ON CO.id_computador = C.id_computador"
                                 + " INNER JOIN problemas P ON P.id_problema = C.id_problema"
@@ -345,6 +344,15 @@ public class TrataCliente extends Thread {
 
                         sql = "DELETE FROM usuarios"
                                 + " WHERE id_usuario = " + usuario.getID_Usuario();
+
+                        out.writeObject(Servidor.AtualizaTabela(sql));
+                    } else  if (operacao.equals("ExcluirChamado")) {
+                        out.writeObject(1);
+
+                        chamado = (Chamado) in.readObject();
+
+                        sql = "DELETE FROM chamados"
+                                + " WHERE id_chamado = " + chamado.getID_Chamado();
 
                         out.writeObject(Servidor.AtualizaTabela(sql));
                     } else if (operacao.equals("ExcluirSala")) {

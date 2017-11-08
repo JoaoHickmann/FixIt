@@ -1,6 +1,5 @@
 package Servidor;
 
-import Classes.Email;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
@@ -27,7 +26,7 @@ public class Servidor {
         group = InetAddress.getByName("228.5.6.7");
         s = new MulticastSocket(6789);
         //ele pega por padrao o virtualbox no meu pc
-        s.setInterface(InetAddress.getByName("192.168.0.200"));
+        //s.setInterface(InetAddress.getByName("192.168.0.200"));
         //-------------------
         s.joinGroup(group);
         

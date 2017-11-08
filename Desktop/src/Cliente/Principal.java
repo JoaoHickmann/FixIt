@@ -37,7 +37,7 @@ public class Principal extends Application {
         //<editor-fold defaultstate="collapsed" desc="Conexão">
         servidor = new Socket();
         servidor.setSoTimeout(2000);
-        servidor.connect(new InetSocketAddress("192.168.0.200", 12345), 2000);
+        servidor.connect(new InetSocketAddress("localhost", 12345), 2000);
         in = new ObjectInputStream(getServidor().getInputStream());
         out = new ObjectOutputStream(getServidor().getOutputStream());
         //</editor-fold>

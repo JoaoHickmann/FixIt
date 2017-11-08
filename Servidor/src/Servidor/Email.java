@@ -1,4 +1,4 @@
-package Classes;
+package Servidor;
 
 import java.util.Properties;
 import javax.mail.Message;

@@ -406,23 +406,23 @@ public class FXMLPrincipalController implements Initializable {
     }
     
     public void excluirChamado(Chamado chamado) {
-//        try {
-//            Principal.getSaida().writeObject("FinalizarChamado");
-//            Principal.getEntrada().readObject();
-//
-//            Principal.getSaida().writeObject(chamado);
-//            if ((Integer) Principal.getEntrada().readObject() == 1) {
-//                attDados();
-//                JFXSnackbar.SnackbarEvent barEvent = new JFXSnackbar.SnackbarEvent("Chamado Finalizado.", "Ok", 3000, false, (MouseEvent event1) -> {
-//                    snackbar.close();
-//                });
-//                snackbar.enqueue(barEvent);
-//            } else {
-//
-//            }
-//        } catch (IOException | ClassNotFoundException ex) {
-//            Logger.getLogger(FXMLSalasController.class.getName()).log(Level.SEVERE, null, ex);
-//        }
+        try {
+            Principal.getSaida().writeObject("ExcluirChamado");
+            Principal.getEntrada().readObject();
+
+            Principal.getSaida().writeObject(chamado);
+            if ((Integer) Principal.getEntrada().readObject() == 1) {
+                attDados();
+                JFXSnackbar.SnackbarEvent barEvent = new JFXSnackbar.SnackbarEvent("Chamado excluido", "Ok", 3000, false, (MouseEvent event1) -> {
+                    snackbar.close();
+                });
+                snackbar.enqueue(barEvent);
+            } else {
+
+            }
+        } catch (IOException | ClassNotFoundException ex) {
+            Logger.getLogger(FXMLSalasController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public void attDados() {

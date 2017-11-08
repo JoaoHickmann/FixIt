@@ -1,6 +1,5 @@
 package Cliente;
 
-import Classes.Criptografia;
 import Classes.*;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXDialog;
