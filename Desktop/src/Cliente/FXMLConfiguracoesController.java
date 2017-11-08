@@ -1,0 +1,256 @@
+package Cliente;
+
+import Classes.Criptografia;
+import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXDialog;
+import com.jfoenix.controls.JFXDialogLayout;
+import com.jfoenix.controls.JFXPasswordField;
+import com.jfoenix.controls.JFXSnackbar;
+import com.jfoenix.controls.JFXTextField;
+import com.jfoenix.validation.RequiredFieldValidator;
+import com.jfoenix.validation.base.ValidatorBase;
+import java.io.IOException;
+import java.net.URL;
+import java.util.LinkedList;
+import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Scene;
+import javafx.scene.control.TextInputControl;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Paint;
+import javafx.scene.text.Text;
+import javafx.stage.Stage;
+
+public class FXMLConfiguracoesController implements Initializable {
+
+    @FXML
+    private JFXButton btVoltar;
+    @FXML
+    private JFXButton btSettings;
+    @FXML
+    private JFXTextField tfNome;
+    @FXML
+    private JFXButton btAlterarNome;
+    @FXML
+    private JFXButton btAlterarSenha;
+    @FXML
+    private StackPane StackPane;
+
+    JFXSnackbar snackbar;
+    @FXML
+    private JFXTextField tfEmail;
+
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        //<editor-fold defaultstate="collapsed" desc="SnackBar">
+        snackbar = new JFXSnackbar(StackPane);
+        snackbar.setPrefWidth(300);
+        //</editor-fold>
+
+        tfNome.setText(Principal.getUser().getNome());
+        tfEmail.setText(Principal.getUser().getEmail());
+
+        //<editor-fold defaultstate="collapsed" desc="Validators">
+        RequiredFieldValidator requiredValidator = new RequiredFieldValidator();
+        requiredValidator.setMessage("O campo deve ser preenchido.");
+
+        ValidatorBase novaSenhaValidator = new ValidatorBase("Senha inválida. Caracteres especiais permitido: @#$%&*-+.") {
+            @Override
+            protected void eval() {
+                TextInputControl textField = (TextInputControl) srcControl.get();
+                boolean caracteresD = false;
+                String alfabeto = "YPDe6FpaxH&yRNs+jMVBAOnShoEmg802tQ@r1i-$L%Jq*G3#9XTdW57lUCkzcubwZ4vKfI";
+
+                for (char letra : textField.getText().toCharArray()) {
+                    if (!alfabeto.contains(String.valueOf(letra))) {
+                        caracteresD = true;
+                        break;
+                    }
+                }
+
+                hasErrors.set(textField.getText().isEmpty() || textField.getText() == null || caracteresD);
+
+            }
+        };
+
+        tfNome.getValidators().add(requiredValidator);
+        tfNome.setOnKeyReleased((event) -> {
+            tfNome.validate();
+        });
+        //</editor-fold>
+
+        //<editor-fold defaultstate="collapsed" desc="Voltar">
+        btVoltar.setOnAction((ActionEvent event) -> {
+            try {
+                Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                Scene scene = new Scene(FXMLLoader.load(getClass().getResource("FXMLPrincipal.fxml")), ((Node) event.getSource()).getScene().getWidth(), ((Node) event.getSource()).getScene().getHeight());
+                scene.getStylesheets().add(getClass().getResource("cssSnackbar.css").toExternalForm());
+                stage.setScene(scene);
+                stage.show();
+            } catch (IOException ex) {
+                Logger.getLogger(FXMLSalasController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
+        //</editor-fold>
+
+        //<editor-fold defaultstate="collapsed" desc="Alterar Nome">
+        btAlterarNome.setOnAction((ActionEvent event) -> {
+            if (tfNome.validate()) {
+                try {
+                    Principal.getSaida().writeObject("MudarNome");
+                    Principal.getEntrada().readObject();
+                    Principal.getSaida().reset();
+                    Principal.getSaida().writeObject(Principal.getUser());
+                    if ((Integer) Principal.getEntrada().readObject() == 1) {
+                        Principal.getUser().setNome(tfNome.getText());
+                        JFXSnackbar.SnackbarEvent barEvent = new JFXSnackbar.SnackbarEvent("Nome alterado.", "Ok", 3000, false, (MouseEvent event2) -> {
+                            snackbar.close();
+                        });
+                        snackbar.enqueue(barEvent);
+                    } else {
+                        //ERRO
+                    }
+                } catch (IOException | ClassNotFoundException ex) {
+                    Logger.getLogger(FXMLConfiguracoesController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
+        //</editor-fold>
+
+        //<editor-fold defaultstate="collapsed" desc="Alterar Senha">
+        btAlterarSenha.setOnAction((ActionEvent event) -> {
+            JFXDialogLayout layout = new JFXDialogLayout();
+            JFXDialog dialog = new JFXDialog(StackPane, layout, JFXDialog.DialogTransition.CENTER);
+
+            AnchorPane content = new AnchorPane();
+
+            ValidatorBase senhaValidator = new ValidatorBase("Senha incorreta.") {
+                @Override
+                protected void eval() {
+                    TextInputControl textField = (TextInputControl) srcControl.get();
+
+                    hasErrors.set(!(new Criptografia(Principal.getUser().getEmail().charAt(0)).criptografar(textField.getText()).equals(Principal.getUser().getSenha())));
+                }
+            };
+
+            JFXPasswordField pfSenhaAtual = new JFXPasswordField();
+            pfSenhaAtual.setPromptText("Senha Atual");
+            pfSenhaAtual.setLabelFloat(true);
+            pfSenhaAtual.setFocusColor(Paint.valueOf("#29B6F6"));
+            pfSenhaAtual.setLayoutY(10.0);
+            pfSenhaAtual.getValidators().add(senhaValidator);
+            pfSenhaAtual.focusedProperty().addListener((observable, oldValue, newValue) -> {
+                if (!newValue) {
+                    pfSenhaAtual.validate();
+                }
+            });
+            pfSenhaAtual.setOnKeyReleased((event1) -> {
+                if (pfSenhaAtual.getText().length() >= 20) {
+                    event.consume();
+                }
+            });
+
+            JFXPasswordField pfNovaSenha = new JFXPasswordField();
+            pfNovaSenha.setPromptText("Nova Senha");
+            pfNovaSenha.setLabelFloat(true);
+            pfNovaSenha.setFocusColor(Paint.valueOf("#29B6F6"));
+            pfNovaSenha.setLayoutY(70.0);
+            pfNovaSenha.getValidators().add(novaSenhaValidator);
+            pfNovaSenha.setOnKeyReleased((event1) -> {
+                pfNovaSenha.validate();
+            });
+            pfNovaSenha.setOnKeyTyped((event1) -> {
+                if (pfNovaSenha.getText().length() >= 20) {
+                    event.consume();
+                }
+            });
+
+            ValidatorBase confirmaSenhaValidator = new ValidatorBase("Senha diferente.") {
+                @Override
+                protected void eval() {
+                    TextInputControl textField = (TextInputControl) srcControl.get();
+
+                    hasErrors.set(!textField.getText().equals(pfNovaSenha.getText()));
+                }
+            };
+
+            JFXPasswordField pfConfirmarSenha = new JFXPasswordField();
+            pfConfirmarSenha.setPromptText("Confirmar Senha");
+            pfConfirmarSenha.setLabelFloat(true);
+            pfConfirmarSenha.setLayoutY(130.0);
+            pfConfirmarSenha.setFocusColor(Paint.valueOf("#29B6F6"));
+            pfConfirmarSenha.getValidators().add(confirmaSenhaValidator);
+            pfConfirmarSenha.focusedProperty().addListener((observable, oldValue, newValue) -> {
+                if (!newValue) {
+                    pfConfirmarSenha.validate();
+                }
+            });
+
+            AnchorPane.setLeftAnchor(pfSenhaAtual, 0.0);
+            AnchorPane.setRightAnchor(pfSenhaAtual, 0.0);
+
+            AnchorPane.setLeftAnchor(pfNovaSenha, 0.0);
+            AnchorPane.setRightAnchor(pfNovaSenha, 0.0);
+
+            AnchorPane.setLeftAnchor(pfConfirmarSenha, 0.0);
+            AnchorPane.setRightAnchor(pfConfirmarSenha, 0.0);
+
+            content.getChildren().add(pfSenhaAtual);
+            content.getChildren().add(pfNovaSenha);
+            content.getChildren().add(pfConfirmarSenha);
+
+            JFXButton btCancelar = new JFXButton("Cancelar");
+            btCancelar.setTextFill(Paint.valueOf("#FF0000"));
+            btCancelar.setOnAction((ActionEvent event1) -> {
+                dialog.close();
+            });
+
+            JFXButton btAlterar = new JFXButton("Alterar");
+            btAlterar.setTextFill(Paint.valueOf("#29B6F6"));
+            btAlterar.setOnAction((ActionEvent event1) -> {
+                if (pfSenhaAtual.validate() && pfNovaSenha.validate() && pfConfirmarSenha.validate()) {
+                    try {
+                        Principal.getSaida().writeObject("MudarSenha");
+                        Principal.getEntrada().readObject();
+
+                        String senha = new Criptografia(Principal.getUser().getEmail().charAt(0)).criptografar(pfNovaSenha.getText());
+                        Principal.getUser().setSenha(senha);
+
+                        Principal.getSaida().reset();
+                        Principal.getSaida().writeObject(Principal.getUser());
+                        if ((Integer) Principal.getEntrada().readObject() == 1) {
+                            JFXSnackbar.SnackbarEvent barEvent = new JFXSnackbar.SnackbarEvent("Senha alterada.", "Ok", 3000, false, (MouseEvent event2) -> {
+                                snackbar.close();
+                            });
+                            snackbar.enqueue(barEvent);
+                        } else {
+
+                        }
+                    } catch (IOException | ClassNotFoundException ex) {
+                        Logger.getLogger(FXMLSalasController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    dialog.close();
+                }
+            });
+
+            LinkedList<Node> actions = new LinkedList<>();
+            actions.add(btCancelar);
+            actions.add(btAlterar);
+
+            layout.setHeading(new Text("Alterar Senha"));
+            layout.setBody(content);
+            layout.setActions(actions);
+
+            dialog.show();
+        });
+        //</editor-fold>
+    }
+}

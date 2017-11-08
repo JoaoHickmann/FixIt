@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXListView?>
+<?import com.jfoenix.controls.JFXTextArea?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import com.jfoenix.controls.JFXToolbar?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.text.Font?>
+
+<StackPane fx:id="StackPane" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Cliente.FXMLPrincipalController">
+   <children>
+      <AnchorPane fx:id="apBody">
+         <children>
+            <JFXListView fx:id="lvChamados" minHeight="0.0" minWidth="0.0" prefHeight="750.0" prefWidth="250.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="50.0" />
+            <AnchorPane layoutX="286.0" minHeight="0.0" minWidth="0.0" prefHeight="750.0" prefWidth="714.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="250.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="50.0">
+               <children>
+                  <JFXTextField fx:id="tfID" editable="false" focusColor="#29b6f6" labelFloat="true" layoutX="14.0" layoutY="14.0" prefHeight="25.0" prefWidth="198.0" promptText="ID" />
+                  <JFXTextField fx:id="tfUsuario" editable="false" focusColor="#29b6f6" labelFloat="true" layoutX="14.0" layoutY="59.0" prefHeight="25.0" prefWidth="198.0" promptText="Usuário" />
+                  <JFXTextField fx:id="tfAdministrador" editable="false" focusColor="#29b6f6" labelFloat="true" layoutX="14.0" layoutY="104.0" prefHeight="25.0" prefWidth="198.0" promptText="Administrador" />
+                  <JFXTextField fx:id="tfCriacao" editable="false" focusColor="#29b6f6" labelFloat="true" layoutX="14.0" layoutY="149.0" prefHeight="25.0" prefWidth="198.0" promptText="Data de criação" />
+                  <JFXTextField fx:id="tfFinalizacao" editable="false" focusColor="#29b6f6" labelFloat="true" layoutX="14.0" layoutY="194.0" prefHeight="25.0" prefWidth="198.0" promptText="Data de finalização" />
+                  <JFXTextField fx:id="tfTipoProblema" editable="false" focusColor="#29b6f6" labelFloat="true" layoutX="14.0" layoutY="239.0" prefHeight="25.0" prefWidth="198.0" promptText="Tipo do Problema" />
+                  <JFXTextField fx:id="tfProblema" editable="false" focusColor="#29b6f6" labelFloat="true" layoutX="14.0" layoutY="284.0" prefHeight="25.0" prefWidth="198.0" promptText="Problema" />
+                  <JFXTextArea fx:id="taObservacoes" editable="false" focusColor="#29b6f6" labelFloat="true" layoutX="14.0" layoutY="329.0" prefHeight="99.0" prefWidth="358.0" promptText="Observações" />
+                  <JFXButton fx:id="btAtender" buttonType="RAISED" disable="true" layoutX="14.0" layoutY="448.0" prefHeight="25.0" prefWidth="89.0" style="-fx-background-color: #29B6F6;" text="Atender" textFill="WHITE" />
+                  <JFXButton fx:id="btFinalizar" buttonType="RAISED" disable="true" layoutX="123.0" layoutY="448.0" prefHeight="25.0" prefWidth="89.0" style="-fx-background-color: #29B6F6;" text="Finalizar" textFill="WHITE" />
+                  <JFXButton fx:id="btExcluir" buttonType="RAISED" layoutX="232.0" layoutY="448.0" prefHeight="25.0" prefWidth="89.0" style="-fx-background-color: #29B6F6;" text="Excluir" textFill="WHITE" />
+               </children>
+            </AnchorPane>
+            <JFXToolbar prefHeight="50.0" style="-fx-background-color: #29B6F6;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <center>
+                  <Label text="Chamados" textFill="WHITE" BorderPane.alignment="CENTER">
+                     <font>
+                        <Font size="30.0" />
+                     </font>
+                  </Label>
+               </center>
+               <right>
+                  <JFXButton fx:id="btMenu" contentDisplay="GRAPHIC_ONLY" BorderPane.alignment="CENTER">
+                     <graphic>
+                        <FontAwesomeIconView glyphName="ELLIPSIS_V" glyphStyle="-fx-fill: #FFFFFF" size="30" />
+                     </graphic>
+                  </JFXButton>
+               </right>
+               <left>
+                  <JFXButton fx:id="btAtualizar" contentDisplay="GRAPHIC_ONLY" BorderPane.alignment="CENTER">
+                     <graphic>
+                        <MaterialDesignIconView glyphName="REFRESH" glyphStyle="-fx-fill:#FFFFFF" size="30" />
+                     </graphic>
+                  </JFXButton>
+               </left>
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+            </JFXToolbar>
+         </children>
+      </AnchorPane>
+   </children>
+</StackPane>

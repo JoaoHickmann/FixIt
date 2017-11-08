@@ -1,0 +1,75 @@
+package com.example.joaop.fixit;
+
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import java.util.List;
+
+import Classes.Chamado;
+
+public class ChamadoAdapter extends RecyclerView.Adapter<ChamadoAdapter.MyViewHolder>  {
+    private List<Chamado> listaChamados;
+    private ChamadoOnClickListener chamadoOnClickListener;
+
+    public ChamadoAdapter(List<Chamado> listaChamados, ChamadoOnClickListener chamadoOnClickListener) {
+        this.listaChamados = listaChamados;
+        this.chamadoOnClickListener = chamadoOnClickListener;
+    }
+
+    @Override
+    public ChamadoAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View itemView = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.item_list_row, parent, false);
+
+        return new MyViewHolder(itemView);
+    }
+
+    @Override
+    public void onBindViewHolder(final ChamadoAdapter.MyViewHolder holder, final int position) {
+        Chamado chamado = listaChamados.get(position);
+
+        holder.tvChamado.setText("Chamado #"+chamado.getID_Chamado());
+        holder.tvProblema.setText((chamado.getTipo_Problema() == 1 ? "Hardware" : "Software") + " - " + chamado.getProblema());
+        holder.tvSala.setText(chamado.getSala() + " - " +chamado.getComputador());
+        if (chamado.getStatus() == 3) {
+            holder.ivStatus.setVisibility(View.INVISIBLE);
+        }
+
+        if (chamadoOnClickListener != null) {
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    chamadoOnClickListener.onClickAluno(holder.itemView,position);
+                }
+            });
+        }
+    }
+
+    @Override
+    public int getItemCount() {
+        return listaChamados.size();
+    }
+
+
+
+    public class MyViewHolder extends RecyclerView.ViewHolder {
+        TextView tvChamado, tvProblema, tvSala;
+        ImageView ivStatus;
+
+        public MyViewHolder(View itemView) {
+            super(itemView);
+            tvChamado = itemView.findViewById(R.id.tvChamado);
+            ivStatus = itemView.findViewById(R.id.ivStatus);
+            tvProblema = itemView.findViewById(R.id.tvProblema);
+            tvSala = itemView.findViewById(R.id.tvSala);
+        }
+    }
+
+    public interface ChamadoOnClickListener {
+        public void onClickAluno(View view, int position);
+    }
+}

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXComboBox?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import com.jfoenix.controls.JFXToolbar?>
+<?import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.text.Font?>
+
+<StackPane fx:id="StackPane" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Cliente.FXMLAdministradoresController">
+   <children>
+      <AnchorPane id="AnchorPane" prefHeight="800.0" prefWidth="1000.0">
+         <children>
+            <StackPane prefHeight="222.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="50.0">
+               <children>
+                  <AnchorPane maxHeight="135.0" maxWidth="200.0" minHeight="135.0" minWidth="200.0" prefHeight="135.0" prefWidth="200.0">
+                     <children>
+                        <JFXComboBox fx:id="cmbEmail" focusColor="#29b6f6" labelFloat="true" layoutY="20.0" prefWidth="200.0" promptText="Email" />
+                        <JFXTextField fx:id="tfNome" editable="false" focusColor="#29b6f6" labelFloat="true" layoutY="65.0" prefWidth="200.0" promptText="Nome" />
+                        <JFXButton fx:id="btExcluir" buttonType="RAISED" contentDisplay="RIGHT" layoutY="110.0" prefWidth="200.0" style="-fx-background-color: #FF0000;" text="Excluir" textFill="WHITE">
+                           <graphic>
+                              <MaterialDesignIconView glyphName="DELETE" glyphStyle="-fx-fill: #FFFFFF" />
+                           </graphic>
+                        </JFXButton>
+                     </children>
+                  </AnchorPane>
+               </children>
+            </StackPane>
+            <JFXButton fx:id="btAdicionar" buttonType="RAISED" contentDisplay="GRAPHIC_ONLY" prefHeight="50.0" prefWidth="50.0" style="-fx-background-radius: 50px; -fx-background-color: #29B6F6;" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0">
+               <graphic>
+                  <MaterialDesignIconView glyphName="PLUS" glyphStyle="-fx-fill: #FFFFFF" size="30" />
+               </graphic>
+            </JFXButton>
+            <JFXToolbar prefHeight="50.0" prefWidth="1000.0" style="-fx-background-color: #29B6F6;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <left>
+                  <JFXButton fx:id="btVoltar" contentDisplay="GRAPHIC_ONLY" BorderPane.alignment="CENTER">
+                     <graphic>
+                        <MaterialDesignIconView glyphName="ARROW_LEFT" glyphStyle="-fx-fill: #FFFFFF" size="30" />
+                     </graphic>
+                  </JFXButton>
+               </left>
+               <center>
+                  <Label text="Administradores" textFill="WHITE" BorderPane.alignment="CENTER">
+                     <font>
+                        <Font size="30.0" />
+                     </font>
+                  </Label>
+               </center>
+               <right>
+                  <JFXButton contentDisplay="GRAPHIC_ONLY" BorderPane.alignment="CENTER" />
+               </right>
+            </JFXToolbar>
+         </children>
+      </AnchorPane>
+   </children>
+</StackPane>
