@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -32,7 +33,6 @@ import Classes.Chamado;
 public class PrincipalActivity extends AppCompatActivity {
     private Dados dados;
     static LinkedList<Chamado> chamados;
-
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
      * fragments for each of the sections. We use a
@@ -133,33 +133,27 @@ public class PrincipalActivity extends AppCompatActivity {
 
             LinkedList<Chamado> lista = new LinkedList<>();
 
-            while (chamados == null) {}
+            while (chamados == null) {
+            }
 
-            if (getArguments().getInt(ARG_SECTION_NUMBER) == 2){
-                for (Chamado chamado : chamados){
-                    if (chamado.getStatus() == 3) {
-                        lista.add(chamado);
-                    }
-                }
-
-            } else {
-                for (Chamado chamado : chamados){
-                    if (chamado.getStatus() != 3) {
-                        lista.add(chamado);
-                    }
+            for (Chamado chamado : chamados) {
+                if (getArguments().getInt(ARG_SECTION_NUMBER) == 2 && chamado.getStatus() == 3) {
+                    lista.add(chamado);
+                } else if (getArguments().getInt(ARG_SECTION_NUMBER) == 1 && chamado.getStatus() != 3) {
+                    lista.add(chamado);
                 }
             }
 
             ChamadoAdapter chamadoAdapter;
-            if (getArguments().getInt(ARG_SECTION_NUMBER) == 2){
+            if (getArguments().getInt(ARG_SECTION_NUMBER) == 2) {
                 chamadoAdapter = new ChamadoAdapter(lista, new ChamadoAdapter.ChamadoOnClickListener() {
                     @Override
                     public void onClickAluno(View view, int position) {
                         int i = 0;
-                        for (Chamado chamado : chamados){
+                        for (Chamado chamado : chamados) {
                             if (chamado.getStatus() == 3) {
                                 if (i == position) {
-                                    Toast.makeText(getContext(), ""+chamado.getID_Chamado(), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getContext(), "" + chamado.getID_Chamado(), Toast.LENGTH_SHORT).show();
                                     break;
                                 }
                                 i++;
@@ -172,10 +166,10 @@ public class PrincipalActivity extends AppCompatActivity {
                     @Override
                     public void onClickAluno(View view, int position) {
                         int i = 0;
-                        for (Chamado chamado : chamados){
+                        for (Chamado chamado : chamados) {
                             if (chamado.getStatus() != 3) {
                                 if (i == position) {
-                                    Toast.makeText(getContext(), ""+chamado.getID_Chamado(), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getContext(), "" + chamado.getID_Chamado(), Toast.LENGTH_SHORT).show();
                                     break;
                                 }
                                 i++;
@@ -190,6 +184,15 @@ public class PrincipalActivity extends AppCompatActivity {
             rvChamados.setLayoutManager(mLayoutManager);
             rvChamados.setItemAnimator(new DefaultItemAnimator());
             rvChamados.setAdapter(chamadoAdapter);
+
+            final SwipeRefreshLayout swipeRefresh = rootView.findViewById(R.id.swipeRefresh);
+
+            swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                @Override
+                public void onRefresh() {
+                    swipeRefresh.setRefreshing(false);
+                }
+            });
 
             return rootView;
         }
