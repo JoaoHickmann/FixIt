@@ -144,8 +144,9 @@ COMMIT;
 START TRANSACTION;
 USE `trabalhofinal`;
 INSERT INTO `trabalhofinal`.`Usuarios` (`ID_Usuario`, `Nome`, `Email`, `Senha`, `isAdministrador`) VALUES (1, 'João', 'joaophickmann@outlook.com', '123456', 0);
-INSERT INTO `trabalhofinal`.`Usuarios` (`ID_Usuario`, `Nome`, `Email`, `Senha`, `isAdministrador`) VALUES (2, 'Gordo da TI', 'bacon@carne.com', 'coxinha', 1);
+INSERT INTO `trabalhofinal`.`Usuarios` (`ID_Usuario`, `Nome`, `Email`, `Senha`, `isAdministrador`) VALUES (2, 'Gordo da TI', 'bacon@carne.com', 'coxinha', 0);
 INSERT INTO `trabalhofinal`.`Usuarios` (`ID_Usuario`, `Nome`, `Email`, `Senha`, `isAdministrador`) VALUES (3, 'Guilherme', 'guikipper1@gmail.com', 'sougay', 0);
+INSERT INTO `trabalhofinal`.`Usuarios` (`ID_Usuario`, `Nome`, `Email`, `Senha`, `isAdministrador`) VALUES (4, 'a', 'a@a.a', 'OM#90o', 1);
 
 COMMIT;
 
@@ -166,7 +167,7 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `trabalhofinal`;
-INSERT INTO `trabalhofinal`.`Chamados` (`ID_Chamado`, `ID_Usuario`, `ID_Usuario_Administrador`, `Data_Inicial`, `Data_Final`, `ID_Computador`, `ID_Problema`, `Observacao`, `Status`) VALUES (1, 1, 2, DEFAULT, '01/11/2017', 1, 1, 'Sem Mouse', 3);
+INSERT INTO `trabalhofinal`.`Chamados` (`ID_Chamado`, `ID_Usuario`, `ID_Usuario_Administrador`, `Data_Inicial`, `Data_Final`, `ID_Computador`, `ID_Problema`, `Observacao`, `Status`) VALUES (1, 1, 2, DEFAULT, '2017-11-10 00:00:00', 1, 1, 'Sem Mouse', 3);
 INSERT INTO `trabalhofinal`.`Chamados` (`ID_Chamado`, `ID_Usuario`, `ID_Usuario_Administrador`, `Data_Inicial`, `Data_Final`, `ID_Computador`, `ID_Problema`, `Observacao`, `Status`) VALUES (2, 3, NULL, DEFAULT, NULL, 2, 2, 'Não Abre', 1);
 
 COMMIT;
