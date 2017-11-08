@@ -70,8 +70,8 @@ public class PrincipalActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent it = new Intent(PrincipalActivity.this, RealizarChamadasActivity.class);
+                startActivity(it);
             }
         });
 
@@ -190,6 +190,7 @@ public class PrincipalActivity extends AppCompatActivity {
             swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
                 @Override
                 public void onRefresh() {
+
                     swipeRefresh.setRefreshing(false);
                 }
             });

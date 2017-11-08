@@ -25,7 +25,16 @@
         <activity
             android:name=".PrincipalActivity"
             android:label="@string/title_activity_principal"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".RealizarChamadasActivity"
+            android:label="@string/title_activity_realizar_chamadas"
+            android:parentActivityName=".PrincipalActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.joaop.fixit.PrincipalActivity" />
+        </activity>
     </application>
 
 </manifest>
