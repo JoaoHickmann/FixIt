@@ -81,6 +81,10 @@ public class FXMLPrincipalController implements Initializable {
     private LinkedList<Chamado> chamados;
     @FXML
     private JFXButton btExcluir;
+    @FXML
+    private JFXTextField tfSala;
+    @FXML
+    private JFXTextField tfComputador;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -139,8 +143,12 @@ public class FXMLPrincipalController implements Initializable {
         btAtenderP.setPadding(new Insets(10));
         btAtenderP.setMinWidth(100.0);
         btAtenderP.setOnAction((event) -> {
-            chamados.get(lvChamados.getSelectionModel().getSelectedIndex()).setID_Administrador(Principal.getUser().getID_Usuario());
-            atenderChamado(chamados.get(lvChamados.getSelectionModel().getSelectedIndex()));
+            Chamado chamado = chamados.get(lvChamados.getSelectionModel().getSelectedIndex());
+
+            if (chamado.getStatus() == 1) {
+                chamado.setID_Administrador(Principal.getUser().getID_Usuario());
+                atenderChamado(chamado);
+            }
             popup.hide();
         });
 
@@ -148,10 +156,13 @@ public class FXMLPrincipalController implements Initializable {
         btFinalizarP.setPadding(new Insets(10));
         btFinalizarP.setMinWidth(100.0);
         btFinalizarP.setOnAction((event) -> {
-            finalizarChamado(chamados.get(lvChamados.getSelectionModel().getSelectedIndex()));
+            Chamado chamado = chamados.get(lvChamados.getSelectionModel().getSelectedIndex());
+            if (chamado.getStatus() == 2) {
+                finalizarChamado(chamado);
+            }
             popup.hide();
         });
-        
+
         JFXButton btExcluirP = new JFXButton("Excluir");
         btExcluirP.setPadding(new Insets(10));
         btExcluirP.setMinWidth(100.0);
@@ -309,6 +320,8 @@ public class FXMLPrincipalController implements Initializable {
                 tfTipoProblema.setText("");
                 tfProblema.setText("");
                 taObservacoes.setText("");
+                tfSala.setText("");
+                tfComputador.setText("");
                 btAtender.setDisable(true);
                 btFinalizar.setDisable(true);
             } else {
@@ -321,9 +334,13 @@ public class FXMLPrincipalController implements Initializable {
                 tfTipoProblema.setText(chamado.getTipo_Problema() == 1 ? "Hardware" : "Software");
                 tfProblema.setText(chamado.getProblema());
                 taObservacoes.setText(chamado.getObservacao());
+                tfSala.setText(String.valueOf(chamado.getSala()));
+                tfComputador.setText(String.valueOf(chamado.getComputador()));
 
                 btAtender.setDisable(chamado.getStatus() != 1);
                 btFinalizar.setDisable(chamado.getStatus() != 2);
+                btAtenderP.setDisable(chamado.getStatus() != 1);
+                btFinalizarP.setDisable(chamado.getStatus() != 2);
             }
         });
         //</editor-fold>
@@ -345,17 +362,24 @@ public class FXMLPrincipalController implements Initializable {
 
         //<editor-fold defaultstate="collapsed" desc="Atender">
         btAtender.setOnAction((ActionEvent event) -> {
-            chamados.get(lvChamados.getSelectionModel().getSelectedIndex()).setID_Administrador(Principal.getUser().getID_Usuario());
-            atenderChamado(chamados.get(lvChamados.getSelectionModel().getSelectedIndex()));
+            Chamado chamado = chamados.get(lvChamados.getSelectionModel().getSelectedIndex());
+
+            if (chamado.getStatus() == 1) {
+                chamado.setID_Administrador(Principal.getUser().getID_Usuario());
+                atenderChamado(chamado);
+            }
         });
         //</editor-fold>
 
         //<editor-fold defaultstate="collapsed" desc="Finalizar">
         btFinalizar.setOnAction((ActionEvent event) -> {
-            finalizarChamado(chamados.get(lvChamados.getSelectionModel().getSelectedIndex()));
+            Chamado chamado = chamados.get(lvChamados.getSelectionModel().getSelectedIndex());
+            if (chamado.getStatus() == 2) {
+                finalizarChamado(chamado);
+            }
         });
         //</editor-fold>
-        
+
         //<editor-fold defaultstate="collapsed" desc="Excluir">
         btExcluir.setOnAction((ActionEvent event) -> {
             excluirChamado(chamados.get(lvChamados.getSelectionModel().getSelectedIndex()));
@@ -404,7 +428,7 @@ public class FXMLPrincipalController implements Initializable {
             Logger.getLogger(FXMLSalasController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     public void excluirChamado(Chamado chamado) {
         try {
             Principal.getSaida().writeObject("ExcluirChamado");

@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 
-<StackPane fx:id="StackPane" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Cliente.FXMLPrincipalController">
+<StackPane fx:id="StackPane" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Cliente.FXMLPrincipalController">
    <children>
       <AnchorPane fx:id="apBody">
          <children>
@@ -28,10 +28,12 @@
                   <JFXTextField fx:id="tfFinalizacao" editable="false" focusColor="#29b6f6" labelFloat="true" layoutX="14.0" layoutY="194.0" prefHeight="25.0" prefWidth="198.0" promptText="Data de finalização" />
                   <JFXTextField fx:id="tfTipoProblema" editable="false" focusColor="#29b6f6" labelFloat="true" layoutX="14.0" layoutY="239.0" prefHeight="25.0" prefWidth="198.0" promptText="Tipo do Problema" />
                   <JFXTextField fx:id="tfProblema" editable="false" focusColor="#29b6f6" labelFloat="true" layoutX="14.0" layoutY="284.0" prefHeight="25.0" prefWidth="198.0" promptText="Problema" />
-                  <JFXTextArea fx:id="taObservacoes" editable="false" focusColor="#29b6f6" labelFloat="true" layoutX="14.0" layoutY="329.0" prefHeight="99.0" prefWidth="358.0" promptText="Observações" />
-                  <JFXButton fx:id="btAtender" buttonType="RAISED" disable="true" layoutX="14.0" layoutY="448.0" prefHeight="25.0" prefWidth="89.0" style="-fx-background-color: #29B6F6;" text="Atender" textFill="WHITE" />
-                  <JFXButton fx:id="btFinalizar" buttonType="RAISED" disable="true" layoutX="123.0" layoutY="448.0" prefHeight="25.0" prefWidth="89.0" style="-fx-background-color: #29B6F6;" text="Finalizar" textFill="WHITE" />
-                  <JFXButton fx:id="btExcluir" buttonType="RAISED" layoutX="232.0" layoutY="448.0" prefHeight="25.0" prefWidth="89.0" style="-fx-background-color: #29B6F6;" text="Excluir" textFill="WHITE" />
+                  <JFXTextArea fx:id="taObservacoes" editable="false" focusColor="#29b6f6" labelFloat="true" layoutX="14.0" layoutY="418.0" prefHeight="99.0" prefWidth="358.0" promptText="Observações" />
+                  <JFXButton fx:id="btAtender" buttonType="RAISED" disable="true" layoutX="14.0" layoutY="537.0" prefHeight="25.0" prefWidth="89.0" style="-fx-background-color: #29B6F6;" text="Atender" textFill="WHITE" />
+                  <JFXButton fx:id="btFinalizar" buttonType="RAISED" disable="true" layoutX="123.0" layoutY="537.0" prefHeight="25.0" prefWidth="89.0" style="-fx-background-color: #29B6F6;" text="Finalizar" textFill="WHITE" />
+                  <JFXButton fx:id="btExcluir" buttonType="RAISED" layoutX="232.0" layoutY="537.0" prefHeight="25.0" prefWidth="89.0" style="-fx-background-color: #29B6F6;" text="Excluir" textFill="WHITE" />
+                  <JFXTextField fx:id="tfSala" editable="false" focusColor="#29b6f6" labelFloat="true" layoutX="14.0" layoutY="328.0" prefHeight="25.0" prefWidth="198.0" promptText="Sala" />
+                  <JFXTextField fx:id="tfComputador" editable="false" focusColor="#29b6f6" labelFloat="true" layoutX="14.0" layoutY="373.0" prefHeight="25.0" prefWidth="198.0" promptText="Computador" />
                </children>
             </AnchorPane>
             <JFXToolbar prefHeight="50.0" style="-fx-background-color: #29B6F6;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
