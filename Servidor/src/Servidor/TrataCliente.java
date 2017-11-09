@@ -159,6 +159,14 @@ public class TrataCliente extends Thread {
                                 + " VALUES ('" + usuario.getNome() + "', '" + usuario.getEmail() + "', '" + usuario.getSenha() + "', " + (usuario.isAdministrador() ? "1" : "0") + ")";
 
                         out.writeObject(Servidor.AtualizaTabela(sql));
+                    } else  if (operacao.equals("AdicionarChamado")) {
+                        out.writeObject(1);
+                        chamado = (Chamado) in.readObject();
+
+                        sql = "INSERT INTO chamados(id_usuario, id_computador, id_problema, observacao)"
+                                + " VALUES (" + user.getID_Usuario() + ", " + chamado.getComputador() + ", " + chamado.getID_Problema() + ", " + chamado.getObservacao() +"'";
+
+                        out.writeObject(Servidor.AtualizaTabela(sql));
                     } else if (operacao.equals("AdicionarProblema")) {
                         out.writeObject(1);
                         problema = (Problema) in.readObject();
@@ -258,8 +266,8 @@ public class TrataCliente extends Thread {
                         out.writeObject(chamados);
                     } else if (operacao.equals("MeusChamados")) {
                         sql = " SELECT C.id_chamado, U.nome, C.data_inicial, C.data_final,"
-                                + "    C.id_computador, CO.id_sala, P.tipo,"
-                                + "    P.descricao, C.observacao, C.status, A.nome"
+                                + "    C.computador, CO.id_sala, P.tipo,"
+                                + "    P.descricao, C.observacao, C.status, A.nome, C.id_computador"
                                 + " FROM chamados C"
                                 + " INNER JOIN usuarios U ON U.id_usuario = C.id_usuario"
                                 + " INNER JOIN computadores CO ON CO.id_computador = C.id_computador"
@@ -283,6 +291,7 @@ public class TrataCliente extends Thread {
                             String observacao = rs.getString(9);
                             int status = rs.getInt(10);
                             String adm = rs.getString(11);
+                            int id_computador = rs.getInt(12);
 
                             chamados.add(new Chamado(ID, nome, data_inicial, computadorr,
                                     salaa, tipo_problema, problemaa, observacao, status));
