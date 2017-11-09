@@ -11,6 +11,7 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -164,7 +165,7 @@ public class TrataCliente extends Thread {
                         chamado = (Chamado) in.readObject();
 
                         sql = "INSERT INTO chamados(id_usuario, id_computador, id_problema, observacao)"
-                                + " VALUES (" + user.getID_Usuario() + ", " + chamado.getComputador() + ", " + chamado.getID_Problema() + ", " + chamado.getObservacao() +"'";
+                                + " VALUES (" + user.getID_Usuario() + ", " + chamado.getComputador().getID() + ", " + chamado.getProblema().getID() + ", " + chamado.getObservacao() +"'";
 
                         out.writeObject(Servidor.AtualizaTabela(sql));
                     } else if (operacao.equals("AdicionarProblema")) {
@@ -232,7 +233,7 @@ public class TrataCliente extends Thread {
                     } else if (operacao.equals("Chamados")) {
                         sql = " SELECT C.id_chamado, U.nome, C.data_inicial, C.data_final,"
                                 + "    C.id_computador, CO.id_sala, P.tipo,"
-                                + "    P.descricao, C.observacao, C.status, A.nome"
+                                + "    P.descricao, C.observacao, C.status, A.nome, CO.numero"
                                 + " FROM chamados C"
                                 + " INNER JOIN usuarios U ON U.id_usuario = C.id_usuario"
                                 + " INNER JOIN computadores CO ON CO.id_computador = C.id_computador"
@@ -245,29 +246,24 @@ public class TrataCliente extends Thread {
 
                         while (rs.next()) {
                             int ID = rs.getInt(1);
-                            String nome = rs.getString(2);
-                            String data_inicial = rs.getString(3);
-                            String data_final = rs.getString(4);
-                            int computadorr = rs.getInt(5);
-                            int salaa = rs.getInt(6);
-                            int tipo_problema = rs.getInt(7);
-                            String problemaa = rs.getString(8);
+                            String nome_usuario = rs.getString(2);
+                            String nome_administrador = rs.getString(11);
+                            Date data_inicial = rs.getDate(3);
+                            Date data_final = rs.getDate(4);
+                            computador = new Computador(rs.getInt(5), rs.getInt(12), rs.getInt(6));
+                            problema = new Problema(rs.getString(8), rs.getInt(7));
                             String observacao = rs.getString(9);
                             int status = rs.getInt(10);
-                            String adm = rs.getString(11);
-
-                            chamados.add(new Chamado(ID, nome, data_inicial, computadorr,
-                                    salaa, tipo_problema, problemaa, observacao, status));
-                            chamados.getLast().setData_Final(data_final);
-                            chamados.getLast().setNome_Administrador(adm);
-
+                            
+                            chamado = new Chamado(ID, nome_usuario, nome_administrador, data_inicial, data_final, computador, problema, observacao, status);
+                            chamados.add(chamado);
                         }
 
                         out.writeObject(chamados);
                     } else if (operacao.equals("MeusChamados")) {
                         sql = " SELECT C.id_chamado, U.nome, C.data_inicial, C.data_final,"
-                                + "    C.computador, CO.id_sala, P.tipo,"
-                                + "    P.descricao, C.observacao, C.status, A.nome, C.id_computador"
+                                + "    C.id_computador, CO.id_sala, P.tipo,"
+                                + "    P.descricao, C.observacao, C.status, A.nome, CO.numero"
                                 + " FROM chamados C"
                                 + " INNER JOIN usuarios U ON U.id_usuario = C.id_usuario"
                                 + " INNER JOIN computadores CO ON CO.id_computador = C.id_computador"
@@ -281,23 +277,17 @@ public class TrataCliente extends Thread {
 
                         while (rs.next()) {
                             int ID = rs.getInt(1);
-                            String nome = rs.getString(2);
-                            String data_inicial = rs.getString(3);
-                            String data_final = rs.getString(4);
-                            int computadorr = rs.getInt(5);
-                            int salaa = rs.getInt(6);
-                            int tipo_problema = rs.getInt(7);
-                            String problemaa = rs.getString(8);
+                            String nome_usuario = rs.getString(2);
+                            String nome_administrador = rs.getString(11);
+                            Date data_inicial = rs.getDate(3);
+                            Date data_final = rs.getDate(4);
+                            computador = new Computador(rs.getInt(5), rs.getInt(12), rs.getInt(6));
+                            problema = new Problema(rs.getString(8), rs.getInt(7));
                             String observacao = rs.getString(9);
                             int status = rs.getInt(10);
-                            String adm = rs.getString(11);
-                            int id_computador = rs.getInt(12);
-
-                            chamados.add(new Chamado(ID, nome, data_inicial, computadorr,
-                                    salaa, tipo_problema, problemaa, observacao, status));
-                            chamados.getLast().setData_Final(data_final);
-                            chamados.getLast().setNome_Administrador(adm);
-
+                            
+                            chamado = new Chamado(ID, nome_usuario, nome_administrador, data_inicial, data_final, computador, problema, observacao, status);
+                            chamados.add(chamado);
                         }
 
                         out.writeObject(chamados);

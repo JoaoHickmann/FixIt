@@ -16,6 +16,7 @@ import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
 import java.io.IOException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import static java.util.Collections.singletonList;
 import java.util.LinkedList;
 import java.util.ResourceBundle;
@@ -326,15 +327,17 @@ public class FXMLPrincipalController implements Initializable {
                 btFinalizar.setDisable(true);
             } else {
                 Chamado chamado = chamados.get(lvChamados.getSelectionModel().getSelectedIndex());
+                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
+                
                 tfID.setText(chamado.getID_Chamado() + "");
                 tfUsuario.setText(chamado.getNome_Usuario());
                 tfAdministrador.setText(chamado.getNome_Administrador());
-                tfCriacao.setText(chamado.getData_Inicial());
-                tfFinalizacao.setText(chamado.getData_Final());
-                tfTipoProblema.setText(chamado.getTipo_Problema() == 1 ? "Hardware" : "Software");
-                tfProblema.setText(chamado.getProblema());
+                tfCriacao.setText(sdf.format(chamado.getData_Inicial()));
+                tfFinalizacao.setText(sdf.format(chamado.getData_Final()));
+                tfTipoProblema.setText(chamado.getProblema().getTipo() == 1 ? "Hardware" : "Software");
+                tfProblema.setText(chamado.getProblema().getDescricao());
                 taObservacoes.setText(chamado.getObservacao());
-                tfSala.setText(String.valueOf(chamado.getSala()));
+                tfSala.setText(String.valueOf(chamado.getComputador().getSala()));
                 tfComputador.setText(String.valueOf(chamado.getComputador()));
 
                 btAtender.setDisable(chamado.getStatus() != 1);
@@ -460,11 +463,11 @@ public class FXMLPrincipalController implements Initializable {
                 Label lblChamado = new Label("Chamado #" + chamado.getID_Chamado());
                 lblChamado.setFont(Font.font(14));
 
-                Label lblTipo = new Label((chamado.getTipo_Problema() == 1 ? "Hardware" : "Software") + " - " + chamado.getProblema());
+                Label lblTipo = new Label((chamado.getProblema().getTipo() == 1 ? "Hardware" : "Software") + " - " + chamado.getProblema().getDescricao());
                 lblTipo.setFont(Font.font(12));
                 lblTipo.setLayoutY(20);
 
-                Label lblLocal = new Label(chamado.getSala() + " - " + chamado.getComputador());
+                Label lblLocal = new Label(chamado.getComputador().getSala() + " - " + chamado.getComputador().getNumero());
                 lblLocal.setFont(Font.font(12));
                 lblLocal.setLayoutY(20);
 

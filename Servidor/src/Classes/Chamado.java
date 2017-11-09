@@ -1,145 +1,126 @@
 package Classes;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class Chamado implements Serializable{
     private static final long serialVersionUID = 1000L;
-    private int ID_Chamado;
-    private int ID_Usuario;
-    private String Nome_Usuario;
-    private int ID_Administrador;
-    private String Nome_Administrador;
-    private String Data_Inicial;
-    private String Data_Final;
-    private int Computador;
-    private int Sala;
-    private int Tipo_Problema;
-    private int ID_Problema;
-    private String Problema;
-    private String Observacao;
-    private int Status;
+    private int id_chamado;
+    private int id_usuario;
+    private String nome_usuario;
+    private int id_administrador;
+    private String nome_administrador;
+    private Date data_inicial;
+    private Date data_final;
+    private Computador computador;
+    private Problema problema;
+    private String observacao;
+    private int status;
     
-    public Chamado (int ID_Chamado, String Nome_Usuario, String Data_Inicial, int Computador, int Sala, int Tipo_Problema, String Problema, String Observacao, int Status) {
-        this.ID_Chamado = ID_Chamado;
-        this.Nome_Usuario = Nome_Usuario;
-        this.Data_Inicial = Data_Inicial;
-        this.Computador = Computador;
-        this.Sala = Sala;
-        this.Tipo_Problema = Tipo_Problema;
-        this.Problema = Problema;
-        this.Observacao = Observacao;
-        this.Status = Status;
+    public Chamado (int ID_Chamado, String Nome_Usuario, String Nome_Administrador, Date Data_Inicial, Date Data_Final, Computador computador, Problema problema, String observacao, int status) {
+        this.id_chamado = ID_Chamado;
+        this.nome_usuario = Nome_Usuario;
+        this.nome_administrador = Nome_Administrador;
+        this.data_inicial = Data_Inicial;
+        this.data_final = Data_Final;
+        this.computador = computador;
+        this.problema = problema;
+        this.observacao = observacao;
+        this.status = status;
+    }
+    
+    public Chamado (Computador computador, Problema problema, String observacao) {
+        this.computador = computador;
+        this.problema = problema;
+        this.observacao = observacao;
     }
 
     public int getID_Chamado() {
-        return ID_Chamado;
+        return id_chamado;
     }
 
-    public String getNome_Usuario() {
-        return Nome_Usuario;
-    }
-
-    public String getNome_Administrador() {
-        return Nome_Administrador;
-    }
-
-    public void setNome_Administrador(String Nome_Administrador) {
-        this.Nome_Administrador = Nome_Administrador;
-    }
-
-    public String getData_Inicial() {
-        return Data_Inicial;
-    }
-
-    public void setData_Inicial(String Data_Inicial) {
-        this.Data_Inicial = Data_Inicial;
-    }
-
-    public String getData_Final() {
-        return Data_Final;
-    }
-
-    public void setData_Final(String Data_Final) {
-        this.Data_Final = Data_Final;
-    }
-
-    public int getComputador() {
-        return Computador;
-    }
-
-    public void setComputador(int Computador) {
-        this.Computador = Computador;
-    }
-
-    public int getSala() {
-        return Sala;
-    }
-
-    public void setSala(int Sala) {
-        this.Sala = Sala;
-    }
-
-    public String getProblema() {
-        return Problema;
-    }
-
-    public void setProblema(String Problema) {
-        this.Problema = Problema;
-    }
-
-    public String getObservacao() {
-        return Observacao;
-    }
-
-    public void setObservacao(String Observacao) {
-        this.Observacao = Observacao;
-    }
-
-    public int getStatus() {
-        return Status;
-    }
-
-    public void setStatus(int status) {
-        this.Status = status;
+    public void setID_Chamado(int ID_Chamado) {
+        this.id_chamado = ID_Chamado;
     }
 
     public int getID_Usuario() {
-        return ID_Usuario;
+        return id_usuario;
     }
 
     public void setID_Usuario(int ID_Usuario) {
-        this.ID_Usuario = ID_Usuario;
+        this.id_usuario = ID_Usuario;
     }
 
-    public int getID_Administrador() {
-        return ID_Administrador;
-    }
-
-    public void setID_Administrador(int ID_Administrador) {
-        this.ID_Administrador = ID_Administrador;
-    }
-
-    public void setID_Chamado(int ID_Chamada) {
-        this.ID_Chamado = ID_Chamada;
+    public String getNome_Usuario() {
+        return nome_usuario;
     }
 
     public void setNome_Usuario(String Nome_Usuario) {
-        this.Nome_Usuario = Nome_Usuario;
+        this.nome_usuario = Nome_Usuario;
     }
 
-    public int getTipo_Problema() {
-        return Tipo_Problema;
+    public int getID_Administrador() {
+        return id_administrador;
     }
 
-    public void setTipo_Problema(int Tipo_Problema) {
-        this.Tipo_Problema = Tipo_Problema;
+    public void setID_Administrador(int ID_Administrador) {
+        this.id_administrador = ID_Administrador;
     }
 
-    public int getID_Problema() {
-        return ID_Problema;
+    public String getNome_Administrador() {
+        return nome_administrador;
     }
 
-    public void setID_Problema(int ID_Problema) {
-        this.ID_Problema = ID_Problema;
+    public void setNome_Administrador(String Nome_Administrador) {
+        this.nome_administrador = Nome_Administrador;
     }
+
+    public Date getData_Inicial() {
+        return data_inicial;
+    }
+
+    public void setData_Inicial(Date Data_Inicial) {
+        this.data_inicial = Data_Inicial;
+    }
+
+    public Date getData_Final() {
+        return data_final;
+    }
+
+    public void setData_Final(Date Data_Final) {
+        this.data_final = Data_Final;
+    }
+
+    public Computador getComputador() {
+        return computador;
+    }
+
+    public void setComputador(Computador computador) {
+        this.computador = computador;
+    }
+
+    public Problema getProblema() {
+        return problema;
+    }
+
+    public void setProblema(Problema problema) {
+        this.problema = problema;
+    }
+
+    public String getObservacao() {
+        return observacao;
+    }
+
+    public void setObservacao(String Observacao) {
+        this.observacao = Observacao;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int Status) {
+        this.status = Status;
+    }
+
 }
