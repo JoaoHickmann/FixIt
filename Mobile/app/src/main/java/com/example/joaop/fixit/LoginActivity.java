@@ -88,6 +88,7 @@ public class LoginActivity extends AppCompatActivity {
         progress = new ProgressDialog(LoginActivity.this);
         progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progress.setIndeterminate(true);
+        progress.setCancelable(false);
         progress.setMessage("Conectando");
         progress.setTitle("Conectando-se ao servidor");
         progress.show();
@@ -119,7 +120,7 @@ public class LoginActivity extends AppCompatActivity {
                         public void run() {
                             AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
                             builder.setTitle("Não foi possivel se conectar ao servidor")
-                                    .setMessage("Deseja se conectar novamente?")
+                                    .setMessage("Tentar novamente?")
                                     .setPositiveButton("Sim", new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface arg0, int arg1) {
                                             conectar();
