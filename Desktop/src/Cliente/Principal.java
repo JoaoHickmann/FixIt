@@ -86,7 +86,7 @@ public class Principal extends Application {
                                 .hideAfter(Duration.seconds(10))
                                 .onAction((ActionEvent event1) -> {
                                     try {
-                                        stage.setScene(new Scene(FXMLLoader.load(getClass().getResource("FXMLPrincipal.fxml")), stage.getScene().getWidth(), stage.getScene().getHeight()));
+                                        stage.setScene(new Scene(FXMLLoader.load(getClass().getResource("FXML"+msg.split(";")[2]+".fxml")), stage.getScene().getWidth(), stage.getScene().getHeight()));
                                         stage.show();
                                     } catch (IOException ex) {
                                         Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);

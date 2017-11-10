@@ -1,5 +1,6 @@
 package com.example.joaop.fixit;
 
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,6 +38,10 @@ public class ChamadoAdapter extends RecyclerView.Adapter<ChamadoAdapter.MyViewHo
         holder.tvSala.setText(chamado.getComputador().getSala() + " - " +chamado.getComputador().getNumero());
         if (chamado.getStatus() == 3) {
             holder.ivStatus.setVisibility(View.INVISIBLE);
+        } else if (chamado.getStatus() == 2) {
+            holder.ivStatus.setColorFilter(Color.parseColor("#ffff00"));
+        } else {
+            holder.ivStatus.setColorFilter(Color.parseColor("#ff0000"));
         }
 
         if (chamadoOnClickListener != null) {
