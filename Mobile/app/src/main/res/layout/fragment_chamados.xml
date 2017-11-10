@@ -5,12 +5,19 @@
     android:orientation="vertical"
     tools:context="com.example.joaop.fixit.PrincipalActivity">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rvChamados"
+    <android.support.v4.widget.SwipeRefreshLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scrollbars="vertical">
+        android:id="@+id/swipeRefresh">
 
-    </android.support.v7.widget.RecyclerView>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rvChamados"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="vertical">
+
+        </android.support.v7.widget.RecyclerView>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 </LinearLayout>

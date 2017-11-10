@@ -152,21 +152,15 @@ public class TrataCliente extends Thread {
                         usuario.setID_Usuario(rs.getInt("ID"));
 
                         out.writeObject(usuario);
-                    } else if (operacao.equals("AdicionarAdministrador")) {
-                        out.writeObject(1);
-                        usuario = (Usuario) in.readObject();
-
-                        sql = "INSERT INTO usuarios(nome, email, senha, isAdministrador)"
-                                + " VALUES ('" + usuario.getNome() + "', '" + usuario.getEmail() + "', '" + usuario.getSenha() + "', " + (usuario.isAdministrador() ? "1" : "0") + ")";
-
-                        out.writeObject(Servidor.AtualizaTabela(sql));
-                    } else  if (operacao.equals("AdicionarChamado")) {
+                    } else if (operacao.equals("AdicionarChamado")) {
                         out.writeObject(1);
                         chamado = (Chamado) in.readObject();
 
                         sql = "INSERT INTO chamados(id_usuario, id_computador, id_problema, observacao)"
-                                + " VALUES (" + user.getID_Usuario() + ", " + chamado.getComputador().getID() + ", " + chamado.getProblema().getID() + ", " + chamado.getObservacao() +"'";
+                                + " VALUES (" + user.getID_Usuario() + ", " + chamado.getComputador().getID() + ", " + chamado.getProblema().getID() + ", '" + chamado.getObservacao() + "')";
 
+                        Servidor.NotificacaoDesktop("Novo chamado;Clique para abrir");
+                        
                         out.writeObject(Servidor.AtualizaTabela(sql));
                     } else if (operacao.equals("AdicionarProblema")) {
                         out.writeObject(1);
@@ -254,7 +248,7 @@ public class TrataCliente extends Thread {
                             problema = new Problema(rs.getString(8), rs.getInt(7));
                             String observacao = rs.getString(9);
                             int status = rs.getInt(10);
-                            
+
                             chamado = new Chamado(ID, nome_usuario, nome_administrador, data_inicial, data_final, computador, problema, observacao, status);
                             chamados.add(chamado);
                         }
@@ -285,7 +279,7 @@ public class TrataCliente extends Thread {
                             problema = new Problema(rs.getString(8), rs.getInt(7));
                             String observacao = rs.getString(9);
                             int status = rs.getInt(10);
-                            
+
                             chamado = new Chamado(ID, nome_usuario, nome_administrador, data_inicial, data_final, computador, problema, observacao, status);
                             chamados.add(chamado);
                         }
@@ -345,7 +339,7 @@ public class TrataCliente extends Thread {
                                 + " WHERE id_usuario = " + usuario.getID_Usuario();
 
                         out.writeObject(Servidor.AtualizaTabela(sql));
-                    } else  if (operacao.equals("ExcluirChamado")) {
+                    } else if (operacao.equals("ExcluirChamado")) {
                         out.writeObject(1);
 
                         chamado = (Chamado) in.readObject();

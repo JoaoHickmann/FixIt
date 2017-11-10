@@ -140,7 +140,7 @@ public class RealizarChamadasActivity extends AppCompatActivity {
 
                             Problema problema = null;
                             for (Problema problema1 : problemas) {
-                                if (problema1.getTipo() == spTipoProblema.getSelectedItemPosition()+1 && problema1.getDescricao().equals(spProblema.getSelectedItem().toString())) {
+                                if (problema1.getTipo() == spTipoProblema.getSelectedItemPosition() + 1 && problema1.getDescricao().equals(spProblema.getSelectedItem().toString())) {
                                     problema = problema1;
                                     break;
                                 }
@@ -157,7 +157,7 @@ public class RealizarChamadasActivity extends AppCompatActivity {
                                         finish();
                                     }
                                 });
-                            }else{
+                            } else {
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
@@ -169,13 +169,9 @@ public class RealizarChamadasActivity extends AppCompatActivity {
                             e.printStackTrace();
                         }
                     }
-                });
-
-
+                }).start();
             }
         });
-
-
     }
 
 }
