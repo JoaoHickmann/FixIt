@@ -66,6 +66,7 @@ public class RealizarChamadasActivity extends AppCompatActivity {
 
                                     ArrayAdapter<String> adapter = new ArrayAdapter<String>(RealizarChamadasActivity.this, android.R.layout.simple_spinner_item, nomes_problemas);
                                     spProblema.setAdapter(adapter);
+
                                 }
 
                                 @Override
@@ -74,10 +75,30 @@ public class RealizarChamadasActivity extends AppCompatActivity {
                                 }
                             });
 
+                            final LinkedList<String> nomes_salas = new LinkedList<>();
+
+                            for (Computador computador : computadores) {
+                                if (!nomes_salas.contains(String.valueOf(computador.getSala()))) {
+                                    nomes_salas.add(String.valueOf(computador.getSala()));
+                                }
+                            }
+
+                            ArrayAdapter<String> adapter = new ArrayAdapter<String>(RealizarChamadasActivity.this, android.R.layout.simple_spinner_item, nomes_salas);
+                            spSala.setAdapter(adapter);
+
                             spSala.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                                 @Override
                                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                                    spSala.getSelectedItem();
+                                    LinkedList<String> nomes_computadores = new LinkedList<>();
+
+                                    for (Computador computador : computadores) {
+                                        if (String.valueOf(computador.getSala()).equals(spSala.getSelectedItem())) {
+                                            nomes_computadores.add(String.valueOf(computador.getNumero()));
+                                        }
+                                    }
+
+                                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(RealizarChamadasActivity.this, android.R.layout.simple_spinner_item, nomes_computadores);
+                                    spComputador.setAdapter(adapter);
                                 }
 
                                 @Override
@@ -99,6 +120,7 @@ public class RealizarChamadasActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+//                dados.getOut().writeObject("AdicionarChamada");
             }
         });
 
