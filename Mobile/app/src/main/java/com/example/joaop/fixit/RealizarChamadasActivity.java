@@ -169,7 +169,7 @@ public class RealizarChamadasActivity extends AppCompatActivity {
                             e.printStackTrace();
                         }
                     }
-                });
+                }).start();
 
 
             }

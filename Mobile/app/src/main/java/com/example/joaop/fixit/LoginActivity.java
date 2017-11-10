@@ -40,6 +40,7 @@ public class LoginActivity extends AppCompatActivity {
         btEntrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -86,7 +87,7 @@ public class LoginActivity extends AppCompatActivity {
                 try {
                     Socket servidor = new Socket();
                     servidor.setSoTimeout(2000);
-                    servidor.connect(new InetSocketAddress("10.0.2.2", 12345), 2000);
+                    servidor.connect(new InetSocketAddress("10.0.0.2", 12345), 2000);
 
                     dados.setServidor(servidor);
                     dados.setIn(new ObjectInputStream(servidor.getInputStream()));
