@@ -34,7 +34,6 @@ import Classes.Chamado;
 
 public class PrincipalActivity extends AppCompatActivity {
     private Dados dados;
-    private SwipeRefreshLayout swipeRefresh;
     private LinkedList<Chamado> todos_chamados, abertos, finalizados;
 
     /**
@@ -68,30 +67,6 @@ public class PrincipalActivity extends AppCompatActivity {
 
         dados = (Dados) getApplicationContext();
 
-        swipeRefresh = findViewById(R.id.swipeRefresh);
-
-        swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            attRecycler();
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    swipeRefresh.setRefreshing(false);
-                                }
-                            });
-                        } catch (IOException | ClassNotFoundException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }).start();
-            }
-        });
-
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -102,6 +77,22 @@ public class PrincipalActivity extends AppCompatActivity {
                 }
             }
         }).start();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onResume();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    attRecycler();
+                } catch (IOException | ClassNotFoundException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }).start();
+
     }
 
     public void attDados() throws IOException, ClassNotFoundException{

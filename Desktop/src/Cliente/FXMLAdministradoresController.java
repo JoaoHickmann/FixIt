@@ -252,12 +252,12 @@ public class FXMLAdministradoresController implements Initializable {
                 pfConfirmarSenha.validate();
                 if (tfNome.validate() && tfEmail.validate() && pfSenha.validate() && pfConfirmarSenha.validate()) {
                     try {
-                        Principal.getSaida().writeObject("AdicionarAdministrador");
+                        Principal.getSaida().writeObject("CadastrarUsuario");
                         Principal.getEntrada().readObject();
 
                         Usuario usuario = new Usuario(tfNome.getText(), tfEmail.getText(), new Criptografia(tfEmail.getText().charAt(0)).criptografar(pfSenha.getText()), true);
                         Principal.getSaida().writeObject(usuario);
-                        if ((int) Principal.getEntrada().readObject() == 1) {
+                        if (((Usuario) Principal.getEntrada().readObject()).getID_Usuario() != 0) {
                             attDados();
                             JFXSnackbar.SnackbarEvent barEvent = new JFXSnackbar.SnackbarEvent("Administrador adicionado.", "Ok", 3000, false, (MouseEvent event2) -> {
                                 snackbar.close();

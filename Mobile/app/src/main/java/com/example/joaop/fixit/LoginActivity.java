@@ -87,7 +87,10 @@ public class LoginActivity extends AppCompatActivity {
                 try {
                     Socket servidor = new Socket();
                     servidor.setSoTimeout(2000);
-                    servidor.connect(new InetSocketAddress("10.0.0.2", 12345), 2000);
+
+
+//                    servidor.connect();
+
 
                     dados.setServidor(servidor);
                     dados.setIn(new ObjectInputStream(servidor.getInputStream()));
