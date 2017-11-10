@@ -33,8 +33,8 @@ public class ChamadoAdapter extends RecyclerView.Adapter<ChamadoAdapter.MyViewHo
         Chamado chamado = listaChamados.get(position);
 
         holder.tvChamado.setText("Chamado #"+chamado.getID_Chamado());
-        holder.tvProblema.setText((chamado.getTipo_Problema() == 1 ? "Hardware" : "Software") + " - " + chamado.getProblema());
-        holder.tvSala.setText(chamado.getSala() + " - " +chamado.getComputador());
+        holder.tvProblema.setText((chamado.getProblema().getTipo() == 1 ? "Hardware" : "Software") + " - " + chamado.getProblema().getDescricao());
+        holder.tvSala.setText(chamado.getComputador().getSala() + " - " +chamado.getComputador().getNumero());
         if (chamado.getStatus() == 3) {
             holder.ivStatus.setVisibility(View.INVISIBLE);
         }

@@ -1,16 +1,16 @@
-<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/swipeRefresh"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.joaop.fixit.PrincipalActivity$PlaceholderFragment">
+    android:orientation="vertical"
+    tools:context="com.example.joaop.fixit.PrincipalActivity">
 
     <android.support.v7.widget.RecyclerView
+        android:id="@+id/rvChamados"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/rvChamados"
         android:scrollbars="vertical">
 
     </android.support.v7.widget.RecyclerView>
 
-</android.support.v4.widget.SwipeRefreshLayout>
+</LinearLayout>

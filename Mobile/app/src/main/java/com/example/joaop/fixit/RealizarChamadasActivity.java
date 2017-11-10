@@ -22,8 +22,8 @@ public class RealizarChamadasActivity extends AppCompatActivity {
 
     ImageButton btSalvar;
     Spinner spTipoProblema, spProblema, spSala, spComputador;
-    LinkedList <Problema> problemas;
-    LinkedList <Computador> computadores;
+    LinkedList<Problema> problemas;
+    LinkedList<Computador> computadores;
     Dados dados;
 
     @Override
@@ -37,7 +37,7 @@ public class RealizarChamadasActivity extends AppCompatActivity {
         spProblema = findViewById(R.id.spProblema);
         spSala = findViewById(R.id.spSala);
         spComputador = findViewById(R.id.spComputador);
-        dados = (Dados)getApplicationContext();
+        dados = (Dados) getApplicationContext();
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -59,7 +59,7 @@ public class RealizarChamadasActivity extends AppCompatActivity {
                                     LinkedList<String> nomes_problemas = new LinkedList<>();
 
                                     for (Problema problema : problemas) {
-                                        if (problema.getTipo() == position+1) {
+                                        if (problema.getTipo() == position + 1) {
                                             nomes_problemas.add(problema.getDescricao());
                                         }
                                     }
@@ -75,7 +75,7 @@ public class RealizarChamadasActivity extends AppCompatActivity {
                                 }
                             });
 
-                            final LinkedList<String> nomes_salas = new LinkedList<>();
+                            LinkedList<String> nomes_salas = new LinkedList<>();
 
                             for (Computador computador : computadores) {
                                 if (!nomes_salas.contains(String.valueOf(computador.getSala()))) {

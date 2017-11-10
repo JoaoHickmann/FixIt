@@ -16,7 +16,6 @@ import java.io.ObjectOutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 
-import Classes.Criptografia;
 import Classes.Usuario;
 
 public class LoginActivity extends AppCompatActivity {
@@ -87,7 +86,7 @@ public class LoginActivity extends AppCompatActivity {
                 try {
                     Socket servidor = new Socket();
                     servidor.setSoTimeout(2000);
-                    servidor.connect(new InetSocketAddress("10.0.3.2", 12345), 2000);
+                    servidor.connect(new InetSocketAddress("10.0.2.2", 12345), 2000);
 
                     dados.setServidor(servidor);
                     dados.setIn(new ObjectInputStream(servidor.getInputStream()));

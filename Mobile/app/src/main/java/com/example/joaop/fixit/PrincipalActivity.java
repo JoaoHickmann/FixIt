@@ -26,22 +26,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 
 import Classes.Chamado;
 
 public class PrincipalActivity extends AppCompatActivity {
     private Dados dados;
-    static LinkedList<Chamado> chamados;
-    /**
-     * The {@link android.support.v4.view.PagerAdapter} that will provide
-     * fragments for each of the sections. We use a
-     * {@link FragmentPagerAdapter} derivative, which will keep every
-     * loaded fragment in memory. If this becomes too memory intensive, it
-     * may be best to switch to a
-     * {@link android.support.v4.app.FragmentStatePagerAdapter}.
-     */
-    private SectionsPagerAdapter mSectionsPagerAdapter;
+    private SwipeRefreshLayout swipeRefresh;
+    private LinkedList<Chamado> todos_chamados, abertos, finalizados;
 
     /**
      * The {@link ViewPager} that will host the section contents.
@@ -56,15 +50,12 @@ public class PrincipalActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-
         mViewPager = findViewById(R.id.container);
-        mViewPager.setAdapter(mSectionsPagerAdapter);
+        setupViewPager(mViewPager);
 
         TabLayout tabLayout = findViewById(R.id.tabs);
+        tabLayout.setupWithViewPager(mViewPager);
 
-        mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-        tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -77,17 +68,99 @@ public class PrincipalActivity extends AppCompatActivity {
 
         dados = (Dados) getApplicationContext();
 
+        swipeRefresh = findViewById(R.id.swipeRefresh);
+
+        swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            attRecycler();
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    swipeRefresh.setRefreshing(false);
+                                }
+                            });
+                        } catch (IOException | ClassNotFoundException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }).start();
+            }
+        });
+
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    dados.getOut().writeObject("MeusChamados");
-                    chamados = (LinkedList<Chamado>) dados.getIn().readObject();
+                    attRecycler();
                 } catch (IOException | ClassNotFoundException e) {
                     e.printStackTrace();
                 }
             }
         }).start();
+    }
+
+    public void attDados() throws IOException, ClassNotFoundException{
+        dados.getOut().writeObject("MeusChamados");
+        todos_chamados = (LinkedList<Chamado>) dados.getIn().readObject();
+
+        finalizados = new LinkedList<>();
+        abertos = new LinkedList<>();
+
+        for (Chamado chamado:todos_chamados){
+            if (chamado.getStatus() == 3) {
+                finalizados.add(chamado);
+            } else {
+                abertos.add(chamado);
+            }
+        }
+    }
+
+    public void attRecycler() throws IOException, ClassNotFoundException {
+        attDados();
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                RecyclerView rvChamados = ((ChamadosFragment)((ViewPagerAdapter)mViewPager.getAdapter()).getItem(0)).getRvChamados();
+
+                ChamadoAdapter chamadoAdapter = new ChamadoAdapter(abertos, new ChamadoAdapter.ChamadoOnClickListener() {
+                    @Override
+                    public void onClickAluno(View view, int position) {
+                        Toast.makeText(PrincipalActivity.this, "Chamado #"+abertos.get(position).getID_Chamado(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+                RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(PrincipalActivity.this);
+                rvChamados.setLayoutManager(mLayoutManager);
+                rvChamados.setItemAnimator(new DefaultItemAnimator());
+                rvChamados.setAdapter(chamadoAdapter);
+
+                rvChamados = ((ChamadosFragment)((ViewPagerAdapter)mViewPager.getAdapter()).getItem(1)).getRvChamados();
+
+                chamadoAdapter = new ChamadoAdapter(finalizados, new ChamadoAdapter.ChamadoOnClickListener() {
+                    @Override
+                    public void onClickAluno(View view, int position) {
+                        Toast.makeText(PrincipalActivity.this, "Chamado #"+finalizados.get(position).getID_Chamado(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+                mLayoutManager = new LinearLayoutManager(PrincipalActivity.this);
+                rvChamados.setLayoutManager(mLayoutManager);
+                rvChamados.setItemAnimator(new DefaultItemAnimator());
+                rvChamados.setAdapter(chamadoAdapter);
+            }
+        });
+    }
+
+    public void setupViewPager(ViewPager viewPager) {
+        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        adapter.addFragment(new ChamadosFragment(), "Abertos");
+        adapter.addFragment(new ChamadosFragment(), "Finalizados");
+        viewPager.setAdapter(adapter);
     }
 
 
@@ -111,112 +184,32 @@ public class PrincipalActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public static class PlaceholderFragment extends Fragment {
+    class ViewPagerAdapter extends FragmentPagerAdapter {
+        private final List<Fragment> mFragmentList = new ArrayList<>();
+        private final List<String> mFragmentTitleList = new ArrayList<>();
 
-        private static final String ARG_SECTION_NUMBER = "section_number";
-
-        public PlaceholderFragment() {
-        }
-
-        public static PlaceholderFragment newInstance(int sectionNumber) {
-            PlaceholderFragment fragment = new PlaceholderFragment();
-            Bundle args = new Bundle();
-            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-            fragment.setArguments(args);
-            return fragment;
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_principal, container, false);
-
-            LinkedList<Chamado> lista = new LinkedList<>();
-
-            while (chamados == null) {
-            }
-
-            for (Chamado chamado : chamados) {
-                if (getArguments().getInt(ARG_SECTION_NUMBER) == 2 && chamado.getStatus() == 3) {
-                    lista.add(chamado);
-                } else if (getArguments().getInt(ARG_SECTION_NUMBER) == 1 && chamado.getStatus() != 3) {
-                    lista.add(chamado);
-                }
-            }
-
-            ChamadoAdapter chamadoAdapter;
-            if (getArguments().getInt(ARG_SECTION_NUMBER) == 2) {
-                chamadoAdapter = new ChamadoAdapter(lista, new ChamadoAdapter.ChamadoOnClickListener() {
-                    @Override
-                    public void onClickAluno(View view, int position) {
-                        int i = 0;
-                        for (Chamado chamado : chamados) {
-                            if (chamado.getStatus() == 3) {
-                                if (i == position) {
-                                    Toast.makeText(getContext(), "" + chamado.getID_Chamado(), Toast.LENGTH_SHORT).show();
-                                    break;
-                                }
-                                i++;
-                            }
-                        }
-                    }
-                });
-            } else {
-                chamadoAdapter = new ChamadoAdapter(lista, new ChamadoAdapter.ChamadoOnClickListener() {
-                    @Override
-                    public void onClickAluno(View view, int position) {
-                        int i = 0;
-                        for (Chamado chamado : chamados) {
-                            if (chamado.getStatus() != 3) {
-                                if (i == position) {
-                                    Toast.makeText(getContext(), "" + chamado.getID_Chamado(), Toast.LENGTH_SHORT).show();
-                                    break;
-                                }
-                                i++;
-                            }
-                        }
-                    }
-                });
-            }
-
-            RecyclerView rvChamados = rootView.findViewById(R.id.rvChamados);
-            RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
-            rvChamados.setLayoutManager(mLayoutManager);
-            rvChamados.setItemAnimator(new DefaultItemAnimator());
-            rvChamados.setAdapter(chamadoAdapter);
-
-            final SwipeRefreshLayout swipeRefresh = rootView.findViewById(R.id.swipeRefresh);
-
-            swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-                @Override
-                public void onRefresh() {
-
-                    swipeRefresh.setRefreshing(false);
-                }
-            });
-
-            return rootView;
-        }
-    }
-
-    /**
-     * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
-     * one of the sections/tabs/pages.
-     */
-    public class SectionsPagerAdapter extends FragmentPagerAdapter {
-
-        public SectionsPagerAdapter(FragmentManager fm) {
-            super(fm);
+        public ViewPagerAdapter(FragmentManager manager) {
+            super(manager);
         }
 
         @Override
         public Fragment getItem(int position) {
-            return PlaceholderFragment.newInstance(position + 1);
+            return mFragmentList.get(position);
         }
 
         @Override
         public int getCount() {
-            return 2;
+            return mFragmentList.size();
+        }
+
+        public void addFragment(Fragment fragment, String title) {
+            mFragmentList.add(fragment);
+            mFragmentTitleList.add(title);
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return mFragmentTitleList.get(position);
         }
     }
 }
