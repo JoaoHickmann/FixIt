@@ -21,7 +21,7 @@ public class Servidor {
         conexao = new Conexao();
         System.out.println("Conexão com o banco de dados estabelecida");
         ServerSocket servidor = new ServerSocket(12345);
-        System.out.println("Servidor iniciado na porta: " + servidor.getLocalPort());
+        System.out.println("Servidor iniciado em na porta: " + servidor.getLocalPort());
         
         group = InetAddress.getByName("228.5.6.7");
         s = new MulticastSocket(6789);
