@@ -67,9 +67,12 @@ public class PrincipalActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 <<<<<<< HEAD
+<<<<<<< HEAD
                 Intent it = new Intent(PrincipalActivity.this, AdicionarChamadoActivity.class);
                 startActivityForResult(it, 1);
 =======
+=======
+>>>>>>> parent of 3c7d7a2... Merge branch 'master' of https://github.com/JoaoHickmann/FixIt
                 Intent it = new Intent(PrincipalActivity.this, RealizarChamadasActivity.class);
                 startActivity(it);
 >>>>>>> parent of 3c7d7a2... Merge branch 'master' of https://github.com/JoaoHickmann/FixIt
@@ -89,6 +92,7 @@ public class PrincipalActivity extends AppCompatActivity {
                 }
             }
         }).start();
+<<<<<<< HEAD
     }
 
     @Override
@@ -120,6 +124,11 @@ public class PrincipalActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
 =======
+=======
+    }
+
+    @Override
+>>>>>>> parent of 3c7d7a2... Merge branch 'master' of https://github.com/JoaoHickmann/FixIt
     protected void onRestart() {
         super.onRestart();
         new Thread(new Runnable() {
@@ -129,6 +138,9 @@ public class PrincipalActivity extends AppCompatActivity {
                     attRecycler();
                 } catch (IOException | ClassNotFoundException ex) {
                     ex.printStackTrace();
+<<<<<<< HEAD
+>>>>>>> parent of 3c7d7a2... Merge branch 'master' of https://github.com/JoaoHickmann/FixIt
+=======
 >>>>>>> parent of 3c7d7a2... Merge branch 'master' of https://github.com/JoaoHickmann/FixIt
                 }
             }
@@ -247,6 +259,9 @@ public class PrincipalActivity extends AppCompatActivity {
                 rvChamados.setLayoutManager(mLayoutManager);
                 rvChamados.setItemAnimator(new DefaultItemAnimator());
                 rvChamados.setAdapter(chamadoAdapter);
+<<<<<<< HEAD
+>>>>>>> parent of 3c7d7a2... Merge branch 'master' of https://github.com/JoaoHickmann/FixIt
+=======
 >>>>>>> parent of 3c7d7a2... Merge branch 'master' of https://github.com/JoaoHickmann/FixIt
             }
         });

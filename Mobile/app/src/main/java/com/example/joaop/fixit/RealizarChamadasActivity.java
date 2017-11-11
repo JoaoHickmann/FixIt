@@ -162,6 +162,7 @@ public class RealizarChamadasActivity extends AppCompatActivity {
                                 }
                             }
 
+<<<<<<< HEAD:Mobile/app/src/main/java/com/example/joaop/fixit/RealizarChamadasActivity.java
 <<<<<<< HEAD:Mobile/app/src/main/java/com/example/joaop/fixit/AdicionarChamadoActivity.java
                                 Chamado chamado = new Chamado(computador, problema, etObservacao.getText().toString());
 
@@ -187,6 +188,8 @@ public class RealizarChamadasActivity extends AppCompatActivity {
                             } catch (IOException | ClassNotFoundException e) {
                                 e.printStackTrace();
 =======
+=======
+>>>>>>> parent of 3c7d7a2... Merge branch 'master' of https://github.com/JoaoHickmann/FixIt:Mobile/app/src/main/java/com/example/joaop/fixit/RealizarChamadasActivity.java
                             Chamado chamado = new Chamado(computador, problema, etObservacao.getText().toString());
 
                             dados.getOut().writeObject("AdicionarChamado");
@@ -207,6 +210,9 @@ public class RealizarChamadasActivity extends AppCompatActivity {
                                         Toast.makeText(dados, "Não foi possivel adicionar o chamado!\nTente novamente.", Toast.LENGTH_SHORT).show();
                                     }
                                 });
+<<<<<<< HEAD:Mobile/app/src/main/java/com/example/joaop/fixit/RealizarChamadasActivity.java
+>>>>>>> parent of 3c7d7a2... Merge branch 'master' of https://github.com/JoaoHickmann/FixIt:Mobile/app/src/main/java/com/example/joaop/fixit/RealizarChamadasActivity.java
+=======
 >>>>>>> parent of 3c7d7a2... Merge branch 'master' of https://github.com/JoaoHickmann/FixIt:Mobile/app/src/main/java/com/example/joaop/fixit/RealizarChamadasActivity.java
                             }
                         } catch (IOException | ClassNotFoundException e) {
