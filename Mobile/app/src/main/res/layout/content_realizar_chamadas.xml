@@ -6,66 +6,78 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.example.joaop.fixit.RealizarChamadasActivity"
-    tools:showIn="@layout/activity_realizar_chamadas"
-    android:padding="16dp">
+    tools:context="com.example.joaop.fixit.AdicionarChamadoActivity"
+    tools:showIn="@layout/activity_realizar_chamadas">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Tipo do problema:"/>
-    <Spinner
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:id="@+id/spTipoProblema"
-        android:entries="@array/tipo_problema"
-        android:spinnerMode="dropdown">
-    </Spinner>
+        android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Problema:"/>
-    <Spinner
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:id="@+id/spProblema"
-        android:spinnerMode="dropdown">
-    </Spinner>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Sala:"/>
-    <Spinner
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:id="@+id/spSala"
-        android:spinnerMode="dropdown">
-    </Spinner>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Computador:"/>
-    <Spinner
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:id="@+id/spComputador"
-        android:spinnerMode="dropdown">
-    </Spinner>
-
-    <android.support.design.widget.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <EditText
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/etObservacao"
-            android:hint="Observação"
-            android:inputType="textMultiLine"
-            />
-    </android.support.design.widget.TextInputLayout>
+            android:orientation="vertical"
+            android:padding="16dp">
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tipo do problema:" />
+
+            <Spinner
+                android:id="@+id/spTipoProblema"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:entries="@array/tipo_problema"
+                android:spinnerMode="dropdown" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Problema:" />
+
+            <Spinner
+                android:id="@+id/spProblema"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:spinnerMode="dropdown" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sala:" />
+
+            <Spinner
+                android:id="@+id/spSala"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:spinnerMode="dropdown" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Computador:" />
+
+            <Spinner
+                android:id="@+id/spComputador"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:spinnerMode="dropdown" />
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/etObservacao"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:hint="Observação"
+                    android:inputType="textMultiLine" />
+            </android.support.design.widget.TextInputLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
 
 </LinearLayout>
