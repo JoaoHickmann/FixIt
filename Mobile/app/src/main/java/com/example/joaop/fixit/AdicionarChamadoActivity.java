@@ -170,7 +170,7 @@ public class AdicionarChamadoActivity extends AppCompatActivity {
                                     runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
-                                            Toast.makeText(AdicionarChamadoActivity.this, "Chamado adicionado.", Toast.LENGTH_SHORT).show();
+                                            setResult(1);
                                             finish();
                                         }
                                     });

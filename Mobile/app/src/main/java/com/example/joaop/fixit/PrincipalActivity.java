@@ -3,6 +3,7 @@ package com.example.joaop.fixit;
 import android.content.Intent;
 import android.graphics.Color;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -87,7 +88,7 @@ public class PrincipalActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent it = new Intent(PrincipalActivity.this, AdicionarChamadoActivity.class);
-                startActivity(it);
+                startActivityForResult(it, 1);
             }
         });
 
@@ -103,6 +104,21 @@ public class PrincipalActivity extends AppCompatActivity {
         });
 
         dados = (Dados) getApplicationContext();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 1 && resultCode == 1) {
+            final Snackbar snackbar = Snackbar.make(findViewById(R.id.main_content), "Chamado adicionado", Snackbar.LENGTH_LONG);
+            snackbar.setAction("Ok", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    snackbar.dismiss();
+                }
+            });
+
+            snackbar.show();
+        }
     }
 
     @Override
@@ -194,12 +210,7 @@ public class PrincipalActivity extends AppCompatActivity {
                     public void onClickAluno(View view, int position) {
                         Toast.makeText(PrincipalActivity.this, "Chamado #" + finalizados.get(position).getID_Chamado(), Toast.LENGTH_SHORT).show();
                     }
-                }, new ChamadoAdapter.ChamadoOnLongClickListener() {
-                    @Override
-                    public void onLongClickAluno(View view, int position) {
-                        view.callOnClick();
-                    }
-                }));
+                }, null));
             }
         });
     }
