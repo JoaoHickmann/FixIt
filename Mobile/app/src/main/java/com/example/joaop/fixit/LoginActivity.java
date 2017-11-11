@@ -100,11 +100,7 @@ public class LoginActivity extends AppCompatActivity {
                     Socket servidor = new Socket();
                     servidor.setSoTimeout(3000);
 <<<<<<< HEAD
-<<<<<<< HEAD
                     servidor.connect(new InetSocketAddress("192.168.0.200", 12345), 5000);
-=======
-                    servidor.connect(new InetSocketAddress("10.0.2.2", 12345), 2000);
->>>>>>> parent of 3c7d7a2... Merge branch 'master' of https://github.com/JoaoHickmann/FixIt
 =======
                     servidor.connect(new InetSocketAddress("10.0.2.2", 12345), 2000);
 >>>>>>> parent of 3c7d7a2... Merge branch 'master' of https://github.com/JoaoHickmann/FixIt
