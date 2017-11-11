@@ -89,7 +89,6 @@ public class LoginActivity extends AppCompatActivity {
         progress = new ProgressDialog(LoginActivity.this);
         progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progress.setIndeterminate(true);
-        progress.setCancelable(false);
         progress.setMessage("Conectando");
         progress.setTitle("Conectando-se ao servidor");
         progress.show();
@@ -102,7 +101,7 @@ public class LoginActivity extends AppCompatActivity {
                     servidor.setSoTimeout(2000);
 //                    servidor.connect();
                     servidor.setSoTimeout(3000);
-                    servidor.connect(new InetSocketAddress("10.0.2.2", 12345), 2000);
+                    servidor.connect(new InetSocketAddress("192.168.0.200", 12345), 3000);
 
                     dados.setServidor(servidor);
                     dados.setIn(new ObjectInputStream(servidor.getInputStream()));
@@ -123,7 +122,7 @@ public class LoginActivity extends AppCompatActivity {
                         public void run() {
                             AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
                             builder.setTitle("Não foi possivel se conectar ao servidor")
-                                    .setMessage("Tentar novamente?")
+                                    .setMessage("Deseja se conectar novamente?")
                                     .setPositiveButton("Sim", new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface arg0, int arg1) {
                                             conectar();

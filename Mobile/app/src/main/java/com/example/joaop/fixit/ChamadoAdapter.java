@@ -12,15 +12,13 @@ import java.util.List;
 
 import Classes.Chamado;
 
-public class ChamadoAdapter extends RecyclerView.Adapter<ChamadoAdapter.MyViewHolder> {
+public class ChamadoAdapter extends RecyclerView.Adapter<ChamadoAdapter.MyViewHolder>  {
     private List<Chamado> listaChamados;
     private ChamadoOnClickListener chamadoOnClickListener;
-    private ChamadoOnLongClickListener chamadoOnLongClickListener;
 
-    public ChamadoAdapter(List<Chamado> listaChamados, ChamadoOnClickListener chamadoOnClickListener, ChamadoOnLongClickListener chamadoOnLongClickListener) {
+    public ChamadoAdapter(List<Chamado> listaChamados, ChamadoOnClickListener chamadoOnClickListener) {
         this.listaChamados = listaChamados;
         this.chamadoOnClickListener = chamadoOnClickListener;
-        this.chamadoOnLongClickListener = chamadoOnLongClickListener;
     }
 
     @Override
@@ -35,9 +33,9 @@ public class ChamadoAdapter extends RecyclerView.Adapter<ChamadoAdapter.MyViewHo
     public void onBindViewHolder(final ChamadoAdapter.MyViewHolder holder, final int position) {
         Chamado chamado = listaChamados.get(position);
 
-        holder.tvChamado.setText("Chamado #" + chamado.getID_Chamado());
+        holder.tvChamado.setText("Chamado #"+chamado.getID_Chamado());
         holder.tvProblema.setText((chamado.getProblema().getTipo() == 1 ? "Hardware" : "Software") + " - " + chamado.getProblema().getDescricao());
-        holder.tvSala.setText(chamado.getComputador().getSala() + " - " + chamado.getComputador().getNumero());
+        holder.tvSala.setText(chamado.getComputador().getSala() + " - " +chamado.getComputador().getNumero());
         if (chamado.getStatus() == 3) {
             holder.ivStatus.setVisibility(View.INVISIBLE);
         } else if (chamado.getStatus() == 2) {
@@ -50,17 +48,7 @@ public class ChamadoAdapter extends RecyclerView.Adapter<ChamadoAdapter.MyViewHo
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    chamadoOnClickListener.onClickAluno(holder.itemView, position);
-                }
-            });
-        }
-
-        if (chamadoOnLongClickListener != null) {
-            holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    chamadoOnLongClickListener.onLongClickAluno(holder.itemView, position);
-                    return true;
+                    chamadoOnClickListener.onClickAluno(holder.itemView,position);
                 }
             });
         }
@@ -70,6 +58,7 @@ public class ChamadoAdapter extends RecyclerView.Adapter<ChamadoAdapter.MyViewHo
     public int getItemCount() {
         return listaChamados.size();
     }
+
 
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -87,9 +76,5 @@ public class ChamadoAdapter extends RecyclerView.Adapter<ChamadoAdapter.MyViewHo
 
     public interface ChamadoOnClickListener {
         public void onClickAluno(View view, int position);
-    }
-
-    public interface ChamadoOnLongClickListener {
-        public void onLongClickAluno(View view, int position);
     }
 }
