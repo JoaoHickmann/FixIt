@@ -170,7 +170,6 @@ public class RealizarChamadasActivity extends AppCompatActivity {
                         }
                     }
                 }).start();
-
             }
         });
     }

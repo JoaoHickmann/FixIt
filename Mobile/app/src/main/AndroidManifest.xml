@@ -35,6 +35,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.joaop.fixit.PrincipalActivity" />
         </activity>
+        <activity
+            android:name=".RegistrarActivity"
+            android:label="@string/title_activity_registrar"
+            android:parentActivityName=".LoginActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.joaop.fixit.LoginActivity" />
+        </activity>
     </application>
 
 </manifest>
