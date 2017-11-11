@@ -27,6 +27,8 @@ public class AdicionarChamadoActivity extends AppCompatActivity {
     LinkedList<Computador> computadores;
     Dados dados;
 
+    boolean carregado = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,7 +36,6 @@ public class AdicionarChamadoActivity extends AppCompatActivity {
         final Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        setTitle("Adicionar chamado");
 
         spTipoProblema = findViewById(R.id.spTipoProblema);
         spProblema = findViewById(R.id.spProblema);
@@ -77,7 +78,7 @@ public class AdicionarChamadoActivity extends AppCompatActivity {
                             adapter = new ArrayAdapter<String>(AdicionarChamadoActivity.this, android.R.layout.simple_spinner_dropdown_item, nomes_salas);
                             spSala.setAdapter(adapter);
 
-                            toolbar.getMenu().getItem(0).setEnabled(true);
+                            carregado = true;
 
                             spTipoProblema.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                                 @Override
@@ -139,25 +140,26 @@ public class AdicionarChamadoActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_adicionar:
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            Computador computador = null;
-                            for (Computador computador1 : computadores) {
-                                if (computador1.getSala() == Integer.valueOf(spSala.getSelectedItem().toString()) && computador1.getNumero() == Integer.valueOf(spComputador.getSelectedItem().toString())) {
-                                    computador = computador1;
-                                    break;
+                if (carregado) {
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                Computador computador = null;
+                                for (Computador computador1 : computadores) {
+                                    if (computador1.getSala() == Integer.valueOf(spSala.getSelectedItem().toString()) && computador1.getNumero() == Integer.valueOf(spComputador.getSelectedItem().toString())) {
+                                        computador = computador1;
+                                        break;
+                                    }
                                 }
-                            }
 
-                            Problema problema = null;
-                            for (Problema problema1 : problemas) {
-                                if (problema1.getTipo() == spTipoProblema.getSelectedItemPosition() + 1 && problema1.getDescricao().equals(spProblema.getSelectedItem().toString())) {
-                                    problema = problema1;
-                                    break;
+                                Problema problema = null;
+                                for (Problema problema1 : problemas) {
+                                    if (problema1.getTipo() == spTipoProblema.getSelectedItemPosition() + 1 && problema1.getDescricao().equals(spProblema.getSelectedItem().toString())) {
+                                        problema = problema1;
+                                        break;
+                                    }
                                 }
-                            }
 
                                 Chamado chamado = new Chamado(computador, problema, etObservacao.getText().toString());
 
@@ -183,9 +185,12 @@ public class AdicionarChamadoActivity extends AppCompatActivity {
                             } catch (IOException | ClassNotFoundException e) {
                                 e.printStackTrace();
                             }
-                    }
-                }).start();
-                return true;
+                        }
+                    }).start();
+                    return true;
+                } else {
+                    return false;
+                }
             default:
                 return super.onOptionsItemSelected(item);
         }
