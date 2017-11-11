@@ -3,6 +3,7 @@ package Cliente;
 import Classes.Usuario;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
+import java.awt.Toolkit;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -86,14 +87,18 @@ public class Principal extends Application {
                                 .hideAfter(Duration.seconds(10))
                                 .onAction((ActionEvent event1) -> {
                                     try {
-                                        stage.setScene(new Scene(FXMLLoader.load(getClass().getResource("FXML"+msg.split(";")[2]+".fxml")), stage.getScene().getWidth(), stage.getScene().getHeight()));
+                                        stage.setScene(new Scene(FXMLLoader.load(getClass().getResource("FXMLPrincipal.fxml")), stage.getScene().getWidth(), stage.getScene().getHeight()));
                                         stage.show();
+                                        stage.setIconified(false);
+                                        stage.toFront();
                                     } catch (IOException ex) {
                                         Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
                                     }
                                 });
 
                         Platform.runLater(() -> {
+                            Toolkit.getDefaultToolkit().beep();
+
                             notify.show();
                         });
                     }

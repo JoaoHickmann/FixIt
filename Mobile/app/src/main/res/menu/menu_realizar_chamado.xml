@@ -5,6 +5,5 @@
         android:id="@+id/action_adicionar"
         android:icon="@drawable/ic_done_white_24dp"
         android:title="Adicionar"
-        app:showAsAction="always"
-        android:enabled="false"/>
+        app:showAsAction="always"/>
 </menu>
