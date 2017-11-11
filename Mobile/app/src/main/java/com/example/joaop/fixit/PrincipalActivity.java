@@ -66,13 +66,8 @@ public class PrincipalActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-<<<<<<< HEAD
                 Intent it = new Intent(PrincipalActivity.this, AdicionarChamadoActivity.class);
                 startActivityForResult(it, 1);
-=======
-                Intent it = new Intent(PrincipalActivity.this, RealizarChamadasActivity.class);
-                startActivity(it);
->>>>>>> parent of 3c7d7a2... Merge branch 'master' of https://github.com/JoaoHickmann/FixIt
             }
         });
 
@@ -92,7 +87,6 @@ public class PrincipalActivity extends AppCompatActivity {
     }
 
     @Override
-<<<<<<< HEAD
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 1 && resultCode == 1) {
             final Snackbar snackbar = Snackbar.make(findViewById(R.id.main_content), "Chamado adicionado", Snackbar.LENGTH_LONG);
@@ -119,20 +113,9 @@ public class PrincipalActivity extends AppCompatActivity {
                     } catch (IOException | ClassNotFoundException e) {
                         e.printStackTrace();
                     }
-=======
-    protected void onRestart() {
-        super.onRestart();
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    attRecycler();
-                } catch (IOException | ClassNotFoundException ex) {
-                    ex.printStackTrace();
->>>>>>> parent of 3c7d7a2... Merge branch 'master' of https://github.com/JoaoHickmann/FixIt
                 }
-            }
-        }).start();
+            }).start();
+        }
     }
 
     public void attDados() throws IOException, ClassNotFoundException {
@@ -157,7 +140,6 @@ public class PrincipalActivity extends AppCompatActivity {
             @Override
             public void run() {
                 RecyclerView rvChamados = ((ChamadosFragment) ((ViewPagerAdapter) mViewPager.getAdapter()).getItem(0)).getRvChamados();
-
                 ChamadoAdapter chamadoAdapter = new ChamadoAdapter(abertos, new ChamadoAdapter.ChamadoOnClickListener() {
                     @Override
                     public void onClickAluno(View view, int position) {
@@ -194,14 +176,12 @@ public class PrincipalActivity extends AppCompatActivity {
                         }
                     }
                 });
-
                 RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(PrincipalActivity.this);
                 rvChamados.setLayoutManager(mLayoutManager);
                 rvChamados.setItemAnimator(new DefaultItemAnimator());
                 rvChamados.setAdapter(chamadoAdapter);
 
                 rvChamados = ((ChamadosFragment) ((ViewPagerAdapter) mViewPager.getAdapter()).getItem(1)).getRvChamados();
-
                 chamadoAdapter = new ChamadoAdapter(finalizados, new ChamadoAdapter.ChamadoOnClickListener() {
                     @Override
                     public void onClickAluno(View view, int position) {
@@ -224,30 +204,11 @@ public class PrincipalActivity extends AppCompatActivity {
                             }
                         }
                     }
-<<<<<<< HEAD
-                }, null));
-=======
-                }, new ChamadoAdapter.ChamadoOnLongClickListener() {
-                    @Override
-                    public void onLongClickAluno(View view, int position) {
-                        if (!onActionMode) {
-                            MyActionMode callback = new MyActionMode();
-                            actionMode = startActionMode(callback);
-                            ((CardView)view).setCardBackgroundColor(Color.LTGRAY);
-                            selecionados.add(finalizados.get(position));
-                            actionMode.setTitle(selecionados.size() + " selecionados.");
-                            actionMode.getMenu().getItem(1).setVisible(false);
-                        } else {
-                            view.callOnClick();
-                        }
-                    }
-                });
-
+                }, null);
                 mLayoutManager = new LinearLayoutManager(PrincipalActivity.this);
                 rvChamados.setLayoutManager(mLayoutManager);
                 rvChamados.setItemAnimator(new DefaultItemAnimator());
                 rvChamados.setAdapter(chamadoAdapter);
->>>>>>> parent of 3c7d7a2... Merge branch 'master' of https://github.com/JoaoHickmann/FixIt
             }
         });
     }

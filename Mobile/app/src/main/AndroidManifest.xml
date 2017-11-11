@@ -27,7 +27,7 @@
             android:label="@string/title_activity_principal"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".RealizarChamadasActivity"
+            android:name=".AdicionarChamadoActivity"
             android:label="@string/title_activity_realizar_chamadas"
             android:parentActivityName=".PrincipalActivity"
             android:theme="@style/AppTheme.NoActionBar">

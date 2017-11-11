@@ -17,7 +17,7 @@
         android:layout_height="230dp"
         android:layout_gravity="center"
         android:scaleType="fitStart"
-        android:src="@drawable/logo2"/>
+        android:src="@drawable/ic_launcher_foreground"/>
 
     <EditText
         android:id="@+id/etNomeRegistrar"

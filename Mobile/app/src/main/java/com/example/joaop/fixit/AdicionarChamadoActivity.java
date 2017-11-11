@@ -1,8 +1,6 @@
 package com.example.joaop.fixit;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -11,7 +9,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -22,7 +19,7 @@ import Classes.Chamado;
 import Classes.Computador;
 import Classes.Problema;
 
-public class RealizarChamadasActivity extends AppCompatActivity {
+public class AdicionarChamadoActivity extends AppCompatActivity {
 
     EditText etObservacao;
     Spinner spTipoProblema, spProblema, spSala, spComputador;
@@ -66,7 +63,7 @@ public class RealizarChamadasActivity extends AppCompatActivity {
                                 }
                             }
 
-                            ArrayAdapter<String> adapter = new ArrayAdapter<String>(RealizarChamadasActivity.this, android.R.layout.simple_spinner_dropdown_item, nomes_problemas);
+                            ArrayAdapter<String> adapter = new ArrayAdapter<String>(AdicionarChamadoActivity.this, android.R.layout.simple_spinner_dropdown_item, nomes_problemas);
                             spProblema.setAdapter(adapter);
 
                             LinkedList<String> nomes_salas = new LinkedList<>();
@@ -77,7 +74,7 @@ public class RealizarChamadasActivity extends AppCompatActivity {
                                 }
                             }
 
-                            adapter = new ArrayAdapter<String>(RealizarChamadasActivity.this, android.R.layout.simple_spinner_dropdown_item, nomes_salas);
+                            adapter = new ArrayAdapter<String>(AdicionarChamadoActivity.this, android.R.layout.simple_spinner_dropdown_item, nomes_salas);
                             spSala.setAdapter(adapter);
 
                             toolbar.getMenu().getItem(0).setEnabled(true);
@@ -93,7 +90,7 @@ public class RealizarChamadasActivity extends AppCompatActivity {
                                         }
                                     }
 
-                                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(RealizarChamadasActivity.this, android.R.layout.simple_spinner_dropdown_item, nomes_problemas);
+                                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(AdicionarChamadoActivity.this, android.R.layout.simple_spinner_dropdown_item, nomes_problemas);
                                     spProblema.setAdapter(adapter);
                                 }
 
@@ -114,7 +111,7 @@ public class RealizarChamadasActivity extends AppCompatActivity {
                                         }
                                     }
 
-                                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(RealizarChamadasActivity.this, android.R.layout.simple_spinner_dropdown_item, nomes_computadores);
+                                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(AdicionarChamadoActivity.this, android.R.layout.simple_spinner_dropdown_item, nomes_computadores);
                                     spComputador.setAdapter(adapter);
                                 }
 
@@ -162,7 +159,6 @@ public class RealizarChamadasActivity extends AppCompatActivity {
                                 }
                             }
 
-<<<<<<< HEAD:Mobile/app/src/main/java/com/example/joaop/fixit/AdicionarChamadoActivity.java
                                 Chamado chamado = new Chamado(computador, problema, etObservacao.getText().toString());
 
                                 dados.getOut().writeObject("AdicionarChamado");
@@ -186,32 +182,7 @@ public class RealizarChamadasActivity extends AppCompatActivity {
                                 }
                             } catch (IOException | ClassNotFoundException e) {
                                 e.printStackTrace();
-=======
-                            Chamado chamado = new Chamado(computador, problema, etObservacao.getText().toString());
-
-                            dados.getOut().writeObject("AdicionarChamado");
-                            dados.getIn().readObject();
-                            dados.getOut().writeObject(chamado);
-                            if ((int) dados.getIn().readObject() == 1) {
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        Toast.makeText(RealizarChamadasActivity.this, "Chamado adicionado.", Toast.LENGTH_SHORT).show();
-                                        finish();
-                                    }
-                                });
-                            } else {
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        Toast.makeText(dados, "Não foi possivel adicionar o chamado!\nTente novamente.", Toast.LENGTH_SHORT).show();
-                                    }
-                                });
->>>>>>> parent of 3c7d7a2... Merge branch 'master' of https://github.com/JoaoHickmann/FixIt:Mobile/app/src/main/java/com/example/joaop/fixit/RealizarChamadasActivity.java
                             }
-                        } catch (IOException | ClassNotFoundException e) {
-                            e.printStackTrace();
-                        }
                     }
                 }).start();
                 return true;
