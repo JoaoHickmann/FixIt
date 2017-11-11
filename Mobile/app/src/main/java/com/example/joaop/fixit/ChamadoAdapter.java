@@ -1,7 +1,6 @@
 package com.example.joaop.fixit;
 
 import android.graphics.Color;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import Classes.Chamado;
@@ -18,23 +16,11 @@ public class ChamadoAdapter extends RecyclerView.Adapter<ChamadoAdapter.MyViewHo
     private List<Chamado> listaChamados;
     private ChamadoOnClickListener chamadoOnClickListener;
     private ChamadoOnLongClickListener chamadoOnLongClickListener;
-    private LinkedList<CardView> cardViews;
 
     public ChamadoAdapter(List<Chamado> listaChamados, ChamadoOnClickListener chamadoOnClickListener, ChamadoOnLongClickListener chamadoOnLongClickListener) {
         this.listaChamados = listaChamados;
         this.chamadoOnClickListener = chamadoOnClickListener;
         this.chamadoOnLongClickListener = chamadoOnLongClickListener;
-        cardViews = new LinkedList<>();
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
-
-    @Override
-    public int getItemViewType(int position) {
-        return position;
     }
 
     @Override
@@ -85,9 +71,6 @@ public class ChamadoAdapter extends RecyclerView.Adapter<ChamadoAdapter.MyViewHo
         return listaChamados.size();
     }
 
-    public LinkedList<CardView> getCardViews() {
-        return cardViews;
-    }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         TextView tvChamado, tvProblema, tvSala;
@@ -99,7 +82,6 @@ public class ChamadoAdapter extends RecyclerView.Adapter<ChamadoAdapter.MyViewHo
             ivStatus = itemView.findViewById(R.id.ivStatus);
             tvProblema = itemView.findViewById(R.id.tvProblema);
             tvSala = itemView.findViewById(R.id.tvSala);
-            getCardViews().add((CardView) itemView);
         }
     }
 

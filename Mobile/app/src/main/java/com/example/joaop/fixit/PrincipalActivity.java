@@ -6,7 +6,6 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -23,7 +22,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -34,8 +32,9 @@ import Classes.Chamado;
 
 public class PrincipalActivity extends AppCompatActivity {
     private Dados dados;
-    private LinkedList<Chamado> todos_chamados, abertos, finalizados, selecionados;
+    private LinkedList<Chamado> todos_chamados, abertos, finalizados;
     private boolean onActionMode = false;
+    private LinkedList<Chamado> selecionados;
 
     /**
      * The {@link ViewPager} that will host the section contents.
@@ -45,7 +44,6 @@ public class PrincipalActivity extends AppCompatActivity {
     private ActionMode actionMode;
     private Toolbar toolbar;
     private AppBarLayout appBarLayout;
-    private FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,10 +51,9 @@ public class PrincipalActivity extends AppCompatActivity {
         setContentView(R.layout.activity_principal);
 
         appBarLayout = findViewById(R.id.appbar);
-        selecionados = new LinkedList<>();
 
         toolbar = findViewById(R.id.toolbar);
-
+        toolbar.setTitle("Meus chamados");
         setSupportActionBar(toolbar);
 
         mViewPager = findViewById(R.id.container);
@@ -64,49 +61,38 @@ public class PrincipalActivity extends AppCompatActivity {
 
         tabLayout = findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                if (onActionMode) {
-                    actionMode.finish();
-                }
-            }
 
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
-        });
-
-        fab = findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+<<<<<<< HEAD
                 Intent it = new Intent(PrincipalActivity.this, AdicionarChamadoActivity.class);
                 startActivityForResult(it, 1);
+=======
+                Intent it = new Intent(PrincipalActivity.this, RealizarChamadasActivity.class);
+                startActivity(it);
+>>>>>>> parent of 3c7d7a2... Merge branch 'master' of https://github.com/JoaoHickmann/FixIt
             }
         });
 
-        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+        selecionados = new LinkedList<>();
+        dados = (Dados) getApplicationContext();
+
+        new Thread(new Runnable() {
             @Override
-            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-                if (verticalOffset == 0 && fab.getVisibility() == View.GONE && !onActionMode) {
-                    fab.show();
-                } else if (verticalOffset != 0 && fab.getVisibility() == View.VISIBLE) {
-                    fab.hide();
+            public void run() {
+                try {
+                    attRecycler();
+                } catch (IOException | ClassNotFoundException e) {
+                    e.printStackTrace();
                 }
             }
-        });
-
-        dados = (Dados) getApplicationContext();
+        }).start();
     }
 
     @Override
+<<<<<<< HEAD
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 1 && resultCode == 1) {
             final Snackbar snackbar = Snackbar.make(findViewById(R.id.main_content), "Chamado adicionado", Snackbar.LENGTH_LONG);
@@ -133,12 +119,23 @@ public class PrincipalActivity extends AppCompatActivity {
                     } catch (IOException | ClassNotFoundException e) {
                         e.printStackTrace();
                     }
+=======
+    protected void onRestart() {
+        super.onRestart();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    attRecycler();
+                } catch (IOException | ClassNotFoundException ex) {
+                    ex.printStackTrace();
+>>>>>>> parent of 3c7d7a2... Merge branch 'master' of https://github.com/JoaoHickmann/FixIt
                 }
-            }).start();
-        }
+            }
+        }).start();
     }
 
-    public void attRecycler() throws IOException, ClassNotFoundException {
+    public void attDados() throws IOException, ClassNotFoundException {
         dados.getOut().writeObject("MeusChamados");
         todos_chamados = (LinkedList<Chamado>) dados.getIn().readObject();
 
@@ -152,65 +149,105 @@ public class PrincipalActivity extends AppCompatActivity {
                 abertos.add(chamado);
             }
         }
+    }
 
+    public void attRecycler() throws IOException, ClassNotFoundException {
+        attDados();
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if (onActionMode) {
-                    actionMode.finish();
-                }
-
                 RecyclerView rvChamados = ((ChamadosFragment) ((ViewPagerAdapter) mViewPager.getAdapter()).getItem(0)).getRvChamados();
-                RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(PrincipalActivity.this);
-                rvChamados.setLayoutManager(mLayoutManager);
-                rvChamados.setItemAnimator(new DefaultItemAnimator());
-                rvChamados.setAdapter(new ChamadoAdapter(abertos, new ChamadoAdapter.ChamadoOnClickListener() {
+
+                ChamadoAdapter chamadoAdapter = new ChamadoAdapter(abertos, new ChamadoAdapter.ChamadoOnClickListener() {
                     @Override
                     public void onClickAluno(View view, int position) {
                         if (onActionMode) {
-                            if (selecionados.contains(abertos.get(position))) {
-                                selecionados.remove(abertos.get(position));
-                                ((CardView) view) .setCardBackgroundColor(Color.WHITE);
+                            Chamado chamado = abertos.get(position);
+                            if (selecionados.contains(chamado)) {
+                                ((CardView)view).setCardBackgroundColor(Color.WHITE);
+                                selecionados.remove(chamado);
+                                actionMode.setTitle(selecionados.size() + " selecionados.");
+                                actionMode.getMenu().getItem(1).setVisible(selecionados.size() == 1 && selecionados.get(0).getStatus() != 3);
 
                                 if (selecionados.size() == 0) {
                                     actionMode.finish();
                                 }
                             } else {
-                                selecionados.add(abertos.get(position));
-                                ((CardView) view) .setCardBackgroundColor(Color.LTGRAY);
+                                ((CardView)view).setCardBackgroundColor(Color.LTGRAY);
+                                selecionados.add(chamado);
+                                actionMode.setTitle(selecionados.size() + " selecionados.");
+                                actionMode.getMenu().getItem(1).setVisible(selecionados.size() == 1 && selecionados.get(0).getStatus() != 3);
                             }
-
-                            actionMode.setTitle(selecionados.size()+" selecionado"+(selecionados.size() > 1 ? "s" : "")+".");
-                            actionMode.getMenu().getItem(0).setVisible(selecionados.size() == 1);
-                        } else {
-                            Toast.makeText(PrincipalActivity.this, "Chamado #" + abertos.get(position).getID_Chamado(), Toast.LENGTH_SHORT).show();
                         }
                     }
                 }, new ChamadoAdapter.ChamadoOnLongClickListener() {
                     @Override
                     public void onLongClickAluno(View view, int position) {
-                        if (onActionMode) {
-                            view.callOnClick();
-                        } else {
+                        if (!onActionMode) {
                             MyActionMode callback = new MyActionMode();
                             actionMode = startActionMode(callback);
-                            ((CardView) view).setCardBackgroundColor(Color.LTGRAY);
+                            ((CardView)view).setCardBackgroundColor(Color.LTGRAY);
                             selecionados.add(abertos.get(position));
-                            actionMode.setTitle("1 selecionado.");
+                            actionMode.setTitle(selecionados.size() + " selecionados.");
+                        } else {
+                            view.callOnClick();
                         }
                     }
-                }));
+                });
+
+                RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(PrincipalActivity.this);
+                rvChamados.setLayoutManager(mLayoutManager);
+                rvChamados.setItemAnimator(new DefaultItemAnimator());
+                rvChamados.setAdapter(chamadoAdapter);
 
                 rvChamados = ((ChamadosFragment) ((ViewPagerAdapter) mViewPager.getAdapter()).getItem(1)).getRvChamados();
+
+                chamadoAdapter = new ChamadoAdapter(finalizados, new ChamadoAdapter.ChamadoOnClickListener() {
+                    @Override
+                    public void onClickAluno(View view, int position) {
+                        if (onActionMode) {
+                            Chamado chamado = finalizados.get(position);
+                            if (selecionados.contains(chamado)) {
+                                ((CardView)view).setCardBackgroundColor(Color.WHITE);
+                                selecionados.remove(chamado);
+                                actionMode.setTitle(selecionados.size() + " selecionados.");
+                                actionMode.getMenu().getItem(1).setVisible(selecionados.size() == 1 && selecionados.get(0).getStatus() != 3);
+
+                                if (selecionados.size() == 0) {
+                                    actionMode.finish();
+                                }
+                            } else {
+                                ((CardView)view).setCardBackgroundColor(Color.LTGRAY);
+                                selecionados.add(chamado);
+                                actionMode.setTitle(selecionados.size() + " selecionados.");
+                                actionMode.getMenu().getItem(1).setVisible(selecionados.size() == 1 && selecionados.get(0).getStatus() != 3);
+                            }
+                        }
+                    }
+<<<<<<< HEAD
+                }, null));
+=======
+                }, new ChamadoAdapter.ChamadoOnLongClickListener() {
+                    @Override
+                    public void onLongClickAluno(View view, int position) {
+                        if (!onActionMode) {
+                            MyActionMode callback = new MyActionMode();
+                            actionMode = startActionMode(callback);
+                            ((CardView)view).setCardBackgroundColor(Color.LTGRAY);
+                            selecionados.add(finalizados.get(position));
+                            actionMode.setTitle(selecionados.size() + " selecionados.");
+                            actionMode.getMenu().getItem(1).setVisible(false);
+                        } else {
+                            view.callOnClick();
+                        }
+                    }
+                });
+
                 mLayoutManager = new LinearLayoutManager(PrincipalActivity.this);
                 rvChamados.setLayoutManager(mLayoutManager);
                 rvChamados.setItemAnimator(new DefaultItemAnimator());
-                rvChamados.setAdapter(new ChamadoAdapter(finalizados, new ChamadoAdapter.ChamadoOnClickListener() {
-                    @Override
-                    public void onClickAluno(View view, int position) {
-                        Toast.makeText(PrincipalActivity.this, "Chamado #" + finalizados.get(position).getID_Chamado(), Toast.LENGTH_SHORT).show();
-                    }
-                }, null));
+                rvChamados.setAdapter(chamadoAdapter);
+>>>>>>> parent of 3c7d7a2... Merge branch 'master' of https://github.com/JoaoHickmann/FixIt
             }
         });
     }
@@ -218,17 +255,15 @@ public class PrincipalActivity extends AppCompatActivity {
     class MyActionMode implements ActionMode.Callback {
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-            selecionados.clear();
             mode.getMenuInflater().inflate(R.menu.menu_contextual_principal, menu);
-            onActionMode = true;
-            fab.hide();
             return true;
         }
 
         @Override
         public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-            tabLayout.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
-            toolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
+            toolbar.setVisibility(View.GONE);
+            onActionMode = true;
+            selecionados.clear();
             return true;
         }
 
@@ -248,14 +283,20 @@ public class PrincipalActivity extends AppCompatActivity {
 
         @Override
         public void onDestroyActionMode(ActionMode mode) {
+            toolbar.setVisibility(View.VISIBLE);
+            onActionMode = false;
+
             RecyclerView rvChamados = ((ChamadosFragment) ((ViewPagerAdapter) mViewPager.getAdapter()).getItem(0)).getRvChamados();
-            for(CardView cardView:((ChamadoAdapter)rvChamados.getAdapter()).getCardViews()){
+            for (int i=0; i<rvChamados.getAdapter().getItemCount(); i++) {
+                CardView cardView = (CardView)rvChamados.getChildAt(i);
                 cardView.setCardBackgroundColor(Color.WHITE);
             }
-            onActionMode = false;
-            tabLayout.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-            toolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-            fab.show();
+
+           rvChamados = ((ChamadosFragment) ((ViewPagerAdapter) mViewPager.getAdapter()).getItem(1)).getRvChamados();
+            for (int i=0; i<rvChamados.getAdapter().getItemCount(); i++) {
+                CardView cardView = (CardView)rvChamados.getChildAt(i);
+                cardView.setCardBackgroundColor(Color.WHITE);
+            }
         }
     }
 
@@ -277,7 +318,6 @@ public class PrincipalActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if (id == R.id.action_settings) {
-
             return true;
         } else if (id == R.id.action_sair) {
             startActivity(new Intent(PrincipalActivity.this, LoginActivity.class));
