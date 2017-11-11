@@ -45,7 +45,6 @@ public class PrincipalActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private AppBarLayout appBarLayout;
     private FloatingActionButton fab;
-    private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,23 +109,11 @@ public class PrincipalActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         if (!onActionMode) {
-            swipeRefreshLayout = ((ChamadosFragment) ((ViewPagerAdapter) mViewPager.getAdapter()).getItem(tabLayout.getSelectedTabPosition())).getSwipeRefresh();
-            if (swipeRefreshLayout != null) {
-                swipeRefreshLayout.setRefreshing(true);
-            }
             new Thread(new Runnable() {
                 @Override
                 public void run() {
                     try {
                         attRecycler();
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (swipeRefreshLayout != null) {
-                                    swipeRefreshLayout.setRefreshing(false);
-                                }
-                            }
-                        });
                     } catch (IOException | ClassNotFoundException e) {
                         e.printStackTrace();
                     }
