@@ -177,7 +177,7 @@ public class PrincipalActivity extends AppCompatActivity {
                                 ((CardView) view) .setCardBackgroundColor(Color.LTGRAY);
                             }
 
-                            actionMode.setTitle(selecionados.size()+" selecionado"+(selecionados.size() == 1 ? "" : "s")+".");
+                            actionMode.setTitle(selecionados.size()+" selecionado"+(selecionados.size() > 1 ? "s" : "")+".");
                             actionMode.getMenu().getItem(0).setVisible(selecionados.size() == 1);
                         } else {
                             Toast.makeText(PrincipalActivity.this, "Chamado #" + abertos.get(position).getID_Chamado(), Toast.LENGTH_SHORT).show();
@@ -230,6 +230,7 @@ public class PrincipalActivity extends AppCompatActivity {
         @Override
         public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
             tabLayout.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
+            toolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
             return true;
         }
 
@@ -255,6 +256,7 @@ public class PrincipalActivity extends AppCompatActivity {
             }
             onActionMode = false;
             tabLayout.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+            toolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
             fab.show();
         }
     }
