@@ -159,7 +159,7 @@ public class TrataCliente extends Thread {
                         sql = "INSERT INTO chamados(id_usuario, id_computador, id_problema, observacao)"
                                 + " VALUES (" + user.getID_Usuario() + ", " + chamado.getComputador().getID() + ", " + chamado.getProblema().getID() + ", '" + chamado.getObservacao() + "')";
 
-                        Servidor.NotificacaoDesktop("Novo chamado;Clique para abrir");
+                        Servidor.NotificacaoDesktop("Novo chamado;Clique para abrir;Principal");
                         
                         out.writeObject(Servidor.AtualizaTabela(sql));
                     } else if (operacao.equals("AdicionarProblema")) {
@@ -187,7 +187,7 @@ public class TrataCliente extends Thread {
 
                         out.writeObject(Servidor.AtualizaTabela(sql));
 
-                        Servidor.NotificacaoDesktop("Teste;Sala");
+                        Servidor.NotificacaoDesktop("Teste;Sala;Salas");
                     } else //</editor-fold>
                     //<editor-fold defaultstate="collapsed" desc="Lista">
                     if (operacao.equals("Administradores")) {
