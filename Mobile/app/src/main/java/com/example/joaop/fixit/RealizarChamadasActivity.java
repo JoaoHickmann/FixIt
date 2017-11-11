@@ -5,6 +5,8 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -23,7 +25,6 @@ import Classes.Problema;
 public class RealizarChamadasActivity extends AppCompatActivity {
 
     EditText etObservacao;
-    ImageButton btSalvar;
     Spinner spTipoProblema, spProblema, spSala, spComputador;
     LinkedList<Problema> problemas;
     LinkedList<Computador> computadores;
@@ -33,11 +34,11 @@ public class RealizarChamadasActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_realizar_chamadas);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        final Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        setTitle("Adicionar chamado");
 
-        btSalvar = findViewById(R.id.btSalvar);
         spTipoProblema = findViewById(R.id.spTipoProblema);
         spProblema = findViewById(R.id.spProblema);
         spSala = findViewById(R.id.spSala);
@@ -78,6 +79,8 @@ public class RealizarChamadasActivity extends AppCompatActivity {
 
                             adapter = new ArrayAdapter<String>(RealizarChamadasActivity.this, android.R.layout.simple_spinner_dropdown_item, nomes_salas);
                             spSala.setAdapter(adapter);
+
+                            toolbar.getMenu().getItem(0).setEnabled(true);
 
                             spTipoProblema.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                                 @Override
@@ -127,10 +130,18 @@ public class RealizarChamadasActivity extends AppCompatActivity {
                 }
             }
         }).start();
+    }
 
-        btSalvar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_realizar_chamado, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_adicionar:
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -160,7 +171,7 @@ public class RealizarChamadasActivity extends AppCompatActivity {
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        Toast.makeText(RealizarChamadasActivity.this, "Chamado realizado.", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(RealizarChamadasActivity.this, "Chamado adicionado.", Toast.LENGTH_SHORT).show();
                                         finish();
                                     }
                                 });
@@ -168,7 +179,7 @@ public class RealizarChamadasActivity extends AppCompatActivity {
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        Toast.makeText(dados, "Não foi possivel realizar o chamado!\nTente novamente.", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(dados, "Não foi possivel adicionar o chamado!\nTente novamente.", Toast.LENGTH_SHORT).show();
                                     }
                                 });
                             }
@@ -177,9 +188,16 @@ public class RealizarChamadasActivity extends AppCompatActivity {
                         }
                     }
                 }).start();
+<<<<<<< HEAD
 
             }
         });
+=======
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+>>>>>>> f7a6c0a94238935686479c610ffa188fba29688a
     }
 
 }
