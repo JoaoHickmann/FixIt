@@ -1,8 +1,6 @@
 package com.example.joaop.fixit;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -11,7 +9,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -22,13 +19,15 @@ import Classes.Chamado;
 import Classes.Computador;
 import Classes.Problema;
 
-public class RealizarChamadasActivity extends AppCompatActivity {
+public class AdicionarChamadoActivity extends AppCompatActivity {
 
     EditText etObservacao;
     Spinner spTipoProblema, spProblema, spSala, spComputador;
     LinkedList<Problema> problemas;
     LinkedList<Computador> computadores;
     Dados dados;
+
+    boolean carregado = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +65,7 @@ public class RealizarChamadasActivity extends AppCompatActivity {
                                 }
                             }
 
-                            ArrayAdapter<String> adapter = new ArrayAdapter<String>(RealizarChamadasActivity.this, android.R.layout.simple_spinner_dropdown_item, nomes_problemas);
+                            ArrayAdapter<String> adapter = new ArrayAdapter<String>(AdicionarChamadoActivity.this, android.R.layout.simple_spinner_dropdown_item, nomes_problemas);
                             spProblema.setAdapter(adapter);
 
                             LinkedList<String> nomes_salas = new LinkedList<>();
@@ -77,10 +76,10 @@ public class RealizarChamadasActivity extends AppCompatActivity {
                                 }
                             }
 
-                            adapter = new ArrayAdapter<String>(RealizarChamadasActivity.this, android.R.layout.simple_spinner_dropdown_item, nomes_salas);
+                            adapter = new ArrayAdapter<String>(AdicionarChamadoActivity.this, android.R.layout.simple_spinner_dropdown_item, nomes_salas);
                             spSala.setAdapter(adapter);
 
-                            toolbar.getMenu().getItem(0).setEnabled(true);
+                            carregado = true;
 
                             spTipoProblema.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                                 @Override
@@ -93,7 +92,7 @@ public class RealizarChamadasActivity extends AppCompatActivity {
                                         }
                                     }
 
-                                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(RealizarChamadasActivity.this, android.R.layout.simple_spinner_dropdown_item, nomes_problemas);
+                                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(AdicionarChamadoActivity.this, android.R.layout.simple_spinner_dropdown_item, nomes_problemas);
                                     spProblema.setAdapter(adapter);
                                 }
 
@@ -114,7 +113,7 @@ public class RealizarChamadasActivity extends AppCompatActivity {
                                         }
                                     }
 
-                                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(RealizarChamadasActivity.this, android.R.layout.simple_spinner_dropdown_item, nomes_computadores);
+                                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(AdicionarChamadoActivity.this, android.R.layout.simple_spinner_dropdown_item, nomes_computadores);
                                     spComputador.setAdapter(adapter);
                                 }
 
@@ -142,53 +141,57 @@ public class RealizarChamadasActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_adicionar:
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            Computador computador = null;
-                            for (Computador computador1 : computadores) {
-                                if (computador1.getSala() == Integer.valueOf(spSala.getSelectedItem().toString()) && computador1.getNumero() == Integer.valueOf(spComputador.getSelectedItem().toString())) {
-                                    computador = computador1;
-                                    break;
-                                }
-                            }
-
-                            Problema problema = null;
-                            for (Problema problema1 : problemas) {
-                                if (problema1.getTipo() == spTipoProblema.getSelectedItemPosition() + 1 && problema1.getDescricao().equals(spProblema.getSelectedItem().toString())) {
-                                    problema = problema1;
-                                    break;
-                                }
-                            }
-
-                            Chamado chamado = new Chamado(computador, problema, etObservacao.getText().toString());
-
-                            dados.getOut().writeObject("AdicionarChamado");
-                            dados.getIn().readObject();
-                            dados.getOut().writeObject(chamado);
-                            if ((int) dados.getIn().readObject() == 1) {
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        Toast.makeText(RealizarChamadasActivity.this, "Chamado adicionado.", Toast.LENGTH_SHORT).show();
-                                        finish();
+                if (carregado) {
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                Computador computador = null;
+                                for (Computador computador1 : computadores) {
+                                    if (computador1.getSala() == Integer.valueOf(spSala.getSelectedItem().toString()) && computador1.getNumero() == Integer.valueOf(spComputador.getSelectedItem().toString())) {
+                                        computador = computador1;
+                                        break;
                                     }
-                                });
-                            } else {
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        Toast.makeText(dados, "Não foi possivel adicionar o chamado!\nTente novamente.", Toast.LENGTH_SHORT).show();
+                                }
+
+                                Problema problema = null;
+                                for (Problema problema1 : problemas) {
+                                    if (problema1.getTipo() == spTipoProblema.getSelectedItemPosition() + 1 && problema1.getDescricao().equals(spProblema.getSelectedItem().toString())) {
+                                        problema = problema1;
+                                        break;
                                     }
-                                });
+                                }
+
+                                Chamado chamado = new Chamado(computador, problema, etObservacao.getText().toString());
+
+                                dados.getOut().writeObject("AdicionarChamado");
+                                dados.getIn().readObject();
+                                dados.getOut().writeObject(chamado);
+                                if ((int) dados.getIn().readObject() == 1) {
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            Toast.makeText(AdicionarChamadoActivity.this, "Chamado adicionado.", Toast.LENGTH_SHORT).show();
+                                            finish();
+                                        }
+                                    });
+                                } else {
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            Toast.makeText(dados, "Não foi possivel adicionar o chamado!\nTente novamente.", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                                }
+                            } catch (IOException | ClassNotFoundException e) {
+                                e.printStackTrace();
                             }
-                        } catch (IOException | ClassNotFoundException e) {
-                            e.printStackTrace();
                         }
-                    }
-                }).start();
-                return true;
+                    }).start();
+                    return true;
+                } else {
+                    return false;
+                }
             default:
                 return super.onOptionsItemSelected(item);
         }
