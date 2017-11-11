@@ -7,52 +7,37 @@
     android:orientation="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.example.joaop.fixit.RealizarChamadasActivity"
-    tools:showIn="@layout/activity_realizar_chamadas"
-    android:padding="16dp">
+    tools:showIn="@layout/activity_realizar_chamadas">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Tipo do problema:"/>
     <Spinner
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="wrap_content"
         android:id="@+id/spTipoProblema"
         android:entries="@array/tipo_problema"
-        android:spinnerMode="dropdown">
+        android:spinnerMode="dialog">
     </Spinner>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Problema:"/>
     <Spinner
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="wrap_content"
         android:id="@+id/spProblema"
-        android:spinnerMode="dropdown">
+        android:spinnerMode="dialog">
     </Spinner>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Sala:"/>
     <Spinner
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="wrap_content"
         android:id="@+id/spSala"
-        android:spinnerMode="dropdown">
+        android:spinnerMode="dialog">
+
     </Spinner>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Computador:"/>
     <Spinner
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="wrap_content"
         android:id="@+id/spComputador"
-        android:spinnerMode="dropdown">
+        android:spinnerMode="dialog">
+
     </Spinner>
 
     <android.support.design.widget.TextInputLayout
@@ -60,7 +45,7 @@
         android:layout_height="wrap_content">
         <EditText
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:id="@+id/etObservacao"
             android:hint="Observação"
             android:inputType="textMultiLine"

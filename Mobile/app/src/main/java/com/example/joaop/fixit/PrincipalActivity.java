@@ -81,7 +81,7 @@ public class PrincipalActivity extends AppCompatActivity {
 
     @Override
     protected void onRestart() {
-        super.onRestart();
+        super.onResume();
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -92,6 +92,7 @@ public class PrincipalActivity extends AppCompatActivity {
                 }
             }
         }).start();
+
     }
 
     public void attDados() throws IOException, ClassNotFoundException{
@@ -168,7 +169,6 @@ public class PrincipalActivity extends AppCompatActivity {
             return true;
         } else if (id == R.id.action_sair) {
             startActivity(new Intent(PrincipalActivity.this, LoginActivity.class));
-            finish();
             return true;
         }
 

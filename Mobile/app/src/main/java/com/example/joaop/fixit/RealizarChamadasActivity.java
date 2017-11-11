@@ -35,8 +35,6 @@ public class RealizarChamadasActivity extends AppCompatActivity {
         setContentView(R.layout.activity_realizar_chamadas);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
         btSalvar = findViewById(R.id.btSalvar);
         spTipoProblema = findViewById(R.id.spTipoProblema);
         spProblema = findViewById(R.id.spProblema);
@@ -45,7 +43,9 @@ public class RealizarChamadasActivity extends AppCompatActivity {
         etObservacao = findViewById(R.id.etObservacao);
         dados = (Dados) getApplicationContext();
 
-        new Thread(new Runnable() {
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
@@ -57,28 +57,6 @@ public class RealizarChamadasActivity extends AppCompatActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            LinkedList<String> nomes_problemas = new LinkedList<>();
-
-                            for (Problema problema : problemas) {
-                                if (problema.getTipo() == 1) {
-                                    nomes_problemas.add(problema.getDescricao());
-                                }
-                            }
-
-                            ArrayAdapter<String> adapter = new ArrayAdapter<String>(RealizarChamadasActivity.this, android.R.layout.simple_spinner_dropdown_item, nomes_problemas);
-                            spProblema.setAdapter(adapter);
-
-                            LinkedList<String> nomes_salas = new LinkedList<>();
-
-                            for (Computador computador : computadores) {
-                                if (!nomes_salas.contains(String.valueOf(computador.getSala()))) {
-                                    nomes_salas.add(String.valueOf(computador.getSala()));
-                                }
-                            }
-
-                            adapter = new ArrayAdapter<String>(RealizarChamadasActivity.this, android.R.layout.simple_spinner_dropdown_item, nomes_salas);
-                            spSala.setAdapter(adapter);
-
                             spTipoProblema.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                                 @Override
                                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -90,8 +68,9 @@ public class RealizarChamadasActivity extends AppCompatActivity {
                                         }
                                     }
 
-                                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(RealizarChamadasActivity.this, android.R.layout.simple_spinner_dropdown_item, nomes_problemas);
+                                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(RealizarChamadasActivity.this, android.R.layout.simple_spinner_item, nomes_problemas);
                                     spProblema.setAdapter(adapter);
+
                                 }
 
                                 @Override
@@ -99,6 +78,17 @@ public class RealizarChamadasActivity extends AppCompatActivity {
 
                                 }
                             });
+
+                            LinkedList<String> nomes_salas = new LinkedList<>();
+
+                            for (Computador computador : computadores) {
+                                if (!nomes_salas.contains(String.valueOf(computador.getSala()))) {
+                                    nomes_salas.add(String.valueOf(computador.getSala()));
+                                }
+                            }
+
+                            ArrayAdapter<String> adapter = new ArrayAdapter<String>(RealizarChamadasActivity.this, android.R.layout.simple_spinner_item, nomes_salas);
+                            spSala.setAdapter(adapter);
 
                             spSala.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                                 @Override
@@ -111,7 +101,7 @@ public class RealizarChamadasActivity extends AppCompatActivity {
                                         }
                                     }
 
-                                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(RealizarChamadasActivity.this, android.R.layout.simple_spinner_dropdown_item, nomes_computadores);
+                                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(RealizarChamadasActivity.this, android.R.layout.simple_spinner_item, nomes_computadores);
                                     spComputador.setAdapter(adapter);
                                 }
 
@@ -126,15 +116,20 @@ public class RealizarChamadasActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
             }
-        }).start();
+        });
+        t.start();
 
         btSalvar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Toast.makeText(dados, "VAI DAR TEU CU", Toast.LENGTH_SHORT).show();
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
                         try {
+                            dados.getOut().writeObject("AdicionarChamado");
+                            dados.getIn().readObject();
+
                             Computador computador = null;
                             for (Computador computador1 : computadores) {
                                 if (computador1.getSala() == Integer.valueOf(spSala.getSelectedItem().toString()) && computador1.getNumero() == Integer.valueOf(spComputador.getSelectedItem().toString())) {
@@ -151,16 +146,14 @@ public class RealizarChamadasActivity extends AppCompatActivity {
                                 }
                             }
 
-                            Chamado chamado = new Chamado(computador, problema, etObservacao.getText().toString());
 
-                            dados.getOut().writeObject("AdicionarChamado");
-                            dados.getIn().readObject();
+                            Chamado chamado = new Chamado(computador, problema, etObservacao.getText().toString());
                             dados.getOut().writeObject(chamado);
                             if ((int) dados.getIn().readObject() == 1) {
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        Toast.makeText(RealizarChamadasActivity.this, "Chamado realizado.", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(RealizarChamadasActivity.this, "Deu", Toast.LENGTH_SHORT).show();
                                         finish();
                                     }
                                 });
@@ -168,7 +161,7 @@ public class RealizarChamadasActivity extends AppCompatActivity {
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        Toast.makeText(dados, "Não foi possivel realizar o chamado!\nTente novamente.", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(dados, "Deu errado", Toast.LENGTH_SHORT).show();
                                     }
                                 });
                             }
