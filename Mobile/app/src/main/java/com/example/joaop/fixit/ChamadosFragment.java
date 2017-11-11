@@ -62,7 +62,7 @@ public class ChamadosFragment extends Fragment {
         return rvChamados;
     }
 
-    public void setRvChamados(RecyclerView rvChamados) {
-        this.rvChamados = rvChamados;
+    public SwipeRefreshLayout getSwipeRefresh() {
+        return swipeRefresh;
     }
 }

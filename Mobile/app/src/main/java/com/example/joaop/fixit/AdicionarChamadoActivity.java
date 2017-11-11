@@ -36,7 +36,6 @@ public class AdicionarChamadoActivity extends AppCompatActivity {
         final Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        setTitle("Adicionar chamado");
 
         spTipoProblema = findViewById(R.id.spTipoProblema);
         spProblema = findViewById(R.id.spProblema);

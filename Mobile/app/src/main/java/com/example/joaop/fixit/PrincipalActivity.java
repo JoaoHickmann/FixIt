@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -44,6 +45,7 @@ public class PrincipalActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private AppBarLayout appBarLayout;
     private FloatingActionButton fab;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,9 +53,10 @@ public class PrincipalActivity extends AppCompatActivity {
         setContentView(R.layout.activity_principal);
 
         appBarLayout = findViewById(R.id.appbar);
+        selecionados = new LinkedList<>();
 
         toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle("Meus chamados");
+
         setSupportActionBar(toolbar);
 
         mViewPager = findViewById(R.id.container);
@@ -64,7 +67,9 @@ public class PrincipalActivity extends AppCompatActivity {
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                actionMode.finish();
+                if (onActionMode) {
+                    actionMode.finish();
+                }
             }
 
             @Override
@@ -90,7 +95,7 @@ public class PrincipalActivity extends AppCompatActivity {
         appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             @Override
             public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-                if (verticalOffset == 0 && fab.getVisibility() == View.GONE) {
+                if (verticalOffset == 0 && fab.getVisibility() == View.GONE && !onActionMode) {
                     fab.show();
                 } else if (verticalOffset != 0 && fab.getVisibility() == View.VISIBLE) {
                     fab.hide();
@@ -99,32 +104,35 @@ public class PrincipalActivity extends AppCompatActivity {
         });
 
         dados = (Dados) getApplicationContext();
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    attRecycler();
-                } catch (IOException | ClassNotFoundException e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
     }
 
     @Override
-    protected void onRestart() {
-        super.onRestart();
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    attRecycler();
-                } catch (IOException | ClassNotFoundException ex) {
-                    ex.printStackTrace();
-                }
+    protected void onResume() {
+        super.onResume();
+        if (!onActionMode) {
+            swipeRefreshLayout = ((ChamadosFragment) ((ViewPagerAdapter) mViewPager.getAdapter()).getItem(tabLayout.getSelectedTabPosition())).getSwipeRefresh();
+            if (swipeRefreshLayout != null) {
+                swipeRefreshLayout.setRefreshing(true);
             }
-        }).start();
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        attRecycler();
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (swipeRefreshLayout != null) {
+                                    swipeRefreshLayout.setRefreshing(false);
+                                }
+                            }
+                        });
+                    } catch (IOException | ClassNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }).start();
+        }
     }
 
     public void attRecycler() throws IOException, ClassNotFoundException {
@@ -145,6 +153,10 @@ public class PrincipalActivity extends AppCompatActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                if (onActionMode) {
+                    actionMode.finish();
+                }
+
                 RecyclerView rvChamados = ((ChamadosFragment) ((ViewPagerAdapter) mViewPager.getAdapter()).getItem(0)).getRvChamados();
                 RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(PrincipalActivity.this);
                 rvChamados.setLayoutManager(mLayoutManager);
@@ -152,14 +164,37 @@ public class PrincipalActivity extends AppCompatActivity {
                 rvChamados.setAdapter(new ChamadoAdapter(abertos, new ChamadoAdapter.ChamadoOnClickListener() {
                     @Override
                     public void onClickAluno(View view, int position) {
+                        if (onActionMode) {
+                            if (selecionados.contains(abertos.get(position))) {
+                                selecionados.remove(abertos.get(position));
+                                ((CardView) view) .setCardBackgroundColor(Color.WHITE);
 
+                                if (selecionados.size() == 0) {
+                                    actionMode.finish();
+                                }
+                            } else {
+                                selecionados.add(abertos.get(position));
+                                ((CardView) view) .setCardBackgroundColor(Color.LTGRAY);
+                            }
+
+                            actionMode.setTitle(selecionados.size()+" selecionado"+(selecionados.size() == 1 ? "" : "s")+".");
+                            actionMode.getMenu().getItem(0).setVisible(selecionados.size() == 1);
+                        } else {
+                            Toast.makeText(PrincipalActivity.this, "Chamado #" + abertos.get(position).getID_Chamado(), Toast.LENGTH_SHORT).show();
+                        }
                     }
                 }, new ChamadoAdapter.ChamadoOnLongClickListener() {
                     @Override
                     public void onLongClickAluno(View view, int position) {
-                        MyActionMode callback = new MyActionMode();
-                        actionMode = startActionMode(callback);
-                        ((CardView) view).setCardBackgroundColor(Color.LTGRAY);
+                        if (onActionMode) {
+                            view.callOnClick();
+                        } else {
+                            MyActionMode callback = new MyActionMode();
+                            actionMode = startActionMode(callback);
+                            ((CardView) view).setCardBackgroundColor(Color.LTGRAY);
+                            selecionados.add(abertos.get(position));
+                            actionMode.setTitle("1 selecionado.");
+                        }
                     }
                 }));
 
@@ -185,8 +220,10 @@ public class PrincipalActivity extends AppCompatActivity {
     class MyActionMode implements ActionMode.Callback {
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            selecionados.clear();
             mode.getMenuInflater().inflate(R.menu.menu_contextual_principal, menu);
             onActionMode = true;
+            fab.hide();
             return true;
         }
 
@@ -212,8 +249,13 @@ public class PrincipalActivity extends AppCompatActivity {
 
         @Override
         public void onDestroyActionMode(ActionMode mode) {
+            RecyclerView rvChamados = ((ChamadosFragment) ((ViewPagerAdapter) mViewPager.getAdapter()).getItem(0)).getRvChamados();
+            for(CardView cardView:((ChamadoAdapter)rvChamados.getAdapter()).getCardViews()){
+                cardView.setCardBackgroundColor(Color.WHITE);
+            }
             onActionMode = false;
             tabLayout.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+            fab.show();
         }
     }
 
