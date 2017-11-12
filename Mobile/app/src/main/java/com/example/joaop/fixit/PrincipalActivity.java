@@ -210,12 +210,7 @@ public class PrincipalActivity extends AppCompatActivity {
                     public void onClickAluno(View view, int position) {
                         Toast.makeText(PrincipalActivity.this, "Chamado #" + finalizados.get(position).getID_Chamado(), Toast.LENGTH_SHORT).show();
                     }
-                }, new ChamadoAdapter.ChamadoOnLongClickListener() {
-                    @Override
-                    public void onLongClickAluno(View view, int position) {
-                        view.callOnClick();
-                    }
-                }));
+                }, null));
             }
         });
     }
