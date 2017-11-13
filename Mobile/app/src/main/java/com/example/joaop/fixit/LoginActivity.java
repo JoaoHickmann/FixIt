@@ -81,6 +81,20 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        btRegistrar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Intent it = new Intent(LoginActivity.this, RegistrarActivity.class);
+                        startActivity(it);
+                    }
+                }).start();
+
+            }
+        });
+
         conectar();
     }
 
@@ -99,7 +113,7 @@ public class LoginActivity extends AppCompatActivity {
                 try {
                     Socket servidor = new Socket();
                     servidor.setSoTimeout(3000);
-                    servidor.connect(new InetSocketAddress("192.168.0.200", 12345), 5000);
+                    servidor.connect(new InetSocketAddress("192.168.137.1", 12345), 5000);
 
                     dados.setServidor(servidor);
                     dados.setIn(new ObjectInputStream(servidor.getInputStream()));
