@@ -137,9 +137,11 @@ public class TrataCliente extends Thread {
                     }  //</editor-fold>
                     //<editor-fold defaultstate="collapsed" desc="Cadastro">
                     if (operacao.equals("CadastrarUsuario")) {
+                        System.out.println("aqui chegou");
                         out.writeObject(1);
                         usuario = (Usuario) in.readObject();
-
+                        System.out.println("aqui também");
+                               
                         sql = " INSERT INTO `usuarios`(`Nome`, `Email`, `Senha`, `isAdministrador`)"
                                 + " VALUES ('" + usuario.getNome() + "','" + usuario.getEmail() + "','" + usuario.getSenha() + "'," + (usuario.isAdministrador() ? "1" : "0") + ")";
 

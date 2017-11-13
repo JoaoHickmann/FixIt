@@ -8,6 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import java.io.IOException;
 
@@ -28,6 +29,7 @@ public class RegistrarActivity extends AppCompatActivity {
         etSenhaRegistrar = findViewById(R.id.etSenhaRegistrar);
         etConfirmarSenhaRegistrar = findViewById(R.id.etSenhaRegistrar);
         btRegistrar = findViewById(R.id.btRegistrarRegistrar);
+        dados = (Dados) getApplicationContext();
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -38,20 +40,40 @@ public class RegistrarActivity extends AppCompatActivity {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    try {
-                        dados.getOut().writeObject("CadastrarUsuario");
-                        dados.getIn().readObject();
 
-                        String senha = new Criptografia(etEmailRegistrar.getText().toString().charAt(0)).criptografar(etSenhaRegistrar.getText().toString());
-                        Usuario usuario = new Usuario(etEmailRegistrar.getText().toString(), senha);
 
-                        dados.getOut().writeObject(usuario);
 
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } catch (ClassNotFoundException e) {
-                        e.printStackTrace();
-                    }
+
+
+
+                            try {
+                                dados.getOut().writeObject("CadastrarUsuario");
+                                dados.getIn().readObject();
+
+                                String nome = etNomeRegistrar.getText().toString();
+                                String email = etEmailRegistrar.getText().toString();
+                                String senha = new Criptografia(etEmailRegistrar.getText().toString().charAt(0)).criptografar(etSenhaRegistrar.getText().toString());
+                                Usuario usuario = new Usuario(nome, email, senha, false);
+                                dados.getOut().writeObject(usuario);
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                    Toast.makeText(dados, "Usuário adicionado com sucesso!", Toast.LENGTH_SHORT).show();
+                                        etNomeRegistrar.setText("");
+                                        etEmailRegistrar.setText("");
+                                        etSenhaRegistrar.setText("");
+                                        etConfirmarSenhaRegistrar.setText("");
+                                    }
+                                });
+
+
+                            } catch (IOException | ClassNotFoundException e) {
+                                e.printStackTrace();
+                            }
+
+
+
+
                 }
             }).start();
         }
