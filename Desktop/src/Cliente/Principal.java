@@ -13,7 +13,6 @@ import java.net.InetSocketAddress;
 import java.net.MulticastSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
@@ -113,18 +112,6 @@ public class Principal extends Application {
         t.setDaemon(true);
         t.start();
         //</editor-fold>
-    }
-    
-    public static Object obterLista(String operacao) throws IOException, ClassNotFoundException {
-        out.writeObject(operacao);
-        return (LinkedList<Object>) in.readObject();
-    }
-    
-    public static Object realizarOperacao(String operacao, Object obj) throws IOException, ClassNotFoundException {
-        out.writeObject(operacao);
-        in.readObject();
-        out.writeObject(obj);
-        return in.readObject();
     }
 
     public static void main(String[] args) {

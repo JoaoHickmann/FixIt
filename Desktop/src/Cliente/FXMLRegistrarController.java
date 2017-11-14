@@ -13,7 +13,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -41,7 +40,7 @@ public class FXMLRegistrarController implements Initializable {
         //<editor-fold defaultstate="collapsed" desc="Validators">
         RequiredFieldValidator nomeRequiredValidator = new RequiredFieldValidator();
         nomeRequiredValidator.setMessage("O campo deve ser preenchido.");
-
+        
         RequiredFieldValidator emailRequiredValidator = new RequiredFieldValidator();
         emailRequiredValidator.setMessage("O campo deve ser preenchido.");
 
@@ -56,7 +55,7 @@ public class FXMLRegistrarController implements Initializable {
                 hasErrors.set(!m.find());
             }
         };
-
+        
         RequiredFieldValidator senhaRequiredValidator = new RequiredFieldValidator();
         senhaRequiredValidator.setMessage("O campo deve ser preenchido.");
 
@@ -71,7 +70,7 @@ public class FXMLRegistrarController implements Initializable {
                 for (char letra : textField.getText().toCharArray()) {
                     if (!alfabeto.contains(String.valueOf(letra))) {
                         caracteresD = true;
-                        setMessage(letra + " não permitido.");
+                        setMessage(letra+ " não permitido.");
                         break;
                     }
                 }
@@ -130,30 +129,24 @@ public class FXMLRegistrarController implements Initializable {
             pfConfirmarSenha.validate();
 
             if (tfNome.validate() && tfEmail.validate() && pfSenha.validate() && pfConfirmarSenha.validate()) {
-                new Thread(() -> {
+                try {
+                    Principal.getSaida().writeObject("CadastrarUsuario");
+                    Principal.getEntrada().readObject();
+
                     String senha = new Criptografia(tfEmail.getText().charAt(0)).criptografar(pfSenha.getText());
                     Usuario user = new Usuario(tfNome.getText(), tfEmail.getText(), senha, true);
 
-                    try {
-                        user = (Usuario) Principal.realizarOperacao("CadastrarUsuario", user);
-                        Principal.setUser(user);
+                    Principal.getSaida().writeObject(user);
+                    Principal.setUser((Usuario) Principal.getEntrada().readObject());
 
-                        if (user != null) {
-                            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                            Scene scene = new Scene(FXMLLoader.load(getClass().getResource("FXMLPrincipal.fxml")), ((Node) event.getSource()).getScene().getWidth(), ((Node) event.getSource()).getScene().getHeight());
-                            scene.getStylesheets().add(getClass().getResource("cssSnackbar.css").toExternalForm());
-                            Platform.runLater(() -> {
-                                stage.setScene(scene);
-                                stage.show();
-                            });
-                        } else {
-
-                        }
-                    } catch (IOException | ClassNotFoundException ex) {
-                        Logger.getLogger(FXMLRegistrarController.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-
-                }).start();
+                    Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                    Scene scene = new Scene(FXMLLoader.load(getClass().getResource("FXMLPrincipal.fxml")), ((Node) event.getSource()).getScene().getWidth(), ((Node) event.getSource()).getScene().getHeight());
+                    scene.getStylesheets().add(getClass().getResource("cssSnackbar.css").toExternalForm());
+                    stage.setScene(scene);
+                    stage.show();
+                } catch (IOException | ClassNotFoundException ex) {
+                    Logger.getLogger(FXMLRegistrarController.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
         //</editor-fold>
