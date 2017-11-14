@@ -17,6 +17,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -35,7 +36,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class FXMLLoginController implements Initializable {
-    
+
     @FXML
     private JFXTextField tfEmail;
     @FXML
@@ -48,9 +49,9 @@ public class FXMLLoginController implements Initializable {
     private JFXButton btSenha;
     @FXML
     private StackPane stack;
-    
+
     JFXSnackbar snackbar;
-    
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         //<editor-fold defaultstate="collapsed" desc="SnackBar">
@@ -66,14 +67,14 @@ public class FXMLLoginController implements Initializable {
                 Pattern p = Pattern.compile("^[A-Za-z0-9-]+(\\-[A-Za-z0-9])*@"
                         + "[A-Za-z0-9-]+(\\.[A-Za-z0-9])");
                 Matcher m = p.matcher(textField.getText());
-                
+
                 hasErrors.set(textField.getText() == null || textField.getText().isEmpty() || !m.find());
             }
         };
-        
+
         RequiredFieldValidator requiredValidator = new RequiredFieldValidator();
         requiredValidator.setMessage("O campo deve ser preenchido.");
-        
+
         ValidatorBase senhaTamanhoValidator = new ValidatorBase("Máximo de 20 caracteres.") {
             @Override
             protected void eval() {
@@ -82,12 +83,12 @@ public class FXMLLoginController implements Initializable {
                 hasErrors.set(textField.getText().length() > 20);
             }
         };
-        
+
         tfEmail.getValidators().add(emailValidator);
         tfEmail.setOnKeyReleased((event) -> {
             tfEmail.validate();
         });
-        
+
         pfSenha.getValidators().add(requiredValidator);
         pfSenha.getValidators().add(senhaTamanhoValidator);
         pfSenha.setOnKeyReleased((event) -> {
@@ -100,35 +101,38 @@ public class FXMLLoginController implements Initializable {
             tfEmail.validate();
             pfSenha.validate();
             if (tfEmail.validate() && pfSenha.validate()) {
-                try {
-                    Principal.getSaida().writeObject("Login");
-                    Principal.getEntrada().readObject();
-                    
+                new Thread(() -> {
                     String senha = new Criptografia(tfEmail.getText().charAt(0)).criptografar(pfSenha.getText());
                     Usuario usuario = new Usuario(tfEmail.getText(), senha);
                     
-                    Principal.getSaida().writeObject(usuario);
-                    usuario = (Usuario) Principal.getEntrada().readObject();
-                    
-                    if (usuario != null && usuario.isAdministrador()) {
-                        Principal.setUser(usuario);
-                        
-                        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                        Scene scene = new Scene(FXMLLoader.load(getClass().getResource("FXMLPrincipal.fxml")), ((Node) event.getSource()).getScene().getWidth(), ((Node) event.getSource()).getScene().getHeight());
-                        scene.getStylesheets().add(getClass().getResource("cssSnackbar.css").toExternalForm());
-                        stage.setScene(scene);
-                        stage.show();
-                    } else if (usuario != null && !usuario.isAdministrador()) {
-                        lblMensagem.setText("Usuário sem permissões de administrador!");
-                    } else {
-                        lblMensagem.setText("Email ou Senha incorreto!");
+                    try {
+                        usuario = (Usuario) Principal.realizarOperacao("Login", usuario);
+                        if (usuario != null && usuario.isAdministrador()) {
+                            Principal.setUser(usuario);
+                            
+                            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                            Scene scene = new Scene(FXMLLoader.load(getClass().getResource("FXMLPrincipal.fxml")), ((Node) event.getSource()).getScene().getWidth(), ((Node) event.getSource()).getScene().getHeight());
+                            scene.getStylesheets().add(getClass().getResource("cssSnackbar.css").toExternalForm());
+                            Platform.runLater(() -> {
+                                stage.setScene(scene);
+                                stage.show();
+                            });
+                        } else if (usuario != null && !usuario.isAdministrador()) {
+                            Platform.runLater(() -> {
+                                lblMensagem.setText("Usuário sem permissões de administrador!");
+                            });
+                        } else {
+                            Platform.runLater(() -> {
+                                lblMensagem.setText("Email ou Senha incorreto!");
+                            });
+                        }
+                    } catch (IOException | ClassNotFoundException ex) {
+                        Logger.getLogger(FXMLLoginController.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                } catch (IOException | ClassNotFoundException ex) {
-                    Logger.getLogger(FXMLLoginController.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                }).start();
             }
         };
-        
+
         pfSenha.setOnAction(entrar);
         btEntrar.setOnAction(entrar);
         //</editor-fold>
@@ -137,9 +141,9 @@ public class FXMLLoginController implements Initializable {
         btSenha.setOnAction((event) -> {
             JFXDialogLayout layout = new JFXDialogLayout();
             JFXDialog dialog = new JFXDialog(stack, layout, JFXDialog.DialogTransition.CENTER);
-            
+
             AnchorPane content = new AnchorPane();
-            
+
             JFXTextField tfEmail = new JFXTextField();
             tfEmail.setFocusColor(Paint.valueOf("#29B6F6"));
             tfEmail.setPromptText("Email");
@@ -149,48 +153,47 @@ public class FXMLLoginController implements Initializable {
             tfEmail.setOnKeyReleased((event1) -> {
                 tfEmail.validate();
             });
-            
+
             AnchorPane.setLeftAnchor(tfEmail, 0.0);
             AnchorPane.setRightAnchor(tfEmail, 0.0);
             content.getChildren().add(tfEmail);
-            
+
             JFXButton btCancelar = new JFXButton("Cancelar");
             btCancelar.setTextFill(Paint.valueOf("#FF0000"));
             btCancelar.setOnAction((ActionEvent event1) -> {
                 dialog.close();
             });
-            
+
             JFXButton btAdicionar = new JFXButton("Enviar email");
             btAdicionar.setTextFill(Paint.valueOf("#29B6F6"));
             btAdicionar.setOnAction((ActionEvent event1) -> {
-                if (tfEmail.validate()) {
+                new Thread(() -> {
                     try {
-                        Principal.getSaida().writeObject("EsqueceuSenha");
-                        Principal.getEntrada().readObject();
-                        Principal.getSaida().writeObject(tfEmail.getText());
-                        if ((int) Principal.getEntrada().readObject() == 1) {
+                        if (tfEmail.validate() && (int) Principal.realizarOperacao("EsqueceuSenha", tfEmail.getText()) == 1) {
                             JFXSnackbar.SnackbarEvent barEvent = new JFXSnackbar.SnackbarEvent("Email enviado para " + tfEmail.getText() + "", "Ok", 3000, false, (MouseEvent event2) -> {
                                 snackbar.close();
                             });
-                            snackbar.enqueue(barEvent);
-                        } else {
-                            //ERRO
+                            Platform.runLater(() -> {
+                                snackbar.enqueue(barEvent);
+                                dialog.close();
+                            });
+                        } else if (tfEmail.validate()) {
+                            
                         }
                     } catch (IOException | ClassNotFoundException ex) {
-                        Logger.getLogger(FXMLSalasController.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(FXMLLoginController.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                    dialog.close();
-                }
+                }).start();
             });
-            
+
             LinkedList<Node> actions = new LinkedList<>();
             actions.add(btCancelar);
             actions.add(btAdicionar);
-            
+
             layout.setHeading(new Text("Recuperação de senha"));
             layout.setBody(content);
             layout.setActions(actions);
-            
+
             dialog.show();
         });
         //</editor-fold>
