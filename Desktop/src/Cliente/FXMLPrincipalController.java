@@ -334,12 +334,12 @@ public class FXMLPrincipalController implements Initializable {
                 tfUsuario.setText(chamado.getNome_Usuario());
                 tfAdministrador.setText(chamado.getNome_Administrador());
                 tfCriacao.setText(sdf.format(chamado.getData_Inicial()));
-                tfFinalizacao.setText(sdf.format(chamado.getData_Final()));
+                tfFinalizacao.setText(chamado.getData_Final() != null ? sdf.format(chamado.getData_Final()) : "");
                 tfTipoProblema.setText(chamado.getProblema().getTipo() == 1 ? "Hardware" : "Software");
                 tfProblema.setText(chamado.getProblema().getDescricao());
                 taObservacoes.setText(chamado.getObservacao());
                 tfSala.setText(String.valueOf(chamado.getComputador().getSala()));
-                tfComputador.setText(String.valueOf(chamado.getComputador()));
+                tfComputador.setText(String.valueOf(chamado.getComputador().getNumero()));
 
                 btAtender.setDisable(chamado.getStatus() != 1);
                 btFinalizar.setDisable(chamado.getStatus() != 2);

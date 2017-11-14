@@ -14,9 +14,9 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".LoginActivity"
+            android:configChanges="keyboard|orientation|locale|fontScale|screenLayout|screenSize|uiMode|navigation|touchscreen|keyboardHidden|layoutDirection|smallestScreenSize"
             android:label="@string/app_name"
-            android:theme="@style/SplashTheme"
-            android:configChanges="keyboard|orientation|locale|fontScale|screenLayout|screenSize|uiMode|navigation|touchscreen|keyboardHidden|layoutDirection|smallestScreenSize">
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -25,18 +25,27 @@
         </activity>
         <activity
             android:name=".PrincipalActivity"
+            android:configChanges="keyboard|orientation|locale|fontScale|screenLayout|screenSize|uiMode|navigation|touchscreen|keyboardHidden|layoutDirection|smallestScreenSize"
             android:label="@string/title_activity_principal"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:configChanges="keyboard|orientation|locale|fontScale|screenLayout|screenSize|uiMode|navigation|touchscreen|keyboardHidden|layoutDirection|smallestScreenSize" />
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".AdicionarChamadoActivity"
+            android:configChanges="keyboard|orientation|locale|fontScale|screenLayout|screenSize|uiMode|navigation|touchscreen|keyboardHidden|layoutDirection|smallestScreenSize"
             android:label="@string/title_activity_realizar_chamadas"
             android:parentActivityName=".PrincipalActivity"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:configChanges="keyboard|orientation|locale|fontScale|screenLayout|screenSize|uiMode|navigation|touchscreen|keyboardHidden|layoutDirection|smallestScreenSize">
+            android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.joaop.fixit.PrincipalActivity" />
+        </activity>
+        <activity
+            android:name=".RegistrarActivity"
+            android:label="@string/title_activity_registrar"
+            android:parentActivityName=".LoginActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.joaop.fixit.LoginActivity" />
         </activity>
     </application>
 
