@@ -47,6 +47,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.joaop.fixit.LoginActivity" />
         </activity>
+        <activity
+            android:name=".DetalhesActivity"
+            android:label="@string/title_activity_detalhes"
+            android:parentActivityName=".PrincipalActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.joaop.fixit.PrincipalActivity" />
+        </activity>
     </application>
 
 </manifest>

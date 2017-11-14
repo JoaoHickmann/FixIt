@@ -50,11 +50,77 @@ public class RegistrarActivity extends AppCompatActivity {
                                 dados.getOut().writeObject("CadastrarUsuario");
                                 dados.getIn().readObject();
 
-                                String nome = etNomeRegistrar.getText().toString();
-                                String email = etEmailRegistrar.getText().toString();
-                                String senha = new Criptografia(etEmailRegistrar.getText().toString().charAt(0)).criptografar(etSenhaRegistrar.getText().toString());
-                                Usuario usuario = new Usuario(nome, email, senha, false);
-                                dados.getOut().writeObject(usuario);
+                                if (!etNomeRegistrar.getText().toString().equals("")) {
+                                    if (!etEmailRegistrar.getText().toString().equals("")) {
+                                        if (!etSenhaRegistrar.getText().toString().equals("")) {
+                                            if (!etConfirmarSenhaRegistrar.getText().toString().equals("")) {
+//                                                if (etSenhaRegistrar.getText().toString() == etConfirmarSenhaRegistrar.getText().toString()) {
+
+                                                    String nome = etNomeRegistrar.getText().toString();
+                                                    String email = etEmailRegistrar.getText().toString();
+                                                    String senha = new Criptografia(etEmailRegistrar.getText().toString().charAt(0)).criptografar(etSenhaRegistrar.getText().toString());
+                                                    Usuario usuario = new Usuario(nome, email, senha, false);
+                                                    dados.getOut().writeObject(usuario);
+
+//                                                }
+                                            }
+                                        }
+                                    }
+                                }
+
+
+//                                                } else {
+//                                                   runOnUiThread(new Runnable() {
+//                                                       @Override
+//                                                       public void run() {
+//                                                           etSenhaRegistrar.setText("");
+//                                                           etConfirmarSenhaRegistrar.setText("");
+//                                                           etSenhaRegistrar.setError("As senhas não coincidem");
+//                                                           etSenhaRegistrar.requestFocus();
+//                                                       }
+//                                                   });
+//
+//                                                }
+//                                            } else {
+//                                                runOnUiThread(new Runnable() {
+//                                                    @Override
+//                                                    public void run() {
+//                                                        etConfirmarSenhaRegistrar.setError("Confirme a senha!");
+//                                                        etConfirmarSenhaRegistrar.requestFocus();
+//                                                    }
+//                                                });
+//
+//                                            }
+//                                        } else {
+//                                            runOnUiThread(new Runnable() {
+//                                                @Override
+//                                                public void run() {
+//                                                    etSenhaRegistrar.setError("Informe a senha!");
+//                                                    etSenhaRegistrar.requestFocus();
+//                                                }
+//                                            });
+//                                        }
+//                                    } else {
+//                                        runOnUiThread(new Runnable() {
+//                                            @Override
+//                                            public void run() {
+//                                                 etEmailRegistrar.setError("Informe o email!");
+//                                                 etEmailRegistrar.requestFocus();
+//                                            }
+//                                        });
+//                                    }
+//                                } else {
+//                                    runOnUiThread(new Runnable() {
+//                                        @Override
+//                                        public void run() {
+//                                            etNomeRegistrar.setError("Informe o nome!");
+//                                            etNomeRegistrar.requestFocus();
+//                                        }
+//                                    });
+//                                }
+
+
+
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
