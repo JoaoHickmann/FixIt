@@ -242,8 +242,8 @@ public class TrataCliente extends Thread {
                             int ID = rs.getInt(1);
                             String nome_usuario = rs.getString(2);
                             String nome_administrador = rs.getString(11);
-                            Date data_inicial = rs.getDate(3);
-                            Date data_final = rs.getDate(4);
+                            Date data_inicial = new Date(rs.getTimestamp(3).getTime());
+                            Date data_final = rs.getTimestamp(4) == null ? null : new Date(rs.getTimestamp(4).getTime());
                             computador = new Computador(rs.getInt(5), rs.getInt(12), rs.getInt(6));
                             problema = new Problema(rs.getString(8), rs.getInt(7));
                             String observacao = rs.getString(9);
@@ -273,8 +273,8 @@ public class TrataCliente extends Thread {
                             int ID = rs.getInt(1);
                             String nome_usuario = rs.getString(2);
                             String nome_administrador = rs.getString(11);
-                            Date data_inicial = rs.getDate(3);
-                            Date data_final = rs.getDate(4);
+                            Date data_inicial = new Date(rs.getTimestamp(3).getTime());
+                            Date data_final = rs.getTimestamp(4) == null ? null : new Date(rs.getTimestamp(4).getTime());
                             computador = new Computador(rs.getInt(5), rs.getInt(12), rs.getInt(6));
                             problema = new Problema(rs.getString(8), rs.getInt(7));
                             String observacao = rs.getString(9);
