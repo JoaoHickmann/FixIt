@@ -182,7 +182,7 @@ public class FXMLProblemasController implements Initializable {
         btAdicionarD1.setTextFill(Paint.valueOf("#29B6F6"));
         btAdicionarD1.setOnAction((ActionEvent event) -> {
             if (tfProblemaD.validate()) {
-                adicionarProblema(new Problema(tfProblemaD.getText(), cmbTipoD.getSelectionModel().getSelectedIndex()+1));
+                adicionarProblema(new Problema(tfProblemaD.getText(), cmbTipoD.getSelectionModel().getSelectedIndex() + 1));
                 dialogAdd.close();
             }
         });
@@ -229,17 +229,22 @@ public class FXMLProblemasController implements Initializable {
             }
         }).start();
     }
-    
+
     public void adicionarProblema(Problema problema) {
         new Thread(() -> {
             try {
                 int result = (int) Principal.realizarOperacao("AdicionarProblema", problema);
-                if ( result != 0) {
+                if (result != 0) {
                     problema.setID(result);
                     Platform.runLater(() -> {
                         problemas.add(problema);
-                        cmbTipo.getSelectionModel().select(problema.getTipo()-1);
-                        cmbProblema.getSelectionModel().select(problema.getDescricao());
+                        if (cmbTipo.getSelectionModel().getSelectedIndex() == problema.getTipo() - 1) {
+                            cmbProblema.getItems().add(problema.getDescricao());
+                        } else {
+                            cmbTipo.getSelectionModel().select(problema.getTipo() - 1);
+                        }
+                        cmbProblema.getSelectionModel().selectLast();
+
                         JFXSnackbar.SnackbarEvent barEvent = new JFXSnackbar.SnackbarEvent("Problema adicionado.", "Ok", 3000, false, (MouseEvent event2) -> {
                             snackbar.close();
                         });

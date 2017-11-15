@@ -179,12 +179,12 @@ public class TrataCliente extends Thread {
 
                         sql = "INSERT INTO problemas(descricao, tipo)"
                                 + " VALUES ('" + problema.getDescricao() + "', " + problema.getTipo() + ")";
-                        
-                        int result =0;
-                        
-                        if (Servidor.AtualizaTabela(sql) == 1){
+
+                        int result = 0;
+
+                        if (Servidor.AtualizaTabela(sql) == 1) {
                             sql = "SELECT MAX(id_problema)"
-                                + " FROM problemas";
+                                    + " FROM problemas";
                             rs = Servidor.ExecutaSelect(sql);
                             rs.next();
                             result = rs.getInt(1);
@@ -193,12 +193,31 @@ public class TrataCliente extends Thread {
                         out.writeObject(result);
                     } else if (operacao.equals("AdicionarComputador")) {
                         out.writeObject(1);
-                        computador = (Computador) in.readObject();
+                        LinkedList<Computador> pcs = (LinkedList<Computador>) in.readObject();
 
                         sql = "INSERT INTO computadores(numero, id_sala)"
-                                + " VALUES ('" + computador.getNumero() + "', " + computador.getSala() + ")";
+                                + " VALUES ";
 
-                        out.writeObject(Servidor.AtualizaTabela(sql));
+                        if (pcs.size() == 1) {
+                            sql += " (" + pcs.get(0).getNumero() + ", " + pcs.get(0).getSala() + ") ";
+                        } else {
+                            for (int i = pcs.get(0).getNumero(); i <= pcs.get(1).getNumero(); i++) {
+                                sql += " (" + i + ", " + pcs.get(0).getSala() + "), ";
+                            }
+                            sql = sql.substring(0, sql.length()-2);
+                        }
+                        
+                        int result = 0;
+                        
+                        if (Servidor.AtualizaTabela(sql) != 0) {
+                            sql = "SELECT MAX(id_computador)"
+                                    + " FROM computadores";
+                            rs = Servidor.ExecutaSelect(sql);
+                            rs.next();
+                            result = rs.getInt(1);
+                        }
+
+                        out.writeObject(result);
                     } else if (operacao.equals("AdicionarSala")) {
                         out.writeObject(1);
                         sala = (Sala) in.readObject();
@@ -212,7 +231,8 @@ public class TrataCliente extends Thread {
                     if (operacao.equals("Administradores")) {
                         sql = " SELECT id_usuario, nome, email"
                                 + " FROM usuarios"
-                                + " WHERE isAdministrador = 1";
+                                + " WHERE isAdministrador = 1"
+                                + " ORDER BY email";
                         rs = Servidor.ExecutaSelect(sql);
 
                         LinkedList<Usuario> administradores = new LinkedList<>();
@@ -230,7 +250,8 @@ public class TrataCliente extends Thread {
                         out.writeObject(administradores);
                     } else if (operacao.equals("Salas")) {
                         sql = "SELECT id_sala"
-                                + " FROM salas";
+                                + " FROM salas"
+                                + " ORDER BY id_sala";
 
                         rs = Servidor.ExecutaSelect(sql);
 
@@ -306,7 +327,8 @@ public class TrataCliente extends Thread {
                         out.writeObject(chamados);
                     } else if (operacao.equals("Problemas")) {
                         sql = "SELECT id_problema, descricao, tipo"
-                                + " FROM problemas";
+                                + " FROM problemas"
+                                + " ORDER BY tipo, descricao";
 
                         rs = Servidor.ExecutaSelect(sql);
 
@@ -323,7 +345,8 @@ public class TrataCliente extends Thread {
                         out.writeObject(problemas);
                     } else if (operacao.equals("Computadores")) {
                         sql = "SELECT id_computador, numero, id_sala"
-                                + " FROM computadores";
+                                + " FROM computadores"
+                                + " ORDER BY id_sala, numero";
 
                         rs = Servidor.ExecutaSelect(sql);
 
