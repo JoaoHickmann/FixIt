@@ -79,7 +79,7 @@ public class FXMLConfiguracoesController implements Initializable {
                 hasErrors.set(textField.getText().isEmpty() || textField.getText() == null || caracteresD);
             }
         };
-        
+
         ValidatorBase novaSenhaTamanhoValidator = new ValidatorBase("Máximo de 20 caracteres.") {
             @Override
             protected void eval() {
@@ -88,7 +88,7 @@ public class FXMLConfiguracoesController implements Initializable {
                 hasErrors.set(textField.getText().length() > 20);
             }
         };
-        
+
         ValidatorBase senhaValidator = new ValidatorBase("Senha incorreta.") {
             @Override
             protected void eval() {
@@ -122,25 +122,21 @@ public class FXMLConfiguracoesController implements Initializable {
         btAlterarNome.setOnAction((ActionEvent event) -> {
             if (tfNome.validate()) {
                 new Thread(() -> {
-                    try {
-                        if ((int) Principal.realizarOperacao("MudarNome", tfNome.getText()) == 1) {
-                            Principal.getUser().setNome(tfNome.getText());
-                            Platform.runLater(() -> {
-                                JFXSnackbar.SnackbarEvent barEvent = new JFXSnackbar.SnackbarEvent("Nome alterado.", "Ok", 3000, false, (MouseEvent event2) -> {
-                                    snackbar.close();
-                                });
-                                snackbar.enqueue(barEvent);
+                    if ((int) Principal.realizarOperacao("MudarNome", tfNome.getText()) == 1) {
+                        Principal.getUser().setNome(tfNome.getText());
+                        Platform.runLater(() -> {
+                            JFXSnackbar.SnackbarEvent barEvent = new JFXSnackbar.SnackbarEvent("Nome alterado.", "Ok", 3000, false, (MouseEvent event2) -> {
+                                snackbar.close();
                             });
-                        } else {
-                            Platform.runLater(() -> {
-                                JFXSnackbar.SnackbarEvent barEvent = new JFXSnackbar.SnackbarEvent("Não foi possível alterar o nome.", "Ok", 3000, false, (MouseEvent event2) -> {
-                                    snackbar.close();
-                                });
-                                snackbar.enqueue(barEvent);
+                            snackbar.enqueue(barEvent);
+                        });
+                    } else {
+                        Platform.runLater(() -> {
+                            JFXSnackbar.SnackbarEvent barEvent = new JFXSnackbar.SnackbarEvent("Não foi possível alterar o nome.", "Ok", 3000, false, (MouseEvent event2) -> {
+                                snackbar.close();
                             });
-                        }
-                    } catch (IOException | ClassNotFoundException ex) {
-                        Logger.getLogger(FXMLConfiguracoesController.class.getName()).log(Level.SEVERE, null, ex);
+                            snackbar.enqueue(barEvent);
+                        });
                     }
                 }).start();
             }
@@ -221,26 +217,22 @@ public class FXMLConfiguracoesController implements Initializable {
         btAlterar.setOnAction((ActionEvent event1) -> {
             new Thread(() -> {
                 String senha = new Criptografia(Principal.getUser().getEmail().charAt(0)).criptografar(pfNovaSenha.getText());
-                try {
-                    if ((int) Principal.realizarOperacao("MudarSenha", senha) == 1) {
-                        Principal.getUser().setSenha(senha);
-                        Platform.runLater(() -> {
-                            JFXSnackbar.SnackbarEvent barEvent = new JFXSnackbar.SnackbarEvent("Senha alterada.", "Ok", 3000, false, (MouseEvent event2) -> {
-                                snackbar.close();
-                            });
-                            snackbar.enqueue(barEvent);
+                if ((int) Principal.realizarOperacao("MudarSenha", senha) == 1) {
+                    Principal.getUser().setSenha(senha);
+                    Platform.runLater(() -> {
+                        JFXSnackbar.SnackbarEvent barEvent = new JFXSnackbar.SnackbarEvent("Senha alterada.", "Ok", 3000, false, (MouseEvent event2) -> {
+                            snackbar.close();
                         });
-                    } else {
-                        Platform.runLater(() -> {
-                            JFXSnackbar.SnackbarEvent barEvent = new JFXSnackbar.SnackbarEvent("Não foi possível alterar a senha.", "Tentar novamente", 3000, false, (MouseEvent event2) -> {
-                                dialog.show();
-                                snackbar.close();
-                            });
-                            snackbar.enqueue(barEvent);
+                        snackbar.enqueue(barEvent);
+                    });
+                } else {
+                    Platform.runLater(() -> {
+                        JFXSnackbar.SnackbarEvent barEvent = new JFXSnackbar.SnackbarEvent("Não foi possível alterar a senha.", "Tentar novamente", 3000, false, (MouseEvent event2) -> {
+                            dialog.show();
+                            snackbar.close();
                         });
-                    }
-                } catch (IOException | ClassNotFoundException ex) {
-                    Logger.getLogger(FXMLConfiguracoesController.class.getName()).log(Level.SEVERE, null, ex);
+                        snackbar.enqueue(barEvent);
+                    });
                 }
             }).start();
             dialog.close();

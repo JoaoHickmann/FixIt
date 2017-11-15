@@ -79,11 +79,7 @@ public class FXMLRegistrarController implements Initializable {
                 int disponivel = 0;
 
                 if (m.find()) {
-                    try {
-                        disponivel = (int) Principal.realizarOperacao("EmailDisponivel", textField.getText());
-                    } catch (IOException | ClassNotFoundException ex) {
-                        Logger.getLogger(FXMLRegistrarController.class.getName()).log(Level.SEVERE, null, ex);
-                    }
+                    disponivel = (int) Principal.realizarOperacao("EmailDisponivel", textField.getText());
                 }
 
                 hasErrors.set(disponivel == 0);
@@ -188,7 +184,7 @@ public class FXMLRegistrarController implements Initializable {
                                 snackbar.enqueue(barEvent);
                             });
                         }
-                    } catch (IOException | ClassNotFoundException ex) {
+                    } catch (IOException ex) {
                         Logger.getLogger(FXMLRegistrarController.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }).start();

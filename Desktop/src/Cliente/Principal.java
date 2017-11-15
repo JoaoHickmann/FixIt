@@ -23,6 +23,8 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -35,21 +37,20 @@ public class Principal extends Application {
     private static ObjectInputStream in;
     private static ObjectOutputStream out;
     private static Usuario user;
+    private static Stage stg;
+    private static Class<?> classe;
 
     @Override
     public void start(Stage stage) throws Exception {
         //<editor-fold defaultstate="collapsed" desc="Conexão">
+        stg = stage;
+        classe = getClass();
+        conectar();
+        out.writeObject("PossuiAdmin");
+        //</editor-fold>
+
+        //<editor-fold defaultstate="collapsed" desc="PossuiAdmin">
         try {
-            servidor = new Socket();
-            servidor.setSoTimeout(2000);
-            servidor.connect(new InetSocketAddress("localhost", 12345), 2000);
-            in = new ObjectInputStream(getServidor().getInputStream());
-            out = new ObjectOutputStream(getServidor().getOutputStream());
-
-            //</editor-fold>
-            //<editor-fold defaultstate="collapsed" desc="PossuiAdmin">
-            out.writeObject("PossuiAdmin");
-
             Parent root;
             if ((int) in.readObject() == 1) {
                 root = FXMLLoader.load(getClass().getResource("FXMLLogin.fxml"));
@@ -63,78 +64,157 @@ public class Principal extends Application {
             stage.setTitle("FixIt");
             stage.getIcons().add(new Image(getClass().getResourceAsStream("/Imagens/logo-sem-fundo.png")));
             stage.show();
-
-            //<editor-fold defaultstate="collapsed" desc="Thread Notificações">
-            Thread t = new Thread(() -> {
-                try {
-                    InetAddress group = InetAddress.getByName("228.5.6.7");
-                    MulticastSocket s = new MulticastSocket(6789);
-                    s.joinGroup(group);
-
-                    byte[] buf = new byte[1000];
-                    DatagramPacket recv = new DatagramPacket(buf, buf.length);
-
-                    while (true) {
-                        s.receive(recv);
-
-                        if (user != null) {
-                            String msg = new String(recv.getData());
-
-                            MaterialDesignIconView icon = new MaterialDesignIconView(MaterialDesignIcon.BELL_RING);
-                            icon.setSize("60");
-
-                            Notifications notify = Notifications.create()
-                                    .title(msg.split(";")[0])
-                                    .text(msg.split(";")[1])
-                                    .graphic(icon)
-                                    .hideAfter(Duration.seconds(10))
-                                    .onAction((ActionEvent event1) -> {
-                                        try {
-                                            Scene scene1 = new Scene(FXMLLoader.load(getClass().getResource("FXMLPrincipal.fxml")), stage.getScene().getWidth(), stage.getScene().getHeight());
-                                            scene1.getStylesheets().add(getClass().getResource("cssSnackbar.css").toExternalForm());
-                                            stage.setScene(scene1);
-                                            stage.show();
-                                            stage.setIconified(false);
-                                            stage.toFront();
-                                        } catch (IOException ex) {
-                                            Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
-                                        }
-                                    });
-
-                            Platform.runLater(() -> {
-                                Toolkit.getDefaultToolkit().beep();
-
-                                notify.show();
-                            });
-                        }
-                    }
-                } catch (UnknownHostException ex) {
-                    Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (IOException ex) {
-                    Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            });
-            t.setDaemon(true);
-            t.start();
-            //</editor-fold>
-        } catch (IOException | ClassNotFoundException ex) {
+        } catch (IOException ex) {
             JOptionPane.showConfirmDialog(null, "Tente novamente mais tarde.", "Não foi possível se conectar!", JOptionPane.CLOSED_OPTION, JOptionPane.ERROR_MESSAGE);
             System.exit(0);
         }
+
+        //<editor-fold defaultstate="collapsed" desc="Thread Notificações">
+        Thread t = new Thread(() -> {
+            try {
+                InetAddress group = InetAddress.getByName("228.5.6.7");
+                MulticastSocket s = new MulticastSocket(6789);
+                s.joinGroup(group);
+
+                byte[] buf = new byte[1000];
+                DatagramPacket recv = new DatagramPacket(buf, buf.length);
+
+                while (true) {
+                    s.receive(recv);
+
+                    if (user != null) {
+                        String msg = new String(recv.getData());
+
+                        MaterialDesignIconView icon = new MaterialDesignIconView(MaterialDesignIcon.BELL_RING);
+                        icon.setSize("60");
+
+                        Notifications notify = Notifications.create()
+                                .title(msg.split(";")[0])
+                                .text(msg.split(";")[1])
+                                .graphic(icon)
+                                .hideAfter(Duration.seconds(10))
+                                .onAction((ActionEvent event) -> {
+                                    try {
+                                        Scene scene1 = new Scene(FXMLLoader.load(getClass().getResource("FXMLPrincipal.fxml")), stage.getScene().getWidth(), stage.getScene().getHeight());
+                                        scene1.getStylesheets().add(getClass().getResource("cssSnackbar.css").toExternalForm());
+                                        stage.setScene(scene1);
+                                        stage.show();
+                                        stage.setIconified(false);
+                                        stage.toFront();
+                                    } catch (IOException ex) {
+                                        Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+                                    }
+                                });
+
+                        Platform.runLater(() -> {
+                            Toolkit.getDefaultToolkit().beep();
+
+                            notify.show();
+                        });
+                    }
+                }
+            } catch (UnknownHostException ex) {
+                Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
+        t.setDaemon(true);
+        t.start();
+        //</editor-fold>
+
         //</editor-fold>
     }
 
-    public static Object obterLista(String operacao) throws IOException, ClassNotFoundException {
-        out.writeObject(operacao);
-        return (LinkedList<Object>) in.readObject();
+    public static void conectar() {
+        try {
+            servidor = new Socket();
+            servidor.setSoTimeout(2000);
+            servidor.connect(new InetSocketAddress("localhost", 12345), 2000);
+            in = new ObjectInputStream(servidor.getInputStream());
+            out = new ObjectOutputStream(servidor.getOutputStream());
+
+            if (user != null) {
+                Principal.realizarOperacao("Login", user);
+                FXMLLoader loader = new FXMLLoader(classe.getResource("FXMLPrincipal.fxml"));
+                Scene scene = new Scene(loader.load(), stg.getScene().getWidth(), stg.getScene().getHeight());
+                scene.getStylesheets().add(classe.getResource("cssSnackbar.css").toExternalForm());
+                stg.setScene(scene);
+                stg.show();
+                ((FXMLPrincipalController)loader.getController()).reconnect();
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+            Alert dialog = new Alert(Alert.AlertType.ERROR);
+            dialog.setTitle("Erro");
+            dialog.setHeaderText("Não foi possivel se conectar com o servidor.");
+            dialog.setContentText("Deseja se conectar novamente?");
+            dialog.getButtonTypes().clear();
+            dialog.getButtonTypes().add(ButtonType.YES);
+            dialog.getButtonTypes().add(ButtonType.NO);
+            dialog.showAndWait().ifPresent((t) -> {
+                if (t == ButtonType.YES) {
+                    conectar();
+                } else {
+                    System.exit(0);
+                }
+            });
+        }
     }
 
-    public static Object realizarOperacao(String operacao, Object obj) throws IOException, ClassNotFoundException {
-        out.writeObject(operacao);
-        in.readObject();
-        out.reset();
-        out.writeObject(obj);
-        return in.readObject();
+    public static Object obterLista(String operacao) {
+        try {
+            out.writeObject(operacao);
+            return (LinkedList<Object>) in.readObject();
+        } catch (IOException | ClassNotFoundException ex) {
+            Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+            Platform.runLater(() -> {
+                Alert dialog = new Alert(Alert.AlertType.ERROR);
+                dialog.setTitle("Erro");
+                dialog.setHeaderText("Não foi possivel se conectar com o servidor.");
+                dialog.setContentText("Deseja se conectar novamente?");
+                dialog.getButtonTypes().clear();
+                dialog.getButtonTypes().add(ButtonType.YES);
+                dialog.getButtonTypes().add(ButtonType.NO);
+                dialog.showAndWait().ifPresent((t) -> {
+                    if (t == ButtonType.YES) {
+                        conectar();
+                    } else {
+                        System.exit(0);
+                    }
+                });
+            });
+            return null;
+        }
+    }
+
+    public static Object realizarOperacao(String operacao, Object obj) {
+        try {
+            out.writeObject(operacao);
+            in.readObject();
+            out.reset();
+            out.writeObject(obj);
+            return in.readObject();
+        } catch (IOException | ClassNotFoundException ex) {
+            Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+            Platform.runLater(() -> {
+                Alert dialog = new Alert(Alert.AlertType.ERROR);
+                dialog.setTitle("Erro");
+                dialog.setHeaderText("Não foi possivel se conectar com o servidor.");
+                dialog.setContentText("Deseja se conectar novamente?");
+                dialog.getButtonTypes().clear();
+                dialog.getButtonTypes().add(ButtonType.YES);
+                dialog.getButtonTypes().add(ButtonType.NO);
+                dialog.showAndWait().ifPresent((t) -> {
+                    if (t == ButtonType.YES) {
+                        conectar();
+                    } else {
+                        System.exit(0);
+                    }
+                });
+            });
+            return null;
+        }
     }
 
     public static void main(String[] args) {

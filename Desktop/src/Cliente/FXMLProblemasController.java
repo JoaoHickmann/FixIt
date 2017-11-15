@@ -57,14 +57,10 @@ public class FXMLProblemasController implements Initializable {
 
         //<editor-fold defaultstate="collapsed" desc="attDados">
         new Thread(() -> {
-            try {
-                problemas = (LinkedList<Problema>) Principal.obterLista("Problemas");
-                Platform.runLater(() -> {
-                    cmbTipo.getSelectionModel().selectFirst();
-                });
-            } catch (IOException | ClassNotFoundException ex) {
-                Logger.getLogger(FXMLProblemasController.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            problemas = (LinkedList<Problema>) Principal.obterLista("Problemas");
+            Platform.runLater(() -> {
+                cmbTipo.getSelectionModel().selectFirst();
+            });
         }).start();
         //</editor-fold>
 
@@ -205,62 +201,54 @@ public class FXMLProblemasController implements Initializable {
 
     public void excluirProblema(Problema problema) {
         new Thread(() -> {
-            try {
-                if ((int) Principal.realizarOperacao("ExcluirProblema", problema) == 1) {
-                    Platform.runLater(() -> {
-                        cmbProblema.getItems().remove(cmbProblema.getSelectionModel().getSelectedIndex());
-                        problemas.remove(problema);
-                        JFXSnackbar.SnackbarEvent barEvent = new JFXSnackbar.SnackbarEvent("Problema excluido.", "Ok", 3000, false, (MouseEvent event) -> {
-                            snackbar.close();
-                        });
-                        snackbar.enqueue(barEvent);
+            if ((int) Principal.realizarOperacao("ExcluirProblema", problema) == 1) {
+                Platform.runLater(() -> {
+                    cmbProblema.getItems().remove(cmbProblema.getSelectionModel().getSelectedIndex());
+                    problemas.remove(problema);
+                    JFXSnackbar.SnackbarEvent barEvent = new JFXSnackbar.SnackbarEvent("Problema excluido.", "Ok", 3000, false, (MouseEvent event) -> {
+                        snackbar.close();
                     });
-                } else {
-                    Platform.runLater(() -> {
-                        JFXSnackbar.SnackbarEvent barEvent = new JFXSnackbar.SnackbarEvent("Não foi possível excluir o problema.", "Tentar novamente", 3000, false, (MouseEvent event) -> {
-                            excluirProblema(problema);
-                            snackbar.close();
-                        });
-                        snackbar.enqueue(barEvent);
+                    snackbar.enqueue(barEvent);
+                });
+            } else {
+                Platform.runLater(() -> {
+                    JFXSnackbar.SnackbarEvent barEvent = new JFXSnackbar.SnackbarEvent("Não foi possível excluir o problema.", "Tentar novamente", 3000, false, (MouseEvent event) -> {
+                        excluirProblema(problema);
+                        snackbar.close();
                     });
-                }
-            } catch (IOException | ClassNotFoundException ex) {
-                Logger.getLogger(FXMLSalasController.class.getName()).log(Level.SEVERE, null, ex);
+                    snackbar.enqueue(barEvent);
+                });
             }
         }).start();
     }
 
     public void adicionarProblema(Problema problema) {
         new Thread(() -> {
-            try {
-                int result = (int) Principal.realizarOperacao("AdicionarProblema", problema);
-                if (result != 0) {
-                    problema.setID(result);
-                    Platform.runLater(() -> {
-                        problemas.add(problema);
-                        if (cmbTipo.getSelectionModel().getSelectedIndex() == problema.getTipo() - 1) {
-                            cmbProblema.getItems().add(problema.getDescricao());
-                        } else {
-                            cmbTipo.getSelectionModel().select(problema.getTipo() - 1);
-                        }
-                        cmbProblema.getSelectionModel().selectLast();
+            int result = (int) Principal.realizarOperacao("AdicionarProblema", problema);
+            if (result != 0) {
+                problema.setID(result);
+                Platform.runLater(() -> {
+                    problemas.add(problema);
+                    if (cmbTipo.getSelectionModel().getSelectedIndex() == problema.getTipo() - 1) {
+                        cmbProblema.getItems().add(problema.getDescricao());
+                    } else {
+                        cmbTipo.getSelectionModel().select(problema.getTipo() - 1);
+                    }
+                    cmbProblema.getSelectionModel().selectLast();
 
-                        JFXSnackbar.SnackbarEvent barEvent = new JFXSnackbar.SnackbarEvent("Problema adicionado.", "Ok", 3000, false, (MouseEvent event2) -> {
-                            snackbar.close();
-                        });
-                        snackbar.enqueue(barEvent);
+                    JFXSnackbar.SnackbarEvent barEvent = new JFXSnackbar.SnackbarEvent("Problema adicionado.", "Ok", 3000, false, (MouseEvent event2) -> {
+                        snackbar.close();
                     });
-                } else {
-                    Platform.runLater(() -> {
-                        JFXSnackbar.SnackbarEvent barEvent = new JFXSnackbar.SnackbarEvent("Não foi possível adicionar o problema.", "Tentar novamente", 3000, false, (MouseEvent event) -> {
-                            adicionarProblema(problema);
-                            snackbar.close();
-                        });
-                        snackbar.enqueue(barEvent);
+                    snackbar.enqueue(barEvent);
+                });
+            } else {
+                Platform.runLater(() -> {
+                    JFXSnackbar.SnackbarEvent barEvent = new JFXSnackbar.SnackbarEvent("Não foi possível adicionar o problema.", "Tentar novamente", 3000, false, (MouseEvent event) -> {
+                        adicionarProblema(problema);
+                        snackbar.close();
                     });
-                }
-            } catch (IOException | ClassNotFoundException ex) {
-                Logger.getLogger(FXMLSalasController.class.getName()).log(Level.SEVERE, null, ex);
+                    snackbar.enqueue(barEvent);
+                });
             }
         }).start();
     }

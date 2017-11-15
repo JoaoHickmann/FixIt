@@ -18,11 +18,10 @@ import java.io.IOException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.function.BiFunction;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.animation.Interpolator;
@@ -88,7 +87,9 @@ public class FXMLPrincipalController implements Initializable {
     @FXML
     private JFXTextField tfComputador;
 
-    JFXSnackbar snackbar;
+    private JFXSnackbar snackbar;
+    private JFXButton btAtenderP;
+    private JFXButton btFinalizarP;
 
     private LinkedList<Chamado> chamados;
 
@@ -129,6 +130,7 @@ public class FXMLPrincipalController implements Initializable {
                 scene.getStylesheets().add(getClass().getResource("cssSnackbar.css").toExternalForm());
                 stage.setScene(scene);
                 stage.show();
+                Principal.setUser(null);
             } catch (IOException ex) {
                 Logger.getLogger(FXMLSalasController.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -145,20 +147,19 @@ public class FXMLPrincipalController implements Initializable {
         //<editor-fold defaultstate="collapsed" desc="Popup">
         JFXPopup popup = new JFXPopup();
 
-        JFXButton btAtenderP = new JFXButton("Atender");
+        btAtenderP = new JFXButton("Atender");
         btAtenderP.setPadding(new Insets(10));
         btAtenderP.setMinWidth(100.0);
         btAtenderP.setOnAction((event) -> {
             Chamado chamado = chamados.get(lvChamados.getSelectionModel().getSelectedIndex());
 
             if (chamado.getStatus() == 1) {
-                chamado.setID_Administrador(Principal.getUser().getID_Usuario());
                 atenderChamado(chamado);
             }
             popup.hide();
         });
 
-        JFXButton btFinalizarP = new JFXButton("Finalizar");
+        btFinalizarP = new JFXButton("Finalizar");
         btFinalizarP.setPadding(new Insets(10));
         btFinalizarP.setMinWidth(100.0);
         btFinalizarP.setOnAction((event) -> {
@@ -338,7 +339,7 @@ public class FXMLPrincipalController implements Initializable {
                 btExcluirP.setDisable(true);
             } else {
                 Chamado chamado = chamados.get(lvChamados.getSelectionModel().getSelectedIndex());
-                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
+                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
                 tfID.setText(chamado.getID_Chamado() + "");
                 tfUsuario.setText(chamado.getNome_Usuario());
@@ -384,7 +385,6 @@ public class FXMLPrincipalController implements Initializable {
             Chamado chamado = chamados.get(lvChamados.getSelectionModel().getSelectedIndex());
 
             if (chamado.getStatus() == 1) {
-                chamado.setID_Administrador(Principal.getUser().getID_Usuario());
                 atenderChamado(chamado);
             }
         });
@@ -410,127 +410,136 @@ public class FXMLPrincipalController implements Initializable {
 
     public void atenderChamado(Chamado chamado) {
         new Thread(() -> {
-            try {
-                if ((int) Principal.realizarOperacao("AtenderChamado", chamado) == 1) {
-                    Platform.runLater(() -> {
-                        ((FontAwesomeIconView) lvChamados.getItems().get(chamados.indexOf(chamado)).getChildren().get(1)).setStyle("-fx-fill: #FFFF00;");
-                        JFXSnackbar.SnackbarEvent barEvent = new JFXSnackbar.SnackbarEvent("Chamado atendido.", "Ok", 3000, false, (MouseEvent event1) -> {
-                            snackbar.close();
-                        });
-                        snackbar.enqueue(barEvent);
+            int index = chamados.indexOf(chamado);
+            chamado.setID_Administrador(Principal.getUser().getID_Usuario());
+            chamado.setNome_Administrador(Principal.getUser().getNome());
+            chamado.setStatus(2);
+            if ((int) Principal.realizarOperacao("AtenderChamado", chamado) == 1) {
+                chamados.set(index, chamado);
+                Platform.runLater(() -> {
+                    ((FontAwesomeIconView) lvChamados.getItems().get(chamados.indexOf(chamado)).getChildren().get(1)).setStyle("-fx-fill: #FFFF00;");
+                    tfAdministrador.setText(chamado.getNome_Administrador());
+                    btAtender.setDisable(chamado.getStatus() != 1);
+                    btFinalizar.setDisable(chamado.getStatus() != 2);
+                    btAtenderP.setDisable(chamado.getStatus() != 1);
+                    btFinalizarP.setDisable(chamado.getStatus() != 2);
+                    JFXSnackbar.SnackbarEvent barEvent = new JFXSnackbar.SnackbarEvent("Chamado atendido.", "Ok", 3000, false, (MouseEvent event1) -> {
+                        snackbar.close();
                     });
-                } else {
-                    Platform.runLater(() -> {
-                        JFXSnackbar.SnackbarEvent barEvent = new JFXSnackbar.SnackbarEvent("Não foi possível atender o chamado.", "Tentar novamente", 3000, false, (MouseEvent event1) -> {
-                            atenderChamado(chamado);
-                            snackbar.close();
-                        });
-                        snackbar.enqueue(barEvent);
+                    snackbar.enqueue(barEvent);
+                });
+            } else {
+                Platform.runLater(() -> {
+                    JFXSnackbar.SnackbarEvent barEvent = new JFXSnackbar.SnackbarEvent("Não foi possível atender o chamado.", "Tentar novamente", 3000, false, (MouseEvent event1) -> {
+                        atenderChamado(chamado);
+                        snackbar.close();
                     });
-                }
-            } catch (IOException | ClassNotFoundException ex) {
-                Logger.getLogger(FXMLSalasController.class.getName()).log(Level.SEVERE, null, ex);
+                    snackbar.enqueue(barEvent);
+                });
             }
         }).start();
     }
 
+    public void reconnect() {
+        JFXSnackbar.SnackbarEvent barEvent = new JFXSnackbar.SnackbarEvent("A conexão com o servidor foi restabelecida.", "Ok", 3000, false, (MouseEvent event1) -> {
+            snackbar.close();
+        });
+        snackbar.enqueue(barEvent);
+    }
+
     public void finalizarChamado(Chamado chamado) {
         new Thread(() -> {
-            try {
-                if ((int) Principal.realizarOperacao("FinalizarChamado", chamado) == 1) {
-                    Platform.runLater(() -> {
-                        ((FontAwesomeIconView) lvChamados.getItems().get(chamados.indexOf(chamado)).getChildren().get(1)).setStyle("-fx-fill: #00FF00;");
-                        JFXSnackbar.SnackbarEvent barEvent = new JFXSnackbar.SnackbarEvent("Chamado Finalizado.", "Ok", 3000, false, (MouseEvent event1) -> {
-                            snackbar.close();
-                        });
-                        snackbar.enqueue(barEvent);
+            int index = chamados.indexOf(chamado);
+            chamado.setData_Final(new Date());
+            chamado.setStatus(3);
+            if ((int) Principal.realizarOperacao("FinalizarChamado", chamado) == 1) {
+                chamados.set(index, chamado);
+                Platform.runLater(() -> {
+                    ((FontAwesomeIconView) lvChamados.getItems().get(chamados.indexOf(chamado)).getChildren().get(1)).setStyle("-fx-fill: #00FF00;");
+                    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+                    tfFinalizacao.setText(sdf.format(chamado.getData_Final()));
+                    btAtender.setDisable(chamado.getStatus() != 1);
+                    btFinalizar.setDisable(chamado.getStatus() != 2);
+                    btAtenderP.setDisable(chamado.getStatus() != 1);
+                    btFinalizarP.setDisable(chamado.getStatus() != 2);
+                    JFXSnackbar.SnackbarEvent barEvent = new JFXSnackbar.SnackbarEvent("Chamado Finalizado.", "Ok", 3000, false, (MouseEvent event1) -> {
+                        snackbar.close();
                     });
-                } else {
-                    Platform.runLater(() -> {
-                        JFXSnackbar.SnackbarEvent barEvent = new JFXSnackbar.SnackbarEvent("Não foi possível finalizar o chamado.", "Tentar novamente", 3000, false, (MouseEvent event1) -> {
-                            finalizarChamado(chamado);
-                            snackbar.close();
-                        });
-                        snackbar.enqueue(barEvent);
+                    snackbar.enqueue(barEvent);
+                });
+            } else {
+                Platform.runLater(() -> {
+                    JFXSnackbar.SnackbarEvent barEvent = new JFXSnackbar.SnackbarEvent("Não foi possível finalizar o chamado.", "Tentar novamente", 3000, false, (MouseEvent event1) -> {
+                        finalizarChamado(chamado);
+                        snackbar.close();
                     });
-                }
-            } catch (IOException | ClassNotFoundException ex) {
-                Logger.getLogger(FXMLSalasController.class.getName()).log(Level.SEVERE, null, ex);
+                    snackbar.enqueue(barEvent);
+                });
             }
         }).start();
     }
 
     public void excluirChamado(Chamado chamado) {
         new Thread(() -> {
-            try {
-                if ((int) Principal.realizarOperacao("ExcluirChamado", chamado) == 1) {
-                    Platform.runLater(() -> {
-                        lvChamados.getItems().remove(chamados.indexOf(chamado));
-                        chamados.remove(chamado);
-                        JFXSnackbar.SnackbarEvent barEvent = new JFXSnackbar.SnackbarEvent("Chamado excluido", "Ok", 3000, false, (MouseEvent event1) -> {
-                            snackbar.close();
-                        });
-                        snackbar.enqueue(barEvent);
+            if ((int) Principal.realizarOperacao("ExcluirChamado", chamado) == 1) {
+                Platform.runLater(() -> {
+                    lvChamados.getItems().remove(chamados.indexOf(chamado));
+                    chamados.remove(chamado);
+                    JFXSnackbar.SnackbarEvent barEvent = new JFXSnackbar.SnackbarEvent("Chamado excluido", "Ok", 3000, false, (MouseEvent event1) -> {
+                        snackbar.close();
                     });
-                } else {
-                    Platform.runLater(() -> {
-                        lvChamados.getItems().remove(chamados.indexOf(chamado));
-                        JFXSnackbar.SnackbarEvent barEvent = new JFXSnackbar.SnackbarEvent("Não foi possível excluir o chamado.", "Tentar novamente", 3000, false, (MouseEvent event1) -> {
-                            excluirChamado(chamado);
-                            snackbar.close();
-                        });
-                        snackbar.enqueue(barEvent);
+                    snackbar.enqueue(barEvent);
+                });
+            } else {
+                Platform.runLater(() -> {
+                    lvChamados.getItems().remove(chamados.indexOf(chamado));
+                    JFXSnackbar.SnackbarEvent barEvent = new JFXSnackbar.SnackbarEvent("Não foi possível excluir o chamado.", "Tentar novamente", 3000, false, (MouseEvent event1) -> {
+                        excluirChamado(chamado);
+                        snackbar.close();
                     });
-                }
-            } catch (IOException | ClassNotFoundException ex) {
-                Logger.getLogger(FXMLSalasController.class.getName()).log(Level.SEVERE, null, ex);
+                    snackbar.enqueue(barEvent);
+                });
             }
         }).start();
     }
 
     public void attDados() {
         new Thread(() -> {
-            try {
-                chamados = (LinkedList<Chamado>) Principal.obterLista("Chamados");
+            chamados = (LinkedList<Chamado>) Principal.obterLista("Chamados");
+            Platform.runLater(() -> {
+                lvChamados.getItems().clear();
+            });
+            for (Chamado chamado : chamados) {
+                Label lblChamado = new Label("Chamado #" + chamado.getID_Chamado());
+                lblChamado.setFont(Font.font(14));
+
+                Label lblTipo = new Label((chamado.getProblema().getTipo() == 1 ? "Hardware" : "Software") + " - " + chamado.getProblema().getDescricao());
+                lblTipo.setFont(Font.font(12));
+                lblTipo.setLayoutY(20);
+
+                Label lblLocal = new Label(chamado.getComputador().getSala() + " - " + chamado.getComputador().getNumero());
+                lblLocal.setFont(Font.font(12));
+                lblLocal.setLayoutY(20);
+
+                AnchorPane.setRightAnchor(lblLocal, 0.0);
+
+                FontAwesomeIconView icon = new FontAwesomeIconView(FontAwesomeIcon.CIRCLE);
+                String color;
+                if (chamado.getStatus() == 1) {
+                    color = "#FF0000";
+                } else if (chamado.getStatus() == 2) {
+                    color = "#FFFF00";
+                } else {
+                    color = "#00FF00";
+                }
+                icon.setStyle("-fx-fill: " + color + ";");
+
+                AnchorPane.setRightAnchor(icon, 0.0);
+                AnchorPane.setTopAnchor(icon, 0.0);
 
                 Platform.runLater(() -> {
-                    lvChamados.getItems().clear();
+                    lvChamados.getItems().add(new AnchorPane(lblChamado, icon, lblTipo, lblLocal));
                 });
-
-                for (Chamado chamado : chamados) {
-                    Label lblChamado = new Label("Chamado #" + chamado.getID_Chamado());
-                    lblChamado.setFont(Font.font(14));
-
-                    Label lblTipo = new Label((chamado.getProblema().getTipo() == 1 ? "Hardware" : "Software") + " - " + chamado.getProblema().getDescricao());
-                    lblTipo.setFont(Font.font(12));
-                    lblTipo.setLayoutY(20);
-
-                    Label lblLocal = new Label(chamado.getComputador().getSala() + " - " + chamado.getComputador().getNumero());
-                    lblLocal.setFont(Font.font(12));
-                    lblLocal.setLayoutY(20);
-
-                    AnchorPane.setRightAnchor(lblLocal, 0.0);
-
-                    FontAwesomeIconView icon = new FontAwesomeIconView(FontAwesomeIcon.CIRCLE);
-                    String color;
-                    if (chamado.getStatus() == 1) {
-                        color = "#FF0000";
-                    } else if (chamado.getStatus() == 2) {
-                        color = "#FFFF00";
-                    } else {
-                        color = "#00FF00";
-                    }
-                    icon.setStyle("-fx-fill: " + color + ";");
-
-                    AnchorPane.setRightAnchor(icon, 0.0);
-                    AnchorPane.setTopAnchor(icon, 0.0);
-
-                    Platform.runLater(() -> {
-                        lvChamados.getItems().add(new AnchorPane(lblChamado, icon, lblTipo, lblLocal));
-                    });
-                }
-            } catch (IOException | ClassNotFoundException ex) {
-                Logger.getLogger(FXMLPrincipalController.class.getName()).log(Level.SEVERE, null, ex);
             }
         }).start();
     }

@@ -57,18 +57,13 @@ public class FXMLAdministradoresController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        //<editor-fold defaultstate="collapsed" desc="addDados">
+        //<editor-fold defaultstate="collapsed" desc="attDados">
         new Thread(() -> {
-            try {
-                administradores = (LinkedList<Usuario>) Principal.obterLista("Administradores");
-
-                for (Usuario usuario : administradores) {
-                    cmbEmail.getItems().add(usuario.getEmail());
-                }
-                cmbEmail.getSelectionModel().selectFirst();
-            } catch (IOException | ClassNotFoundException ex) {
-                Logger.getLogger(FXMLAdministradoresController.class.getName()).log(Level.SEVERE, null, ex);
+            administradores = (LinkedList<Usuario>) Principal.obterLista("Administradores");
+            for (Usuario usuario : administradores) {
+                cmbEmail.getItems().add(usuario.getEmail());
             }
+            cmbEmail.getSelectionModel().selectFirst();
         }).start();
         //</editor-fold>
 
@@ -149,11 +144,7 @@ public class FXMLAdministradoresController implements Initializable {
                 int disponivel = 0;
 
                 if (m.find()) {
-                    try {
-                        disponivel = (int) Principal.realizarOperacao("EmailDisponivel", textField.getText());
-                    } catch (IOException | ClassNotFoundException ex) {
-                        Logger.getLogger(FXMLRegistrarController.class.getName()).log(Level.SEVERE, null, ex);
-                    }
+                    disponivel = (int) Principal.realizarOperacao("EmailDisponivel", textField.getText());
                 }
 
                 hasErrors.set(disponivel == 0);
@@ -300,56 +291,48 @@ public class FXMLAdministradoresController implements Initializable {
 
     public void excluirAdministrador(Usuario usuario) {
         new Thread(() -> {
-            try {
-                if ((int) Principal.realizarOperacao("ExcluirAdministrador", usuario) == 1) {
-                    Platform.runLater(() -> {
-                        cmbEmail.getItems().remove(administradores.indexOf(usuario));
-                        administradores.remove(usuario);
-                        JFXSnackbar.SnackbarEvent barEvent = new JFXSnackbar.SnackbarEvent("Administrador excluido.", "Ok", 3000, false, (MouseEvent event) -> {
-                            snackbar.close();
-                        });
-                        snackbar.enqueue(barEvent);
+            if ((int) Principal.realizarOperacao("ExcluirAdministrador", usuario) == 1) {
+                Platform.runLater(() -> {
+                    cmbEmail.getItems().remove(administradores.indexOf(usuario));
+                    administradores.remove(usuario);
+                    JFXSnackbar.SnackbarEvent barEvent = new JFXSnackbar.SnackbarEvent("Administrador excluido.", "Ok", 3000, false, (MouseEvent event) -> {
+                        snackbar.close();
                     });
-                } else {
-                    Platform.runLater(() -> {
-                        JFXSnackbar.SnackbarEvent barEvent = new JFXSnackbar.SnackbarEvent("Não foi possível excluir o administrador.", "Tentar novamente", 3000, false, (MouseEvent event) -> {
-                            excluirAdministrador(usuario);
-                            snackbar.close();
-                        });
-                        snackbar.enqueue(barEvent);
+                    snackbar.enqueue(barEvent);
+                });
+            } else {
+                Platform.runLater(() -> {
+                    JFXSnackbar.SnackbarEvent barEvent = new JFXSnackbar.SnackbarEvent("Não foi possível excluir o administrador.", "Tentar novamente", 3000, false, (MouseEvent event) -> {
+                        excluirAdministrador(usuario);
+                        snackbar.close();
                     });
-                }
-            } catch (IOException | ClassNotFoundException ex) {
-                Logger.getLogger(FXMLSalasController.class.getName()).log(Level.SEVERE, null, ex);
+                    snackbar.enqueue(barEvent);
+                });
             }
         }).start();
     }
 
     public void adicionarAdministrador(Usuario usuario) {
         new Thread(() -> {
-            try {
-                Usuario user = (Usuario) Principal.realizarOperacao("CadastrarUsuario", usuario);
-                if (user != null) {
-                    administradores.add(user);
-                    Platform.runLater(() -> {
-                        cmbEmail.getItems().add(user.getEmail());
-                        cmbEmail.getSelectionModel().selectLast();
-                        JFXSnackbar.SnackbarEvent barEvent = new JFXSnackbar.SnackbarEvent("Administrador adicionado.", "Ok", 3000, false, (MouseEvent event) -> {
-                            snackbar.close();
-                        });
-                        snackbar.enqueue(barEvent);
+            Usuario user = (Usuario) Principal.realizarOperacao("CadastrarUsuario", usuario);
+            if (user != null) {
+                administradores.add(user);
+                Platform.runLater(() -> {
+                    cmbEmail.getItems().add(user.getEmail());
+                    cmbEmail.getSelectionModel().selectLast();
+                    JFXSnackbar.SnackbarEvent barEvent = new JFXSnackbar.SnackbarEvent("Administrador adicionado.", "Ok", 3000, false, (MouseEvent event) -> {
+                        snackbar.close();
                     });
-                } else {
-                    Platform.runLater(() -> {
-                        JFXSnackbar.SnackbarEvent barEvent = new JFXSnackbar.SnackbarEvent("Não foi possível adicionar o adminitrador.", "Tentar novamete", 3000, false, (MouseEvent event) -> {
-                            adicionarAdministrador(usuario);
-                            snackbar.close();
-                        });
-                        snackbar.enqueue(barEvent);
+                    snackbar.enqueue(barEvent);
+                });
+            } else {
+                Platform.runLater(() -> {
+                    JFXSnackbar.SnackbarEvent barEvent = new JFXSnackbar.SnackbarEvent("Não foi possível adicionar o adminitrador.", "Tentar novamete", 3000, false, (MouseEvent event) -> {
+                        adicionarAdministrador(usuario);
+                        snackbar.close();
                     });
-                }
-            } catch (IOException | ClassNotFoundException ex) {
-                Logger.getLogger(FXMLSalasController.class.getName()).log(Level.SEVERE, null, ex);
+                    snackbar.enqueue(barEvent);
+                });
             }
         }).start();
     }

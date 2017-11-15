@@ -55,18 +55,14 @@ public class FXMLSalasController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         //<editor-fold defaultstate="collapsed" desc="attDados">
         new Thread(() -> {
-            try {
-                salas = (LinkedList<Sala>) Principal.obterLista("Salas");
-                Platform.runLater(() -> {
-                    cmbSala.getItems().clear();
-                    for (Sala sala : salas) {
-                        cmbSala.getItems().add(String.valueOf(sala.getID()));
-                    }
-                    cmbSala.getSelectionModel().selectFirst();
-                });
-            } catch (IOException | ClassNotFoundException ex) {
-                Logger.getLogger(FXMLSalasController.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            salas = (LinkedList<Sala>) Principal.obterLista("Salas");
+            Platform.runLater(() -> {
+                cmbSala.getItems().clear();
+                for (Sala sala : salas) {
+                    cmbSala.getItems().add(String.valueOf(sala.getID()));
+                }
+                cmbSala.getSelectionModel().selectFirst();
+            });
         }).start();
         //</editor-fold>
 
@@ -181,55 +177,47 @@ public class FXMLSalasController implements Initializable {
 
     public void excluirSala(Sala sala) {
         new Thread(() -> {
-            try {
-                if ((int) Principal.realizarOperacao("ExcluirSala", sala) == 1) {
-                    Platform.runLater(() -> {
-                        cmbSala.getItems().remove(salas.indexOf(sala));
-                        salas.remove(sala);
-                        SnackbarEvent barEvent = new SnackbarEvent("Sala excluida.", "Ok", 3000, false, (MouseEvent event) -> {
-                            snackbar.close();
-                        });
-                        snackbar.enqueue(barEvent);
+            if ((int) Principal.realizarOperacao("ExcluirSala", sala) == 1) {
+                Platform.runLater(() -> {
+                    cmbSala.getItems().remove(salas.indexOf(sala));
+                    salas.remove(sala);
+                    SnackbarEvent barEvent = new SnackbarEvent("Sala excluida.", "Ok", 3000, false, (MouseEvent event) -> {
+                        snackbar.close();
                     });
-                } else {
-                    Platform.runLater(() -> {
-                        SnackbarEvent barEvent = new SnackbarEvent("Não foi possível excluir a sala.", "Tentar novamente", 3000, false, (MouseEvent event) -> {
-                            excluirSala(sala);
-                            snackbar.close();
-                        });
-                        snackbar.enqueue(barEvent);
+                    snackbar.enqueue(barEvent);
+                });
+            } else {
+                Platform.runLater(() -> {
+                    SnackbarEvent barEvent = new SnackbarEvent("Não foi possível excluir a sala.", "Tentar novamente", 3000, false, (MouseEvent event) -> {
+                        excluirSala(sala);
+                        snackbar.close();
                     });
-                }
-            } catch (IOException | ClassNotFoundException ex) {
-                Logger.getLogger(FXMLSalasController.class.getName()).log(Level.SEVERE, null, ex);
+                    snackbar.enqueue(barEvent);
+                });
             }
         }).start();
     }
 
     public void adicionarSala(Sala sala) {
         new Thread(() -> {
-            try {
-                if ((int) Principal.realizarOperacao("AdicionarSala", sala) == 1) {
-                    salas.add(sala);
-                    Platform.runLater(() -> {
-                        cmbSala.getItems().add(String.valueOf(sala.getID()));
-                        cmbSala.getSelectionModel().selectLast();
-                        SnackbarEvent barEvent = new SnackbarEvent("Sala adicionada.", "Ok", 3000, false, (MouseEvent event) -> {
-                            snackbar.close();
-                        });
-                        snackbar.enqueue(barEvent);
+            if ((int) Principal.realizarOperacao("AdicionarSala", sala) == 1) {
+                salas.add(sala);
+                Platform.runLater(() -> {
+                    cmbSala.getItems().add(String.valueOf(sala.getID()));
+                    cmbSala.getSelectionModel().selectLast();
+                    SnackbarEvent barEvent = new SnackbarEvent("Sala adicionada.", "Ok", 3000, false, (MouseEvent event) -> {
+                        snackbar.close();
                     });
-                } else {
-                    Platform.runLater(() -> {
-                        SnackbarEvent barEvent = new SnackbarEvent("Não foi possível adicionar a sala.", "Tentar novamente", 3000, false, (MouseEvent event) -> {
-                            adicionarSala(sala);
-                            snackbar.close();
-                        });
-                        snackbar.enqueue(barEvent);
+                    snackbar.enqueue(barEvent);
+                });
+            } else {
+                Platform.runLater(() -> {
+                    SnackbarEvent barEvent = new SnackbarEvent("Não foi possível adicionar a sala.", "Tentar novamente", 3000, false, (MouseEvent event) -> {
+                        adicionarSala(sala);
+                        snackbar.close();
                     });
-                }
-            } catch (IOException | ClassNotFoundException ex) {
-                Logger.getLogger(FXMLSalasController.class.getName()).log(Level.SEVERE, null, ex);
+                    snackbar.enqueue(barEvent);
+                });
             }
         }).start();
     }

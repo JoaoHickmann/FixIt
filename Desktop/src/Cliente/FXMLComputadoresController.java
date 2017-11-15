@@ -57,19 +57,15 @@ public class FXMLComputadoresController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         //<editor-fold defaultstate="collapsed" desc="attDados">
         new Thread(() -> {
-            try {
-                computadores = (LinkedList<Computador>) Principal.obterLista("Computadores");
-                Platform.runLater(() -> {
-                    for (Computador computador : computadores) {
-                        if (!cmbSala.getItems().contains(String.valueOf(computador.getSala()))) {
-                            cmbSala.getItems().add(String.valueOf(computador.getSala()));
-                        }
+            computadores = (LinkedList<Computador>) Principal.obterLista("Computadores");
+            Platform.runLater(() -> {
+                for (Computador computador : computadores) {
+                    if (!cmbSala.getItems().contains(String.valueOf(computador.getSala()))) {
+                        cmbSala.getItems().add(String.valueOf(computador.getSala()));
                     }
-                    cmbSala.getSelectionModel().selectFirst();
-                });
-            } catch (IOException | ClassNotFoundException ex) {
-                Logger.getLogger(FXMLComputadoresController.class.getName()).log(Level.SEVERE, null, ex);
-            }
+                }
+                cmbSala.getSelectionModel().selectFirst();
+            });
         }).start();
         //</editor-fold>
 
@@ -229,18 +225,14 @@ public class FXMLComputadoresController implements Initializable {
 
         btAdicionar.setOnAction((ActionEvent event) -> {
             new Thread(() -> {
-                try {
-                    LinkedList<Sala> salas = (LinkedList<Sala>) Principal.obterLista("Salas");
-                    Platform.runLater(() -> {
-                        cmbSalaD.getItems().clear();
-                        for (Sala sala : salas) {
-                            cmbSalaD.getItems().add(String.valueOf(sala.getID()));
-                        }
-                        cmbSalaD.getSelectionModel().selectFirst();
-                    });
-                } catch (IOException | ClassNotFoundException ex) {
-                    Logger.getLogger(FXMLComputadoresController.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                LinkedList<Sala> salas = (LinkedList<Sala>) Principal.obterLista("Salas");
+                Platform.runLater(() -> {
+                    cmbSalaD.getItems().clear();
+                    for (Sala sala : salas) {
+                        cmbSalaD.getItems().add(String.valueOf(sala.getID()));
+                    }
+                    cmbSalaD.getSelectionModel().selectFirst();
+                });
             }).start();
             tfNumeroD.setText("");
             dialogAdd.show();
@@ -250,94 +242,86 @@ public class FXMLComputadoresController implements Initializable {
 
     public void adicionarComputador(LinkedList<Computador> pcs) {
         new Thread(() -> {
-            try {
-                int result = (int) Principal.realizarOperacao("AdicionarComputador", pcs);
-                if (result != 0) {
-                    if (pcs.size() == 1) {
-                        pcs.get(0).setID(result);
-                        computadores.add(pcs.get(0));
-                        Platform.runLater(() -> {
-                            if (cmbSala.getItems().contains(String.valueOf(pcs.get(0).getSala()))) {
-                                if (cmbSala.getValue().equals(String.valueOf(pcs.get(0).getSala()))) {
-                                    cmbComputador.getItems().add(String.valueOf(pcs.get(0).getNumero()));
-                                } else {
-                                    cmbSala.getSelectionModel().select(String.valueOf(pcs.get(0).getSala()));
-                                }
-                                cmbComputador.getSelectionModel().selectLast();
+            int result = (int) Principal.realizarOperacao("AdicionarComputador", pcs);
+            if (result != 0) {
+                if (pcs.size() == 1) {
+                    pcs.get(0).setID(result);
+                    computadores.add(pcs.get(0));
+                    Platform.runLater(() -> {
+                        if (cmbSala.getItems().contains(String.valueOf(pcs.get(0).getSala()))) {
+                            if (cmbSala.getValue().equals(String.valueOf(pcs.get(0).getSala()))) {
+                                cmbComputador.getItems().add(String.valueOf(pcs.get(0).getNumero()));
                             } else {
-                                cmbSala.getItems().add(String.valueOf(pcs.get(0).getSala()));
-                                cmbSala.getSelectionModel().selectLast();
-                            }
-                        });
-                    } else {
-                        for (int i = pcs.get(0).getNumero(); i <= pcs.get(1).getNumero(); i++) {
-                            computadores.add(new Computador(result - (pcs.get(1).getNumero() - i), i, pcs.get(0).getSala()));
-                        }
-                        Platform.runLater(() -> {
-                            if (cmbSala.getItems().contains(String.valueOf(pcs.get(0).getSala()))) {
                                 cmbSala.getSelectionModel().select(String.valueOf(pcs.get(0).getSala()));
-                                cmbComputador.getItems().clear();
-                                for (Computador computador : computadores) {
-                                    if (computador.getSala() == pcs.get(0).getSala()) {
-                                        cmbComputador.getItems().add(String.valueOf(computador.getNumero()));
-                                    }
-                                }
-                            } else {
-                                cmbSala.getItems().add(String.valueOf(pcs.get(0).getSala()));
-                                cmbSala.getSelectionModel().selectLast();
                             }
                             cmbComputador.getSelectionModel().selectLast();
-                        });
-                    }
-                    Platform.runLater(() -> {
-                        JFXSnackbar.SnackbarEvent barEvent = new JFXSnackbar.SnackbarEvent("Computador" + (pcs.size() == 1 ? "" : "s") + " adicionado" + (pcs.size() == 1 ? "" : "s") + ".", "Ok", 3000, false, (MouseEvent event) -> {
-                            snackbar.close();
-                        });
-                        snackbar.enqueue(barEvent);
+                        } else {
+                            cmbSala.getItems().add(String.valueOf(pcs.get(0).getSala()));
+                            cmbSala.getSelectionModel().selectLast();
+                        }
                     });
                 } else {
+                    for (int i = pcs.get(0).getNumero(); i <= pcs.get(1).getNumero(); i++) {
+                        computadores.add(new Computador(result - (pcs.get(1).getNumero() - i), i, pcs.get(0).getSala()));
+                    }
                     Platform.runLater(() -> {
-                        JFXSnackbar.SnackbarEvent barEvent = new JFXSnackbar.SnackbarEvent("Não foi possível adicionar o" + (pcs.size() == 1 ? "" : "s") + " computador" + (pcs.size() == 1 ? "" : "s") + ".", "Tentar novamente", 3000, false, (MouseEvent event) -> {
-                            adicionarComputador(pcs);
-                            snackbar.close();
-                        });
-                        snackbar.enqueue(barEvent);
+                        if (cmbSala.getItems().contains(String.valueOf(pcs.get(0).getSala()))) {
+                            cmbSala.getSelectionModel().select(String.valueOf(pcs.get(0).getSala()));
+                            cmbComputador.getItems().clear();
+                            for (Computador computador : computadores) {
+                                if (computador.getSala() == pcs.get(0).getSala()) {
+                                    cmbComputador.getItems().add(String.valueOf(computador.getNumero()));
+                                }
+                            }
+                        } else {
+                            cmbSala.getItems().add(String.valueOf(pcs.get(0).getSala()));
+                            cmbSala.getSelectionModel().selectLast();
+                        }
+                        cmbComputador.getSelectionModel().selectLast();
                     });
                 }
-            } catch (IOException | ClassNotFoundException ex) {
-                Logger.getLogger(FXMLSalasController.class.getName()).log(Level.SEVERE, null, ex);
+                Platform.runLater(() -> {
+                    JFXSnackbar.SnackbarEvent barEvent = new JFXSnackbar.SnackbarEvent("Computador" + (pcs.size() == 1 ? "" : "s") + " adicionado" + (pcs.size() == 1 ? "" : "s") + ".", "Ok", 3000, false, (MouseEvent event) -> {
+                        snackbar.close();
+                    });
+                    snackbar.enqueue(barEvent);
+                });
+            } else {
+                Platform.runLater(() -> {
+                    JFXSnackbar.SnackbarEvent barEvent = new JFXSnackbar.SnackbarEvent("Não foi possível adicionar o" + (pcs.size() == 1 ? "" : "s") + " computador" + (pcs.size() == 1 ? "" : "s") + ".", "Tentar novamente", 3000, false, (MouseEvent event) -> {
+                        adicionarComputador(pcs);
+                        snackbar.close();
+                    });
+                    snackbar.enqueue(barEvent);
+                });
             }
         }).start();
     }
 
     public void excluirComputador(Computador computador) {
         new Thread(() -> {
-            try {
-                if ((int) Principal.realizarOperacao("ExcluirComputador", computador) == 1) {
-                    computadores.remove(computador);
-                    Platform.runLater(() -> {
-                        cmbComputador.getItems().remove(cmbComputador.getSelectionModel().getSelectedIndex());
-                        cmbComputador.getSelectionModel().selectFirst();
-                        if (cmbComputador.getItems().size() == 0) {
-                            cmbSala.getItems().remove(cmbSala.getSelectionModel().getSelectedIndex());
-                            cmbSala.getSelectionModel().selectFirst();
-                        }
-                        JFXSnackbar.SnackbarEvent barEvent = new JFXSnackbar.SnackbarEvent("Computador excluido.", "Ok", 3000, false, (MouseEvent event) -> {
-                            snackbar.close();
-                        });
-                        snackbar.enqueue(barEvent);
+            if ((int) Principal.realizarOperacao("ExcluirComputador", computador) == 1) {
+                computadores.remove(computador);
+                Platform.runLater(() -> {
+                    cmbComputador.getItems().remove(cmbComputador.getSelectionModel().getSelectedIndex());
+                    cmbComputador.getSelectionModel().selectFirst();
+                    if (cmbComputador.getItems().size() == 0) {
+                        cmbSala.getItems().remove(cmbSala.getSelectionModel().getSelectedIndex());
+                        cmbSala.getSelectionModel().selectFirst();
+                    }
+                    JFXSnackbar.SnackbarEvent barEvent = new JFXSnackbar.SnackbarEvent("Computador excluido.", "Ok", 3000, false, (MouseEvent event) -> {
+                        snackbar.close();
                     });
-                } else {
-                    Platform.runLater(() -> {
-                        JFXSnackbar.SnackbarEvent barEvent = new JFXSnackbar.SnackbarEvent("Não foi possível excluir o computador.", "Tentar novamente", 3000, false, (MouseEvent event) -> {
-                            excluirComputador(computador);
-                            snackbar.close();
-                        });
-                        snackbar.enqueue(barEvent);
+                    snackbar.enqueue(barEvent);
+                });
+            } else {
+                Platform.runLater(() -> {
+                    JFXSnackbar.SnackbarEvent barEvent = new JFXSnackbar.SnackbarEvent("Não foi possível excluir o computador.", "Tentar novamente", 3000, false, (MouseEvent event) -> {
+                        excluirComputador(computador);
+                        snackbar.close();
                     });
-                }
-            } catch (IOException | ClassNotFoundException ex) {
-                Logger.getLogger(FXMLSalasController.class.getName()).log(Level.SEVERE, null, ex);
+                    snackbar.enqueue(barEvent);
+                });
             }
         }).start();
     }

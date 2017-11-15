@@ -138,7 +138,7 @@ public class FXMLLoginController implements Initializable {
                                 lblMensagem.setText("Email ou Senha incorreto!");
                             });
                         }
-                    } catch (IOException | ClassNotFoundException ex) {
+                    } catch (IOException ex) {
                         Logger.getLogger(FXMLLoginController.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }).start();
@@ -179,18 +179,14 @@ public class FXMLLoginController implements Initializable {
         btAdicionarD.setTextFill(Paint.valueOf("#29B6F6"));
         btAdicionarD.setOnAction((ActionEvent event) -> {
             new Thread(() -> {
-                try {
-                    if (tfEmailEsqueceuSenha.validate() && (int) Principal.realizarOperacao("EsqueceuSenha", tfEmailEsqueceuSenha.getText()) == 1) {
-                        JFXSnackbar.SnackbarEvent barEvent = new JFXSnackbar.SnackbarEvent("Email enviado para " + tfEmailEsqueceuSenha.getText() + "", "Ok", 3000, false, (MouseEvent event1) -> {
-                            snackbar.close();
-                        });
-                        Platform.runLater(() -> {
-                            snackbar.enqueue(barEvent);
-                            dialog.close();
-                        });
-                    }
-                } catch (IOException | ClassNotFoundException ex) {
-                    Logger.getLogger(FXMLLoginController.class.getName()).log(Level.SEVERE, null, ex);
+                if (tfEmailEsqueceuSenha.validate() && (int) Principal.realizarOperacao("EsqueceuSenha", tfEmailEsqueceuSenha.getText()) == 1) {
+                    JFXSnackbar.SnackbarEvent barEvent = new JFXSnackbar.SnackbarEvent("Email enviado para " + tfEmailEsqueceuSenha.getText() + "", "Ok", 3000, false, (MouseEvent event1) -> {
+                        snackbar.close();
+                    });
+                    Platform.runLater(() -> {
+                        snackbar.enqueue(barEvent);
+                        dialog.close();
+                    });
                 }
             }).start();
         });
