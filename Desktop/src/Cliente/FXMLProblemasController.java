@@ -14,6 +14,7 @@ import java.util.LinkedList;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -42,17 +43,35 @@ public class FXMLProblemasController implements Initializable {
     private JFXButton btVoltar;
     @FXML
     private StackPane StackPane;
-    
+
     private JFXSnackbar snackbar;
+    private JFXDialog dialogAdd;
+    private JFXDialog dialogExc;
 
     private LinkedList<Problema> problemas;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        cmbTipo.getItems().add("Hardware");
+        cmbTipo.getItems().add("Software");
+
+        //<editor-fold defaultstate="collapsed" desc="attDados">
+        new Thread(() -> {
+            try {
+                problemas = (LinkedList<Problema>) Principal.obterLista("Problemas");
+                Platform.runLater(() -> {
+                    cmbTipo.getSelectionModel().selectFirst();
+                });
+            } catch (IOException | ClassNotFoundException ex) {
+                Logger.getLogger(FXMLProblemasController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }).start();
+        //</editor-fold>
+
         //<editor-fold defaultstate="collapsed" desc="SnackBar">
         snackbar = new JFXSnackbar(StackPane);
         snackbar.setPrefWidth(300);
-        //</editor-fold>
+        //</editor-fold>        
 
         //<editor-fold defaultstate="collapsed" desc="Voltar">
         btVoltar.setOnAction((ActionEvent event) -> {
@@ -76,154 +95,168 @@ public class FXMLProblemasController implements Initializable {
                     cmbProblema.getItems().add(problema.getDescricao());
                 }
             }
+            cmbProblema.getSelectionModel().selectFirst();
         });
         //</editor-fold>
 
         //<editor-fold defaultstate="collapsed" desc="Excluir">
-        btExcluir.setOnAction((ActionEvent event) -> {
+        JFXDialogLayout layoutExc = new JFXDialogLayout();
+        dialogExc = new JFXDialog(StackPane, layoutExc, JFXDialog.DialogTransition.CENTER);
+
+        JFXButton btCancelarD = new JFXButton("Cancelar");
+        btCancelarD.setTextFill(Paint.valueOf("#29B6F6"));
+        btCancelarD.setOnAction((ActionEvent event) -> {
+            dialogExc.close();
+        });
+
+        JFXButton btExcluirD = new JFXButton("Excluir");
+        btExcluirD.setTextFill(Paint.valueOf("#FF0000"));
+        btExcluirD.setOnAction((ActionEvent event) -> {
             for (Problema problema : problemas) {
                 if (problema.getDescricao().equals(cmbProblema.getValue())) {
-                    JFXDialogLayout layout = new JFXDialogLayout();
-                    JFXDialog dialog = new JFXDialog(StackPane, layout, JFXDialog.DialogTransition.CENTER);
-
-                    JFXButton btCancelar = new JFXButton("Cancelar");
-                    btCancelar.setTextFill(Paint.valueOf("#29B6F6"));
-                    btCancelar.setOnAction((ActionEvent event1) -> {
-                        dialog.close();
-                    });
-
-                    JFXButton btExcluir = new JFXButton("Excluir");
-                    btExcluir.setTextFill(Paint.valueOf("#FF0000"));
-                    btExcluir.setOnAction((ActionEvent event1) -> {
-                        try {
-                            Principal.getSaida().writeObject("ExcluirProblema");
-                            Principal.getEntrada().readObject();
-                            Principal.getSaida().writeObject(problema);
-                            if ((int) Principal.getEntrada().readObject() == 1) {
-                                attDados();
-                                JFXSnackbar.SnackbarEvent barEvent = new JFXSnackbar.SnackbarEvent("Problema excluido.", "Ok", 3000, false, (MouseEvent event2) -> {
-                                    snackbar.close();
-                                });
-                                snackbar.enqueue(barEvent);
-                            } else {
-                                //erro
-                            }
-                        } catch (IOException | ClassNotFoundException ex) {
-                            Logger.getLogger(FXMLSalasController.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                        dialog.close();
-                    });
-
-                    LinkedList<Node> actions = new LinkedList<>();
-                    actions.add(btCancelar);
-                    actions.add(btExcluir);
-                    
-                    layout.setHeading(new Text("Deseja realmente excluir este item?"));
-                    layout.setActions(actions);
-
-                    dialog.show();
+                    excluirProblema(problema);
                 }
+            }
+            dialogExc.close();
+        });
+
+        LinkedList<Node> actions = new LinkedList<>();
+        actions.add(btCancelarD);
+        actions.add(btExcluirD);
+
+        layoutExc.setHeading(new Text("Deseja realmente excluir este item?"));
+        layoutExc.setActions(actions);
+
+        btExcluir.setOnAction((ActionEvent event) -> {
+            if (cmbProblema.getValue() != null) {
+                dialogExc.show();
             }
         });
         //</editor-fold>
 
         //<editor-fold defaultstate="collapsed" desc="Adicionar">
+        JFXDialogLayout layoutAdd = new JFXDialogLayout();
+        dialogAdd = new JFXDialog(StackPane, layoutAdd, JFXDialog.DialogTransition.CENTER);
+
+        AnchorPane content = new AnchorPane();
+
+        JFXComboBox<String> cmbTipoD = new JFXComboBox<>();
+        cmbTipoD.setFocusColor(Paint.valueOf("#29B6F6"));
+        cmbTipoD.setPromptText("Tipo");
+        cmbTipoD.setLabelFloat(true);
+        cmbTipoD.setLayoutY(10.0);
+
+        cmbTipoD.getItems().add("Hardware");
+        cmbTipoD.getItems().add("Software");
+        cmbTipoD.getSelectionModel().selectFirst();
+
+        RequiredFieldValidator validator = new RequiredFieldValidator();
+        validator.setMessage("O campo deve ser preenchido.");
+
+        JFXTextField tfProblemaD = new JFXTextField();
+        tfProblemaD.setFocusColor(Paint.valueOf("#29B6F6"));
+        tfProblemaD.setPromptText("Descrição");
+        tfProblemaD.setLabelFloat(true);
+        tfProblemaD.setLayoutY(55.0);
+        tfProblemaD.getValidators().add(validator);
+        tfProblemaD.focusedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+            tfProblemaD.validate();
+        });
+
+        AnchorPane.setLeftAnchor(cmbTipoD, 0.0);
+        AnchorPane.setRightAnchor(cmbTipoD, 0.0);
+
+        AnchorPane.setLeftAnchor(tfProblemaD, 0.0);
+        AnchorPane.setRightAnchor(tfProblemaD, 0.0);
+
+        content.getChildren().add(cmbTipoD);
+        content.getChildren().add(tfProblemaD);
+
+        JFXButton btCancelarD1 = new JFXButton("Cancelar");
+        btCancelarD1.setTextFill(Paint.valueOf("#FF0000"));
+        btCancelarD1.setOnAction((ActionEvent event) -> {
+            dialogAdd.close();
+        });
+
+        JFXButton btAdicionarD1 = new JFXButton("Adicionar");
+        btAdicionarD1.setTextFill(Paint.valueOf("#29B6F6"));
+        btAdicionarD1.setOnAction((ActionEvent event) -> {
+            if (tfProblemaD.validate()) {
+                adicionarProblema(new Problema(tfProblemaD.getText(), cmbTipoD.getSelectionModel().getSelectedIndex()+1));
+                dialogAdd.close();
+            }
+        });
+
+        LinkedList<Node> actions1 = new LinkedList<>();
+        actions1.add(btCancelarD1);
+        actions1.add(btAdicionarD1);
+
+        layoutAdd.setHeading(new Text("Adicionar problema"));
+        layoutAdd.setBody(content);
+        layoutAdd.setActions(actions1);
+
         btAdicionar.setOnAction((ActionEvent event) -> {
-            JFXDialogLayout layout = new JFXDialogLayout();
-            JFXDialog dialog = new JFXDialog(StackPane, layout, JFXDialog.DialogTransition.CENTER);
-
-            AnchorPane content = new AnchorPane();
-
-            JFXComboBox<String> cmbTipo = new JFXComboBox<>();
-            cmbTipo.setFocusColor(Paint.valueOf("#29B6F6"));
-            cmbTipo.setPromptText("Tipo");
-            cmbTipo.setLabelFloat(true);
-            cmbTipo.getItems().add("Hardware");
-            cmbTipo.getItems().add("Software");
-            cmbTipo.getSelectionModel().select(0);
-            cmbTipo.setLayoutY(10.0);
-
-            JFXTextField tfProblema = new JFXTextField();
-            tfProblema.setFocusColor(Paint.valueOf("#29B6F6"));
-            tfProblema.setPromptText("Descrição");
-            tfProblema.setLabelFloat(true);
-            tfProblema.setLayoutY(55.0);
-
-            RequiredFieldValidator validator = new RequiredFieldValidator();
-            validator.setMessage("O campo deve ser preenchido.");
-            tfProblema.getValidators().add(validator);
-
-            tfProblema.focusedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
-                tfProblema.validate();
-            });
-
-            AnchorPane.setLeftAnchor(cmbTipo, 0.0);
-            AnchorPane.setRightAnchor(cmbTipo, 0.0);
-
-            AnchorPane.setLeftAnchor(tfProblema, 0.0);
-            AnchorPane.setRightAnchor(tfProblema, 0.0);
-
-            content.getChildren().add(cmbTipo);
-            content.getChildren().add(tfProblema);
-
-            JFXButton btCancelar = new JFXButton("Cancelar");
-            btCancelar.setTextFill(Paint.valueOf("#FF0000"));
-            btCancelar.setOnAction((ActionEvent event1) -> {
-                dialog.close();
-            });
-
-            JFXButton btAdicionar = new JFXButton("Adicionar");
-            btAdicionar.setTextFill(Paint.valueOf("#29B6F6"));
-            btAdicionar.setOnAction((ActionEvent event1) -> {
-                if (tfProblema.validate()) {
-                    try {
-                        Principal.getSaida().writeObject("AdicionarProblema");
-                        Principal.getEntrada().readObject();
-
-                        Problema problema = new Problema(tfProblema.getText(), cmbTipo.getSelectionModel().getSelectedIndex() + 1);
-                        Principal.getSaida().writeObject(problema);
-                        if ((int) Principal.getEntrada().readObject() == 1) {
-                            //ADICIONOU
-                            attDados();
-                            JFXSnackbar.SnackbarEvent barEvent = new JFXSnackbar.SnackbarEvent("Problema adicionado.", "Ok", 3000, false, (MouseEvent event2) -> {
-                                snackbar.close();
-                            });
-                            snackbar.enqueue(barEvent);
-                        } else {
-                            //ERRO
-                        }
-                    } catch (IOException | ClassNotFoundException ex) {
-                        Logger.getLogger(FXMLSalasController.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                    dialog.close();
-                }
-            });
-
-            LinkedList<Node> actions = new LinkedList<Node>();
-            actions.add(btCancelar);
-            actions.add(btAdicionar);
-
-            layout.setHeading(new Text("Adicionar problema"));
-            layout.setBody(content);
-            layout.setActions(actions);
-
-            dialog.show();
+            cmbTipoD.getSelectionModel().selectFirst();
+            tfProblemaD.setText("");
+            dialogAdd.show();
         });
         //</editor-fold>
-
-        attDados();
     }
 
-    public void attDados() {
-        try {
-            Principal.getSaida().writeObject("Problemas");
-            problemas = (LinkedList<Problema>) Principal.getEntrada().readObject();
-        } catch (IOException | ClassNotFoundException ex) {
-            Logger.getLogger(FXMLSalasController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        cmbTipo.getItems().clear();
-        cmbTipo.getItems().add("Hardware");
-        cmbTipo.getItems().add("Software");
+    public void excluirProblema(Problema problema) {
+        new Thread(() -> {
+            try {
+                if ((int) Principal.realizarOperacao("ExcluirProblema", problema) == 1) {
+                    Platform.runLater(() -> {
+                        cmbProblema.getItems().remove(cmbProblema.getSelectionModel().getSelectedIndex());
+                        problemas.remove(problema);
+                        JFXSnackbar.SnackbarEvent barEvent = new JFXSnackbar.SnackbarEvent("Problema excluido.", "Ok", 3000, false, (MouseEvent event) -> {
+                            snackbar.close();
+                        });
+                        snackbar.enqueue(barEvent);
+                    });
+                } else {
+                    Platform.runLater(() -> {
+                        JFXSnackbar.SnackbarEvent barEvent = new JFXSnackbar.SnackbarEvent("Não foi possível excluir o problema.", "Tentar novamente", 3000, false, (MouseEvent event) -> {
+                            excluirProblema(problema);
+                            snackbar.close();
+                        });
+                        snackbar.enqueue(barEvent);
+                    });
+                }
+            } catch (IOException | ClassNotFoundException ex) {
+                Logger.getLogger(FXMLSalasController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }).start();
+    }
+    
+    public void adicionarProblema(Problema problema) {
+        new Thread(() -> {
+            try {
+                int result = (int) Principal.realizarOperacao("AdicionarProblema", problema);
+                if ( result != 0) {
+                    problema.setID(result);
+                    Platform.runLater(() -> {
+                        problemas.add(problema);
+                        cmbTipo.getSelectionModel().select(problema.getTipo()-1);
+                        cmbProblema.getSelectionModel().select(problema.getDescricao());
+                        JFXSnackbar.SnackbarEvent barEvent = new JFXSnackbar.SnackbarEvent("Problema adicionado.", "Ok", 3000, false, (MouseEvent event2) -> {
+                            snackbar.close();
+                        });
+                        snackbar.enqueue(barEvent);
+                    });
+                } else {
+                    Platform.runLater(() -> {
+                        JFXSnackbar.SnackbarEvent barEvent = new JFXSnackbar.SnackbarEvent("Não foi possível adicionar o problema.", "Tentar novamente", 3000, false, (MouseEvent event) -> {
+                            adicionarProblema(problema);
+                            snackbar.close();
+                        });
+                        snackbar.enqueue(barEvent);
+                    });
+                }
+            } catch (IOException | ClassNotFoundException ex) {
+                Logger.getLogger(FXMLSalasController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }).start();
     }
 }

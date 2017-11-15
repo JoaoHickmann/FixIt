@@ -17,12 +17,16 @@ import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
 import java.io.IOException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
-import static java.util.Collections.singletonList;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.ResourceBundle;
+import java.util.function.BiFunction;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.animation.Interpolator;
+import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.RotateTransition;
 import javafx.application.Platform;
@@ -177,11 +181,10 @@ public class FXMLPrincipalController implements Initializable {
         popup.setPopupContent(vBox1);
 
         lvChamados.setOnMouseClicked((event) -> {
-            Chamado chamado = chamados.get(lvChamados.getSelectionModel().getSelectedIndex());
-            btAtenderP.setDisable(chamado.getStatus() != 1);
-            btFinalizarP.setDisable(chamado.getStatus() != 2);
-
             if (event.getButton() == MouseButton.SECONDARY) {
+                btExcluirP.requestFocus();
+                btFinalizarP.requestFocus();
+                btAtenderP.requestFocus();
                 popup.show(lvChamados, PopupVPosition.TOP, PopupHPosition.LEFT, event.getX(), event.getY());
             }
         });
@@ -294,10 +297,13 @@ public class FXMLPrincipalController implements Initializable {
         });
 
         JFXNodesList nodeList = new JFXNodesList();
-        nodeList.addAnimatedNode(btAdicionar, (Boolean expanded) -> singletonList(new KeyValue(
-                btAdicionar.getGraphic().rotateProperty(),
-                expanded ? -90 : 0,
-                Interpolator.EASE_BOTH)));
+        nodeList.addAnimatedNode(btAdicionar, (Boolean t, Duration u) -> {
+            List<KeyFrame> frames = new ArrayList<>();
+            frames.add(new KeyFrame(u,
+                    new KeyValue(btAdicionar.getGraphic().rotateProperty(), t ? -90 : 0, Interpolator.EASE_BOTH)
+            ));
+            return frames;
+        });
         nodeList.addAnimatedNode(btAdicionarSala);
         nodeList.addAnimatedNode(btAdicionarAdministrador);
         nodeList.addAnimatedNode(btAdicionarProblema);
@@ -326,6 +332,10 @@ public class FXMLPrincipalController implements Initializable {
                 tfComputador.setText("");
                 btAtender.setDisable(true);
                 btFinalizar.setDisable(true);
+                btExcluir.setDisable(true);
+                btAtenderP.setDisable(true);
+                btFinalizarP.setDisable(true);
+                btExcluirP.setDisable(true);
             } else {
                 Chamado chamado = chamados.get(lvChamados.getSelectionModel().getSelectedIndex());
                 SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
@@ -343,8 +353,13 @@ public class FXMLPrincipalController implements Initializable {
 
                 btAtender.setDisable(chamado.getStatus() != 1);
                 btFinalizar.setDisable(chamado.getStatus() != 2);
+                btExcluir.setDisable(false);
                 btAtenderP.setDisable(chamado.getStatus() != 1);
                 btFinalizarP.setDisable(chamado.getStatus() != 2);
+                btExcluirP.setDisable(false);
+                if (popup.isShowing()) {
+                    popup.hide();
+                }
             }
         });
         //</editor-fold>
@@ -397,15 +412,21 @@ public class FXMLPrincipalController implements Initializable {
         new Thread(() -> {
             try {
                 if ((int) Principal.realizarOperacao("AtenderChamado", chamado) == 1) {
-                    attDados();
                     Platform.runLater(() -> {
+                        ((FontAwesomeIconView) lvChamados.getItems().get(chamados.indexOf(chamado)).getChildren().get(1)).setStyle("-fx-fill: #FFFF00;");
                         JFXSnackbar.SnackbarEvent barEvent = new JFXSnackbar.SnackbarEvent("Chamado atendido.", "Ok", 3000, false, (MouseEvent event1) -> {
                             snackbar.close();
                         });
                         snackbar.enqueue(barEvent);
                     });
                 } else {
-
+                    Platform.runLater(() -> {
+                        JFXSnackbar.SnackbarEvent barEvent = new JFXSnackbar.SnackbarEvent("Não foi possível atender o chamado.", "Tentar novamente", 3000, false, (MouseEvent event1) -> {
+                            atenderChamado(chamado);
+                            snackbar.close();
+                        });
+                        snackbar.enqueue(barEvent);
+                    });
                 }
             } catch (IOException | ClassNotFoundException ex) {
                 Logger.getLogger(FXMLSalasController.class.getName()).log(Level.SEVERE, null, ex);
@@ -418,14 +439,20 @@ public class FXMLPrincipalController implements Initializable {
             try {
                 if ((int) Principal.realizarOperacao("FinalizarChamado", chamado) == 1) {
                     Platform.runLater(() -> {
-                        attDados();
+                        ((FontAwesomeIconView) lvChamados.getItems().get(chamados.indexOf(chamado)).getChildren().get(1)).setStyle("-fx-fill: #00FF00;");
                         JFXSnackbar.SnackbarEvent barEvent = new JFXSnackbar.SnackbarEvent("Chamado Finalizado.", "Ok", 3000, false, (MouseEvent event1) -> {
                             snackbar.close();
                         });
                         snackbar.enqueue(barEvent);
                     });
                 } else {
-
+                    Platform.runLater(() -> {
+                        JFXSnackbar.SnackbarEvent barEvent = new JFXSnackbar.SnackbarEvent("Não foi possível finalizar o chamado.", "Tentar novamente", 3000, false, (MouseEvent event1) -> {
+                            finalizarChamado(chamado);
+                            snackbar.close();
+                        });
+                        snackbar.enqueue(barEvent);
+                    });
                 }
             } catch (IOException | ClassNotFoundException ex) {
                 Logger.getLogger(FXMLSalasController.class.getName()).log(Level.SEVERE, null, ex);
@@ -438,14 +465,22 @@ public class FXMLPrincipalController implements Initializable {
             try {
                 if ((int) Principal.realizarOperacao("ExcluirChamado", chamado) == 1) {
                     Platform.runLater(() -> {
-                        attDados();
+                        lvChamados.getItems().remove(chamados.indexOf(chamado));
+                        chamados.remove(chamado);
                         JFXSnackbar.SnackbarEvent barEvent = new JFXSnackbar.SnackbarEvent("Chamado excluido", "Ok", 3000, false, (MouseEvent event1) -> {
                             snackbar.close();
                         });
                         snackbar.enqueue(barEvent);
                     });
                 } else {
-
+                    Platform.runLater(() -> {
+                        lvChamados.getItems().remove(chamados.indexOf(chamado));
+                        JFXSnackbar.SnackbarEvent barEvent = new JFXSnackbar.SnackbarEvent("Não foi possível excluir o chamado.", "Tentar novamente", 3000, false, (MouseEvent event1) -> {
+                            excluirChamado(chamado);
+                            snackbar.close();
+                        });
+                        snackbar.enqueue(barEvent);
+                    });
                 }
             } catch (IOException | ClassNotFoundException ex) {
                 Logger.getLogger(FXMLSalasController.class.getName()).log(Level.SEVERE, null, ex);

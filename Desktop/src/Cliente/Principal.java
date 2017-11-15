@@ -88,7 +88,9 @@ public class Principal extends Application {
                                 .hideAfter(Duration.seconds(10))
                                 .onAction((ActionEvent event1) -> {
                                     try {
-                                        stage.setScene(new Scene(FXMLLoader.load(getClass().getResource("FXMLPrincipal.fxml")), stage.getScene().getWidth(), stage.getScene().getHeight()));
+                                        Scene scene1 = new Scene(FXMLLoader.load(getClass().getResource("FXMLPrincipal.fxml")), stage.getScene().getWidth(), stage.getScene().getHeight()); 
+                                        scene1.getStylesheets().add(getClass().getResource("cssSnackbar.css").toExternalForm());
+                                        stage.setScene(scene1);
                                         stage.show();
                                         stage.setIconified(false);
                                         stage.toFront();
@@ -123,6 +125,7 @@ public class Principal extends Application {
     public static Object realizarOperacao(String operacao, Object obj) throws IOException, ClassNotFoundException {
         out.writeObject(operacao);
         in.readObject();
+        out.reset();
         out.writeObject(obj);
         return in.readObject();
     }

@@ -72,6 +72,18 @@ public class FXMLLoginController implements Initializable {
             }
         };
 
+        ValidatorBase emailEsqueceuSenhaValidator = new ValidatorBase("Email inválido.") {
+            @Override
+            protected void eval() {
+                TextInputControl textField = (TextInputControl) srcControl.get();
+                Pattern p = Pattern.compile("^[A-Za-z0-9-]+(\\-[A-Za-z0-9])*@"
+                        + "[A-Za-z0-9-]+(\\.[A-Za-z0-9])");
+                Matcher m = p.matcher(textField.getText());
+
+                hasErrors.set(textField.getText() == null || textField.getText().isEmpty() || !m.find());
+            }
+        };
+
         RequiredFieldValidator requiredValidator = new RequiredFieldValidator();
         requiredValidator.setMessage("O campo deve ser preenchido.");
 
@@ -104,12 +116,12 @@ public class FXMLLoginController implements Initializable {
                 new Thread(() -> {
                     String senha = new Criptografia(tfEmail.getText().charAt(0)).criptografar(pfSenha.getText());
                     Usuario usuario = new Usuario(tfEmail.getText(), senha);
-                    
+
                     try {
                         usuario = (Usuario) Principal.realizarOperacao("Login", usuario);
                         if (usuario != null && usuario.isAdministrador()) {
                             Principal.setUser(usuario);
-                            
+
                             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                             Scene scene = new Scene(FXMLLoader.load(getClass().getResource("FXMLPrincipal.fxml")), ((Node) event.getSource()).getScene().getWidth(), ((Node) event.getSource()).getScene().getHeight());
                             scene.getStylesheets().add(getClass().getResource("cssSnackbar.css").toExternalForm());
@@ -138,62 +150,60 @@ public class FXMLLoginController implements Initializable {
         //</editor-fold>
 
         //<editor-fold defaultstate="collapsed" desc="Esqueceu Senha">
-        btSenha.setOnAction((event) -> {
-            JFXDialogLayout layout = new JFXDialogLayout();
-            JFXDialog dialog = new JFXDialog(stack, layout, JFXDialog.DialogTransition.CENTER);
+        JFXDialogLayout layout = new JFXDialogLayout();
+        JFXDialog dialog = new JFXDialog(stack, layout, JFXDialog.DialogTransition.CENTER);
 
-            AnchorPane content = new AnchorPane();
+        AnchorPane content = new AnchorPane();
 
-            JFXTextField tfEmail = new JFXTextField();
-            tfEmail.setFocusColor(Paint.valueOf("#29B6F6"));
-            tfEmail.setPromptText("Email");
-            tfEmail.setLabelFloat(true);
-            tfEmail.setLayoutY(10.0);
-            tfEmail.getValidators().add(emailValidator);
-            tfEmail.setOnKeyReleased((event1) -> {
-                tfEmail.validate();
-            });
+        JFXTextField tfEmailEsqueceuSenha = new JFXTextField();
+        tfEmailEsqueceuSenha.setFocusColor(Paint.valueOf("#29B6F6"));
+        tfEmailEsqueceuSenha.setPromptText("Email");
+        tfEmailEsqueceuSenha.setLabelFloat(true);
+        tfEmailEsqueceuSenha.setLayoutY(10.0);
+        tfEmailEsqueceuSenha.getValidators().add(emailEsqueceuSenhaValidator);
+        tfEmailEsqueceuSenha.setOnKeyReleased((event) -> {
+            tfEmailEsqueceuSenha.validate();
+        });
 
-            AnchorPane.setLeftAnchor(tfEmail, 0.0);
-            AnchorPane.setRightAnchor(tfEmail, 0.0);
-            content.getChildren().add(tfEmail);
+        AnchorPane.setLeftAnchor(tfEmailEsqueceuSenha, 0.0);
+        AnchorPane.setRightAnchor(tfEmailEsqueceuSenha, 0.0);
+        content.getChildren().add(tfEmailEsqueceuSenha);
 
-            JFXButton btCancelar = new JFXButton("Cancelar");
-            btCancelar.setTextFill(Paint.valueOf("#FF0000"));
-            btCancelar.setOnAction((ActionEvent event1) -> {
-                dialog.close();
-            });
+        JFXButton btCancelarD = new JFXButton("Cancelar");
+        btCancelarD.setTextFill(Paint.valueOf("#FF0000"));
+        btCancelarD.setOnAction((ActionEvent event) -> {
+            dialog.close();
+        });
 
-            JFXButton btAdicionar = new JFXButton("Enviar email");
-            btAdicionar.setTextFill(Paint.valueOf("#29B6F6"));
-            btAdicionar.setOnAction((ActionEvent event1) -> {
-                new Thread(() -> {
-                    try {
-                        if (tfEmail.validate() && (int) Principal.realizarOperacao("EsqueceuSenha", tfEmail.getText()) == 1) {
-                            JFXSnackbar.SnackbarEvent barEvent = new JFXSnackbar.SnackbarEvent("Email enviado para " + tfEmail.getText() + "", "Ok", 3000, false, (MouseEvent event2) -> {
-                                snackbar.close();
-                            });
-                            Platform.runLater(() -> {
-                                snackbar.enqueue(barEvent);
-                                dialog.close();
-                            });
-                        } else if (tfEmail.validate()) {
-                            
-                        }
-                    } catch (IOException | ClassNotFoundException ex) {
-                        Logger.getLogger(FXMLLoginController.class.getName()).log(Level.SEVERE, null, ex);
+        JFXButton btAdicionarD = new JFXButton("Enviar email");
+        btAdicionarD.setTextFill(Paint.valueOf("#29B6F6"));
+        btAdicionarD.setOnAction((ActionEvent event) -> {
+            new Thread(() -> {
+                try {
+                    if (tfEmailEsqueceuSenha.validate() && (int) Principal.realizarOperacao("EsqueceuSenha", tfEmailEsqueceuSenha.getText()) == 1) {
+                        JFXSnackbar.SnackbarEvent barEvent = new JFXSnackbar.SnackbarEvent("Email enviado para " + tfEmailEsqueceuSenha.getText() + "", "Ok", 3000, false, (MouseEvent event1) -> {
+                            snackbar.close();
+                        });
+                        Platform.runLater(() -> {
+                            snackbar.enqueue(barEvent);
+                            dialog.close();
+                        });
                     }
-                }).start();
-            });
+                } catch (IOException | ClassNotFoundException ex) {
+                    Logger.getLogger(FXMLLoginController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }).start();
+        });
 
-            LinkedList<Node> actions = new LinkedList<>();
-            actions.add(btCancelar);
-            actions.add(btAdicionar);
+        LinkedList<Node> actions = new LinkedList<>();
+        actions.add(btCancelarD);
+        actions.add(btAdicionarD);
 
-            layout.setHeading(new Text("Recuperação de senha"));
-            layout.setBody(content);
-            layout.setActions(actions);
+        layout.setHeading(new Text("Recuperação de senha"));
+        layout.setBody(content);
+        layout.setActions(actions);
 
+        btSenha.setOnAction((event) -> {
             dialog.show();
         });
         //</editor-fold>

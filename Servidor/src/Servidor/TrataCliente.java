@@ -76,20 +76,20 @@ public class TrataCliente extends Thread {
                         out.writeObject(Servidor.ExecutaSelect(sql).next() ? 1 : 0);
                     } else if (operacao.equals("MudarNome")) {
                         out.writeObject(1);
-                        usuario = (Usuario) in.readObject();
+                        String nome = (String) in.readObject();
 
                         sql = "UPDATE usuarios"
-                                + " SET nome = '" + usuario.getNome() + "'"
-                                + " WHERE id_usuario = " + usuario.getID_Usuario();
+                                + " SET nome = '" + nome + "'"
+                                + " WHERE id_usuario = " + user.getID_Usuario();
 
                         out.writeObject(Servidor.AtualizaTabela(sql));
                     } else if (operacao.equals("MudarSenha")) {
                         out.writeObject(1);
-                        usuario = (Usuario) in.readObject();
+                        String senha = (String) in.readObject();
 
                         sql = "UPDATE usuarios"
-                                + " SET senha = '" + usuario.getSenha() + "'"
-                                + " WHERE id_usuario = " + usuario.getID_Usuario();
+                                + " SET senha = '" + senha + "'"
+                                + " WHERE id_usuario = " + user.getID_Usuario();
 
                         out.writeObject(Servidor.AtualizaTabela(sql));
                     } else if (operacao.equals("AtenderChamado")) {
@@ -112,9 +112,20 @@ public class TrataCliente extends Thread {
                                 + " WHERE id_chamado = " + chamado.getID_Chamado();
 
                         out.writeObject(Servidor.AtualizaTabela(sql));
+                    } else if (operacao.equals("EmailDisponivel")) {
+                        out.writeObject(1);
+                        String email = (String) in.readObject();
+
+                        sql = "SELECT 1"
+                                + " FROM usuarios"
+                                + " WHERE UPPER(email) LIKE '" + email.toUpperCase() + "'";
+                        rs = Servidor.ExecutaSelect(sql);
+
+                        out.writeObject(rs.next() ? 0 : 1);
                     } else if (operacao.equals("EsqueceuSenha")) {
                         out.writeObject(1);
                         String email = (String) in.readObject();
+                        out.writeObject(1);
 
                         sql = "SELECT senha"
                                 + " FROM usuarios"
@@ -132,26 +143,24 @@ public class TrataCliente extends Thread {
                                 }
                             }).start();
                         }
-
-                        out.writeObject(1);
                     }  //</editor-fold>
                     //<editor-fold defaultstate="collapsed" desc="Cadastro">
                     if (operacao.equals("CadastrarUsuario")) {
-                        System.out.println("aqui chegou");
                         out.writeObject(1);
                         usuario = (Usuario) in.readObject();
-                        System.out.println("aqui também");
-                               
+
                         sql = " INSERT INTO `usuarios`(`Nome`, `Email`, `Senha`, `isAdministrador`)"
                                 + " VALUES ('" + usuario.getNome() + "','" + usuario.getEmail() + "','" + usuario.getSenha() + "'," + (usuario.isAdministrador() ? "1" : "0") + ")";
 
-                        Servidor.AtualizaTabela(sql);
+                        if (Servidor.AtualizaTabela(sql) == 1) {
+                            sql = " SELECT MAX(ID_Usuario) ID FROM usuarios";
+                            rs = Servidor.ExecutaSelect(sql);
+                            rs.next();
 
-                        sql = " SELECT MAX(ID_Usuario) ID FROM usuarios";
-                        rs = Servidor.ExecutaSelect(sql);
-                        rs.next();
-
-                        usuario.setID_Usuario(rs.getInt("ID"));
+                            usuario.setID_Usuario(rs.getInt("ID"));
+                        } else {
+                            usuario = null;
+                        }
 
                         out.writeObject(usuario);
                     } else if (operacao.equals("AdicionarChamado")) {
@@ -162,7 +171,7 @@ public class TrataCliente extends Thread {
                                 + " VALUES (" + user.getID_Usuario() + ", " + chamado.getComputador().getID() + ", " + chamado.getProblema().getID() + ", '" + chamado.getObservacao() + "')";
 
                         Servidor.NotificacaoDesktop("Novo chamado;Clique para abrir;Principal");
-                        
+
                         out.writeObject(Servidor.AtualizaTabela(sql));
                     } else if (operacao.equals("AdicionarProblema")) {
                         out.writeObject(1);
@@ -170,8 +179,18 @@ public class TrataCliente extends Thread {
 
                         sql = "INSERT INTO problemas(descricao, tipo)"
                                 + " VALUES ('" + problema.getDescricao() + "', " + problema.getTipo() + ")";
+                        
+                        int result =0;
+                        
+                        if (Servidor.AtualizaTabela(sql) == 1){
+                            sql = "SELECT MAX(id_problema)"
+                                + " FROM problemas";
+                            rs = Servidor.ExecutaSelect(sql);
+                            rs.next();
+                            result = rs.getInt(1);
+                        }
 
-                        out.writeObject(Servidor.AtualizaTabela(sql));
+                        out.writeObject(result);
                     } else if (operacao.equals("AdicionarComputador")) {
                         out.writeObject(1);
                         computador = (Computador) in.readObject();
@@ -188,8 +207,6 @@ public class TrataCliente extends Thread {
                                 + " VALUES (" + sala.getID() + ")";
 
                         out.writeObject(Servidor.AtualizaTabela(sql));
-
-                        Servidor.NotificacaoDesktop("Teste;Sala;Salas");
                     } else //</editor-fold>
                     //<editor-fold defaultstate="collapsed" desc="Lista">
                     if (operacao.equals("Administradores")) {
