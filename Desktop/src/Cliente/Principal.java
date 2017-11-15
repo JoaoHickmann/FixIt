@@ -12,6 +12,7 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.MulticastSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.LinkedList;
 import java.util.logging.Level;
@@ -25,6 +26,7 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import javax.swing.JOptionPane;
 import org.controlsfx.control.Notifications;
 
 public class Principal extends Application {
@@ -35,93 +37,98 @@ public class Principal extends Application {
     private static Usuario user;
 
     @Override
-    public void start(Stage stage) throws Exception, IOException {
+    public void start(Stage stage) throws Exception {
         //<editor-fold defaultstate="collapsed" desc="Conexão">
-        servidor = new Socket();
-        servidor.setSoTimeout(2000);
-        servidor.connect(new InetSocketAddress("localhost", 12345), 2000);
-        in = new ObjectInputStream(getServidor().getInputStream());
-        out = new ObjectOutputStream(getServidor().getOutputStream());
-        //</editor-fold>
+        try {
+            servidor = new Socket();
+            servidor.setSoTimeout(2000);
+            servidor.connect(new InetSocketAddress("localhost", 12345), 2000);
+            in = new ObjectInputStream(getServidor().getInputStream());
+            out = new ObjectOutputStream(getServidor().getOutputStream());
 
-        //<editor-fold defaultstate="collapsed" desc="PossuiAdmin">
-        out.writeObject("PossuiAdmin");
+            //</editor-fold>
+            //<editor-fold defaultstate="collapsed" desc="PossuiAdmin">
+            out.writeObject("PossuiAdmin");
 
-        Parent root;
-        if ((int) in.readObject() == 1) {
-            root = FXMLLoader.load(getClass().getResource("FXMLLogin.fxml"));
-        } else {
-            root = FXMLLoader.load(getClass().getResource("FXMLRegistrar.fxml"));
-        }
-
-        Scene scene = new Scene(root);
-        scene.getStylesheets().add(getClass().getResource("cssSnackbar.css").toExternalForm());
-        stage.setScene(scene);
-        stage.setTitle("FixIt");
-        stage.getIcons().add(new Image(getClass().getResourceAsStream("/Imagens/logo-sem-fundo.png")));
-        stage.show();
-        //</editor-fold>
-
-        //<editor-fold defaultstate="collapsed" desc="Thread Notificações">
-        Thread t = new Thread(() -> {
-            try {
-                InetAddress group = InetAddress.getByName("228.5.6.7");
-                MulticastSocket s = new MulticastSocket(6789);
-                s.joinGroup(group);
-
-                byte[] buf = new byte[1000];
-                DatagramPacket recv = new DatagramPacket(buf, buf.length);
-
-                while (true) {
-                    s.receive(recv);
-
-                    if (user != null) {
-                        String msg = new String(recv.getData());
-
-                        MaterialDesignIconView icon = new MaterialDesignIconView(MaterialDesignIcon.BELL_RING);
-                        icon.setSize("60");
-
-                        Notifications notify = Notifications.create()
-                                .title(msg.split(";")[0])
-                                .text(msg.split(";")[1])
-                                .graphic(icon)
-                                .hideAfter(Duration.seconds(10))
-                                .onAction((ActionEvent event1) -> {
-                                    try {
-                                        Scene scene1 = new Scene(FXMLLoader.load(getClass().getResource("FXMLPrincipal.fxml")), stage.getScene().getWidth(), stage.getScene().getHeight()); 
-                                        scene1.getStylesheets().add(getClass().getResource("cssSnackbar.css").toExternalForm());
-                                        stage.setScene(scene1);
-                                        stage.show();
-                                        stage.setIconified(false);
-                                        stage.toFront();
-                                    } catch (IOException ex) {
-                                        Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
-                                    }
-                                });
-
-                        Platform.runLater(() -> {
-                            Toolkit.getDefaultToolkit().beep();
-
-                            notify.show();
-                        });
-                    }
-                }
-            } catch (UnknownHostException ex) {
-                Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (IOException ex) {
-                Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+            Parent root;
+            if ((int) in.readObject() == 1) {
+                root = FXMLLoader.load(getClass().getResource("FXMLLogin.fxml"));
+            } else {
+                root = FXMLLoader.load(getClass().getResource("FXMLRegistrar.fxml"));
             }
-        });
-        t.setDaemon(true);
-        t.start();
+
+            Scene scene = new Scene(root);
+            scene.getStylesheets().add(getClass().getResource("cssSnackbar.css").toExternalForm());
+            stage.setScene(scene);
+            stage.setTitle("FixIt");
+            stage.getIcons().add(new Image(getClass().getResourceAsStream("/Imagens/logo-sem-fundo.png")));
+            stage.show();
+
+            //<editor-fold defaultstate="collapsed" desc="Thread Notificações">
+            Thread t = new Thread(() -> {
+                try {
+                    InetAddress group = InetAddress.getByName("228.5.6.7");
+                    MulticastSocket s = new MulticastSocket(6789);
+                    s.joinGroup(group);
+
+                    byte[] buf = new byte[1000];
+                    DatagramPacket recv = new DatagramPacket(buf, buf.length);
+
+                    while (true) {
+                        s.receive(recv);
+
+                        if (user != null) {
+                            String msg = new String(recv.getData());
+
+                            MaterialDesignIconView icon = new MaterialDesignIconView(MaterialDesignIcon.BELL_RING);
+                            icon.setSize("60");
+
+                            Notifications notify = Notifications.create()
+                                    .title(msg.split(";")[0])
+                                    .text(msg.split(";")[1])
+                                    .graphic(icon)
+                                    .hideAfter(Duration.seconds(10))
+                                    .onAction((ActionEvent event1) -> {
+                                        try {
+                                            Scene scene1 = new Scene(FXMLLoader.load(getClass().getResource("FXMLPrincipal.fxml")), stage.getScene().getWidth(), stage.getScene().getHeight());
+                                            scene1.getStylesheets().add(getClass().getResource("cssSnackbar.css").toExternalForm());
+                                            stage.setScene(scene1);
+                                            stage.show();
+                                            stage.setIconified(false);
+                                            stage.toFront();
+                                        } catch (IOException ex) {
+                                            Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+                                        }
+                                    });
+
+                            Platform.runLater(() -> {
+                                Toolkit.getDefaultToolkit().beep();
+
+                                notify.show();
+                            });
+                        }
+                    }
+                } catch (UnknownHostException ex) {
+                    Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IOException ex) {
+                    Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            });
+            t.setDaemon(true);
+            t.start();
+            //</editor-fold>
+        } catch (IOException | ClassNotFoundException ex) {
+            JOptionPane.showConfirmDialog(null, "Tente novamente mais tarde.", "Não foi possível se conectar!", JOptionPane.CLOSED_OPTION, JOptionPane.ERROR_MESSAGE);
+            System.exit(0);
+        }
         //</editor-fold>
     }
-    
+
     public static Object obterLista(String operacao) throws IOException, ClassNotFoundException {
         out.writeObject(operacao);
         return (LinkedList<Object>) in.readObject();
     }
-    
+
     public static Object realizarOperacao(String operacao, Object obj) throws IOException, ClassNotFoundException {
         out.writeObject(operacao);
         in.readObject();
