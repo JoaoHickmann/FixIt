@@ -232,6 +232,7 @@ public class TrataCliente extends Thread {
                         sql = " SELECT id_usuario, nome, email"
                                 + " FROM usuarios"
                                 + " WHERE isAdministrador = 1"
+                                + "   AND id_usuario <> " + user.getID_Usuario()
                                 + " ORDER BY email";
                         rs = Servidor.ExecutaSelect(sql);
 

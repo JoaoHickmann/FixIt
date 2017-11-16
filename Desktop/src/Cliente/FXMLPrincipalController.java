@@ -441,7 +441,7 @@ public class FXMLPrincipalController implements Initializable {
     }
 
     public void reconnect() {
-        JFXSnackbar.SnackbarEvent barEvent = new JFXSnackbar.SnackbarEvent("A conexão com o servidor foi restabelecida.", "Ok", 3000, false, (MouseEvent event1) -> {
+        JFXSnackbar.SnackbarEvent barEvent = new JFXSnackbar.SnackbarEvent("A conexão com o servidor foi restabelecida.", "Ok", 5000, false, (MouseEvent event) -> {
             snackbar.close();
         });
         snackbar.enqueue(barEvent);
@@ -462,7 +462,7 @@ public class FXMLPrincipalController implements Initializable {
                     btFinalizar.setDisable(chamado.getStatus() != 2);
                     btAtenderP.setDisable(chamado.getStatus() != 1);
                     btFinalizarP.setDisable(chamado.getStatus() != 2);
-                    JFXSnackbar.SnackbarEvent barEvent = new JFXSnackbar.SnackbarEvent("Chamado Finalizado.", "Ok", 3000, false, (MouseEvent event1) -> {
+                    JFXSnackbar.SnackbarEvent barEvent = new JFXSnackbar.SnackbarEvent("Chamado Finalizado.", "Ok", 3000, false, (MouseEvent event) -> {
                         snackbar.close();
                     });
                     snackbar.enqueue(barEvent);
@@ -485,7 +485,7 @@ public class FXMLPrincipalController implements Initializable {
                 Platform.runLater(() -> {
                     lvChamados.getItems().remove(chamados.indexOf(chamado));
                     chamados.remove(chamado);
-                    JFXSnackbar.SnackbarEvent barEvent = new JFXSnackbar.SnackbarEvent("Chamado excluido", "Ok", 3000, false, (MouseEvent event1) -> {
+                    JFXSnackbar.SnackbarEvent barEvent = new JFXSnackbar.SnackbarEvent("Chamado excluido", "Ok", 3000, false, (MouseEvent event) -> {
                         snackbar.close();
                     });
                     snackbar.enqueue(barEvent);
@@ -493,7 +493,7 @@ public class FXMLPrincipalController implements Initializable {
             } else {
                 Platform.runLater(() -> {
                     lvChamados.getItems().remove(chamados.indexOf(chamado));
-                    JFXSnackbar.SnackbarEvent barEvent = new JFXSnackbar.SnackbarEvent("Não foi possível excluir o chamado.", "Tentar novamente", 3000, false, (MouseEvent event1) -> {
+                    JFXSnackbar.SnackbarEvent barEvent = new JFXSnackbar.SnackbarEvent("Não foi possível excluir o chamado.", "Tentar novamente", 3000, false, (MouseEvent event) -> {
                         excluirChamado(chamado);
                         snackbar.close();
                     });

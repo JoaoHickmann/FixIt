@@ -117,7 +117,9 @@ public class FXMLAdministradoresController implements Initializable {
         layoutExc.setActions(actions);
 
         btExcluir.setOnAction((ActionEvent event) -> {
-            dialogExc.show();
+            if (cmbEmail.getValue() != null) {
+                dialogExc.show();
+            }
         });
         //</editor-fold>
 
@@ -229,6 +231,7 @@ public class FXMLAdministradoresController implements Initializable {
 
         JFXPasswordField pfConfirmaSenhaD = new JFXPasswordField();
         pfConfirmaSenhaD.setPromptText("Confirmar Senha");
+        pfConfirmaSenhaD.setFocusColor(Paint.valueOf("#29B6F6"));
         pfConfirmaSenhaD.setLabelFloat(true);
         pfConfirmaSenhaD.setLayoutY(190.0);
         pfConfirmaSenhaD.getValidators().add(confirmaSenhaValidator);
@@ -293,6 +296,7 @@ public class FXMLAdministradoresController implements Initializable {
         new Thread(() -> {
             if ((int) Principal.realizarOperacao("ExcluirAdministrador", usuario) == 1) {
                 Platform.runLater(() -> {
+                    tfNome.setText("");
                     cmbEmail.getItems().remove(administradores.indexOf(usuario));
                     administradores.remove(usuario);
                     JFXSnackbar.SnackbarEvent barEvent = new JFXSnackbar.SnackbarEvent("Administrador excluido.", "Ok", 3000, false, (MouseEvent event) -> {
