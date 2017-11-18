@@ -39,9 +39,6 @@ public class PrincipalActivity extends AppCompatActivity {
     private LinkedList <Chamado> todos_chamados, abertos, finalizados, selecionados;
     private boolean onActionMode = false;
 
-    /**
-     * The {@link ViewPager} that will host the section contents.
-     */
     private ViewPager mViewPager;
     private TabLayout tabLayout;
     private ActionMode actionMode;
@@ -292,7 +289,7 @@ public class PrincipalActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if (id == R.id.action_settings) {
-
+            startActivity(new Intent(PrincipalActivity.this, ConfiguracoesActivity.class));
             return true;
         } else if (id == R.id.action_sair) {
             startActivity(new Intent(PrincipalActivity.this, LoginActivity.class));

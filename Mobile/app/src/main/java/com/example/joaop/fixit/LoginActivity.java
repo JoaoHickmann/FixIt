@@ -80,15 +80,14 @@ public class LoginActivity extends AppCompatActivity {
                         }
                     }
                 }).start();
-
-                             } else {
-                                 etSenha.setError("Informe a senha!");
-                                 etSenha.requestFocus();
-                             }
-                        } else {
-                            etEmail.setError("Informe o email!");
-                            etEmail.requestFocus();
-                        }
+             } else {
+                 etSenha.setError("Informe a senha!");
+                 etSenha.requestFocus();
+             }
+        } else {
+            etEmail.setError("Informe o email!");
+            etEmail.requestFocus();
+        }
             }
         });
 
@@ -125,7 +124,7 @@ public class LoginActivity extends AppCompatActivity {
                     Socket servidor = new Socket();
                     servidor.setSoTimeout(3000);
                     // meu ip é o de baixo, deixa assim
-                    servidor.connect(new InetSocketAddress("192.168.1.221", 12345), 5000);
+                    servidor.connect(new InetSocketAddress("192.168.1.4", 12345), 5000);
 //                    servidor.connect(new InetSocketAddress("192.168.137.1", 12345), 5000);
 
                     dados.setServidor(servidor);

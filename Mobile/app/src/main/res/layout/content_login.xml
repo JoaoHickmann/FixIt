@@ -77,8 +77,8 @@
         android:layout_marginLeft="8dp"
         android:background="#008ac9"
         android:padding="8dp"
-        android:text="Entrar"
         android:textColor="#ffffff"
+        android:text="Entrar"
         android:enabled="false"/>
 
     <Button
