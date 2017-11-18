@@ -80,12 +80,12 @@ public class FXMLConfiguracoesController implements Initializable {
             }
         };
 
-        ValidatorBase novaSenhaTamanhoValidator = new ValidatorBase("Máximo de 20 caracteres.") {
+        ValidatorBase novaSenhaTamanhoValidator = new ValidatorBase("Permitido somente 6-20 caracteres") {
             @Override
             protected void eval() {
                 TextInputControl textField = (TextInputControl) srcControl.get();
 
-                hasErrors.set(textField.getText().length() > 20);
+                hasErrors.set(textField.getText().length() > 20 || textField.getText().length() < 6);
             }
         };
 
