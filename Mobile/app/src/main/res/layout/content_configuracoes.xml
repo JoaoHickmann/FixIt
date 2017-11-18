@@ -27,11 +27,10 @@
             android:text="Alterar nome"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
+            android:background="@color/colorPrimary"
             android:layout_marginRight="8dp"
-            android:layout_marginLeft="8dp"
-            android:background="#008ac9"
-            android:padding="8dp"
+            android:padding="4dp"
+            android:layout_marginLeft="2dp"
             android:textColor="#ffffff">
             </Button>
     </LinearLayout>
@@ -75,11 +74,11 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/ConfiguracoesAlterarSenha"
+        android:id="@+id/btConfiguracoesAlterarSenha"
         android:layout_marginTop="4dp"
         android:layout_marginRight="8dp"
         android:layout_marginLeft="8dp"
-        android:background="#008ac9"
+        android:background="@color/colorPrimary"
         android:padding="8dp"
         android:textColor="#ffffff"
         android:text="Alterar senha"/>
