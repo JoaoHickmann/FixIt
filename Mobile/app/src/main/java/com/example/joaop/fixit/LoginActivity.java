@@ -43,6 +43,8 @@ public class LoginActivity extends AppCompatActivity {
         btEntrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                        if (!etEmail.getText().toString().equals("")) {
+                             if (!etSenha.getText().toString().equals("")) {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -78,6 +80,15 @@ public class LoginActivity extends AppCompatActivity {
                         }
                     }
                 }).start();
+
+                             } else {
+                                 etSenha.setError("Informe a senha!");
+                                 etSenha.requestFocus();
+                             }
+                        } else {
+                            etEmail.setError("Informe o email!");
+                            etEmail.requestFocus();
+                        }
             }
         });
 
@@ -114,7 +125,7 @@ public class LoginActivity extends AppCompatActivity {
                     Socket servidor = new Socket();
                     servidor.setSoTimeout(3000);
                     // meu ip é o de baixo, deixa assim
-                    servidor.connect(new InetSocketAddress("192.168.1.2", 12345), 5000);
+                    servidor.connect(new InetSocketAddress("192.168.1.221", 12345), 5000);
 //                    servidor.connect(new InetSocketAddress("192.168.137.1", 12345), 5000);
 
                     dados.setServidor(servidor);

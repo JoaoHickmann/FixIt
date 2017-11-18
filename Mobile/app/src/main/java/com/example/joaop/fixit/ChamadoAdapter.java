@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -19,6 +20,14 @@ public class ChamadoAdapter extends RecyclerView.Adapter<ChamadoAdapter.MyViewHo
     private ChamadoOnClickListener chamadoOnClickListener;
     private ChamadoOnLongClickListener chamadoOnLongClickListener;
     private LinkedList<CardView> cardViews;
+
+    public List<Chamado> getListaChamados() {
+        return listaChamados;
+    }
+
+    public void setListaChamados(List<Chamado> listaChamados) {
+        this.listaChamados = listaChamados;
+    }
 
     public ChamadoAdapter(List<Chamado> listaChamados, ChamadoOnClickListener chamadoOnClickListener, ChamadoOnLongClickListener chamadoOnLongClickListener) {
         this.listaChamados = listaChamados;

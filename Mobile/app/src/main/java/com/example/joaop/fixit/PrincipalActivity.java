@@ -33,8 +33,10 @@ import Classes.Chamado;
 
 
 public class PrincipalActivity extends AppCompatActivity {
+    RecyclerView rvChamados;
+    ChamadoAdapter chamadoAdapter;
     private Dados dados;
-    private LinkedList<Chamado> todos_chamados, abertos, finalizados, selecionados;
+    private LinkedList <Chamado> todos_chamados, abertos, finalizados, selecionados;
     private boolean onActionMode = false;
 
     /**
@@ -51,19 +53,24 @@ public class PrincipalActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_principal);
-
+        dados = (Dados)getApplicationContext();
+        rvChamados = findViewById(R.id.rvChamados);
         appBarLayout = findViewById(R.id.appbar);
         selecionados = new LinkedList<>();
-
         toolbar = findViewById(R.id.toolbar);
-
         setSupportActionBar(toolbar);
-
         mViewPager = findViewById(R.id.container);
         setupViewPager(mViewPager);
-
         tabLayout = findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
+
+//        if (dados.getUser() != null) {
+////            chamadoAdapter = new ChamadoAdapter (chamadoAdapter.getListaChamados(), trataEvento);
+//            RecyclerView.LayoutManager mlayoutManager = new LinearLayoutManager(this);
+//            rvChamados.setLayoutManager(mlayoutManager);
+//
+//        }
+
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -103,8 +110,16 @@ public class PrincipalActivity extends AppCompatActivity {
             }
         });
 
-        dados = (Dados) getApplicationContext();
     }
+
+
+    ChamadoAdapter.ChamadoOnClickListener trataEvento = new ChamadoAdapter.ChamadoOnClickListener() {
+            @Override
+            public void onClickAluno(View view, int position) {
+
+            }
+        };
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

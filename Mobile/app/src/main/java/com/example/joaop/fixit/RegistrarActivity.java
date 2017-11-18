@@ -37,116 +37,70 @@ public class RegistrarActivity extends AppCompatActivity {
     btRegistrar.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
 
+            if (!etNomeRegistrar.getText().toString().equals("")) {
+                if (!etEmailRegistrar.getText().toString().equals("")) {
+                    if (!etSenhaRegistrar.getText().toString().equals("")) {
+                        if (!etConfirmarSenhaRegistrar.getText().toString().equals("")) {
+                            if (etSenhaRegistrar.getText().toString().equals(etConfirmarSenhaRegistrar.getText().toString())) {
 
-
-
-
-
-                            try {
-                                dados.getOut().writeObject("CadastrarUsuario");
-                                dados.getIn().readObject();
-
-                                if (!etNomeRegistrar.getText().toString().equals("")) {
-                                    if (!etEmailRegistrar.getText().toString().equals("")) {
-                                        if (!etSenhaRegistrar.getText().toString().equals("")) {
-                                            if (!etConfirmarSenhaRegistrar.getText().toString().equals("")) {
-//                                                if (etSenhaRegistrar.getText().toString() == etConfirmarSenhaRegistrar.getText().toString()) {
-
-                                                    String nome = etNomeRegistrar.getText().toString();
-                                                    String email = etEmailRegistrar.getText().toString();
-                                                    String senha = new Criptografia(etEmailRegistrar.getText().toString().charAt(0)).criptografar(etSenhaRegistrar.getText().toString());
-                                                    Usuario usuario = new Usuario(nome, email, senha, false);
-                                                    dados.getOut().writeObject(usuario);
-
-//                                                }
-                                            }
-                                        }
-                                    }
-                                }
-
-
-//                                                } else {
-//                                                   runOnUiThread(new Runnable() {
-//                                                       @Override
-//                                                       public void run() {
-//                                                           etSenhaRegistrar.setText("");
-//                                                           etConfirmarSenhaRegistrar.setText("");
-//                                                           etSenhaRegistrar.setError("As senhas não coincidem");
-//                                                           etSenhaRegistrar.requestFocus();
-//                                                       }
-//                                                   });
-//
-//                                                }
-//                                            } else {
-//                                                runOnUiThread(new Runnable() {
-//                                                    @Override
-//                                                    public void run() {
-//                                                        etConfirmarSenhaRegistrar.setError("Confirme a senha!");
-//                                                        etConfirmarSenhaRegistrar.requestFocus();
-//                                                    }
-//                                                });
-//
-//                                            }
-//                                        } else {
-//                                            runOnUiThread(new Runnable() {
-//                                                @Override
-//                                                public void run() {
-//                                                    etSenhaRegistrar.setError("Informe a senha!");
-//                                                    etSenhaRegistrar.requestFocus();
-//                                                }
-//                                            });
-//                                        }
-//                                    } else {
-//                                        runOnUiThread(new Runnable() {
-//                                            @Override
-//                                            public void run() {
-//                                                 etEmailRegistrar.setError("Informe o email!");
-//                                                 etEmailRegistrar.requestFocus();
-//                                            }
-//                                        });
-//                                    }
-//                                } else {
-//                                    runOnUiThread(new Runnable() {
-//                                        @Override
-//                                        public void run() {
-//                                            etNomeRegistrar.setError("Informe o nome!");
-//                                            etNomeRegistrar.requestFocus();
-//                                        }
-//                                    });
-//                                }
-
-
-
-                                runOnUiThread(new Runnable() {
+                                new Thread(new Runnable() {
                                     @Override
                                     public void run() {
-                                    Toast.makeText(dados, "Usuário adicionado com sucesso!", Toast.LENGTH_SHORT).show();
-                                        etNomeRegistrar.setText("");
-                                        etEmailRegistrar.setText("");
-                                        etSenhaRegistrar.setText("");
-                                        etConfirmarSenhaRegistrar.setText("");
+                                        try {
+                                            dados.getOut().writeObject("CadastrarUsuario");
+                                            dados.getIn().readObject();
+
+                                            String nome = etNomeRegistrar.getText().toString();
+                                            String email = etEmailRegistrar.getText().toString();
+                                            String senha = new Criptografia(etEmailRegistrar.getText().toString().charAt(0)).criptografar(etSenhaRegistrar.getText().toString());
+                                            Usuario usuario = new Usuario(nome, email, senha, false);
+                                            dados.getOut().writeObject(usuario);
+
+//                                            limpaCampos();
+                                        runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                Toast.makeText(dados, "Usuario cadastrado com sucesso!", Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+
+                                        } catch (IOException | ClassNotFoundException e) {
+                                            e.printStackTrace();
+                                        }
+
                                     }
-                                });
+                                }).start();
 
-
-                            } catch (IOException | ClassNotFoundException e) {
-                                e.printStackTrace();
                             }
-
-
-
-
+                            else {
+                                Toast.makeText(dados, "As senhas não coincidem", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(dados, ""+etConfirmarSenhaRegistrar.getText().toString()+etSenhaRegistrar.getText().toString(), Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            etConfirmarSenhaRegistrar.setError("");
+                            etConfirmarSenhaRegistrar.requestFocus();
+                        }
+                    } else {
+                        etSenhaRegistrar.setError("");
+                        etSenhaRegistrar.requestFocus();
+                    }
+                } else {
+                    etEmailRegistrar.setError("Informe o email!");
+                    etEmailRegistrar.requestFocus();
                 }
-            }).start();
+            } else {
+                etNomeRegistrar.setError("Informe o nome!");
+                etNomeRegistrar.requestFocus();
+            }
         }
     });
 
     }
-
-
-
+    public void limpaCampos(){
+        etNomeRegistrar.setText("");
+        etEmailRegistrar.setText("");
+        etSenhaRegistrar.setText("");
+        etConfirmarSenhaRegistrar.setText("");
+    }
 }

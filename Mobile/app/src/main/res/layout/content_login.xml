@@ -7,7 +7,7 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.example.joaop.fixit.LoginActivity"
     tools:showIn="@layout/activity_login"
-    android:background="#29B6F6"
+    android:background="#ffffff"
     android:orientation="vertical">
 
     <ImageView
@@ -23,34 +23,23 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <EditText
-            android:id="@+id/etEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?attr/colorControlHighlight"
-            android:padding="12dp"
-            android:layout_marginTop="30dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginLeft="8dp"
-            android:hint="Email"
+            android:id="@+id/etEmail"
             android:inputType="textEmailAddress"
-            android:textColorHint="#ffffff" />
+            android:hint="Email"/>
+
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <EditText
-            android:id="@+id/etSenha"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:id="@+id/etSenha"
             android:hint="Senha"
-            android:background="?attr/colorControlHighlight"
-            android:padding="12dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginLeft="8dp"
-            android:inputType="textPassword"
-            android:textColorHint="#ffffff"/>
+            android:inputType="textPassword"/>
 
     </android.support.design.widget.TextInputLayout>
 
