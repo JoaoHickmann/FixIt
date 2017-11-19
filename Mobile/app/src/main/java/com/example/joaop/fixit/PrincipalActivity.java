@@ -180,6 +180,7 @@ public class PrincipalActivity extends AppCompatActivity {
                             actionMode.getMenu().getItem(0).setVisible(selecionados.size() == 1);
                         } else {
                             Intent it = new Intent(PrincipalActivity.this, DetalhesActivity.class);
+                            it.putExtra("Editavel", true);
                             it.putExtra("Chamado", abertos.get(position));
                             startActivity(it);
                         }

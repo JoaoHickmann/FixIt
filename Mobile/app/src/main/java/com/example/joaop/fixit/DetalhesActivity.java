@@ -29,6 +29,8 @@ public class DetalhesActivity extends AppCompatActivity {
     EditText etAdministradorDetalhes, etCriacaoDetalhes, etFinalizacaoDetalhes, etObservacaoDetalhes;
     Spinner spTipoProblemaDetalhes, spProblemaDetalhes, spSalaDetalhes, spComputadorDetalhes;
 
+    boolean editavel = false;
+
     Chamado chamado;
     LinkedList<Problema> problemas;
     LinkedList<Computador> computadores;
@@ -55,6 +57,8 @@ public class DetalhesActivity extends AppCompatActivity {
 
         Intent it = getIntent();
         if (it != null) {
+            editavel = it.getBooleanExtra("Editavel", false);
+
             chamado = (Chamado) it.getSerializableExtra("Chamado");
             SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
@@ -68,94 +72,124 @@ public class DetalhesActivity extends AppCompatActivity {
             spTipoProblemaDetalhes.setSelection(chamado.getProblema().getTipo() - 1);
         }
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                problemas = (LinkedList<Problema>) dados.obterLista("Problemas");
-                computadores = (LinkedList<Computador>) dados.obterLista("Computadores");
+        if (editavel) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    problemas = (LinkedList<Problema>) dados.obterLista("Problemas");
+                    computadores = (LinkedList<Computador>) dados.obterLista("Computadores");
 
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        LinkedList<String> nomes_problemas = new LinkedList<>();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            LinkedList<String> nomes_problemas = new LinkedList<>();
 
-                        for (Problema problema : problemas) {
-                            if (problema.getTipo() == chamado.getProblema().getTipo()) {
-                                nomes_problemas.add(problema.getDescricao());
+                            for (Problema problema : problemas) {
+                                if (problema.getTipo() == chamado.getProblema().getTipo()) {
+                                    nomes_problemas.add(problema.getDescricao());
+                                }
                             }
-                        }
 
-                        ArrayAdapter<String> adapter = new ArrayAdapter<>(DetalhesActivity.this, android.R.layout.simple_spinner_dropdown_item, nomes_problemas);
-                        spProblemaDetalhes.setAdapter(adapter);
+                            ArrayAdapter<String> adapter = new ArrayAdapter<>(DetalhesActivity.this, android.R.layout.simple_spinner_dropdown_item, nomes_problemas);
+                            spProblemaDetalhes.setAdapter(adapter);
 
-                        spProblemaDetalhes.setSelection(adapter.getPosition(chamado.getProblema().getDescricao()));
+                            spProblemaDetalhes.setSelection(adapter.getPosition(chamado.getProblema().getDescricao()));
 
-                        LinkedList<String> nomes_salas = new LinkedList<>();
+                            LinkedList<String> nomes_salas = new LinkedList<>();
 
-                        for (Computador computador : computadores) {
-                            if (!nomes_salas.contains(String.valueOf(computador.getSala()))) {
-                                nomes_salas.add(String.valueOf(computador.getSala()));
+                            for (Computador computador : computadores) {
+                                if (!nomes_salas.contains(String.valueOf(computador.getSala()))) {
+                                    nomes_salas.add(String.valueOf(computador.getSala()));
+                                }
                             }
-                        }
 
-                        adapter = new ArrayAdapter<>(DetalhesActivity.this, android.R.layout.simple_spinner_dropdown_item, nomes_salas);
-                        spSalaDetalhes.setAdapter(adapter);
+                            adapter = new ArrayAdapter<>(DetalhesActivity.this, android.R.layout.simple_spinner_dropdown_item, nomes_salas);
+                            spSalaDetalhes.setAdapter(adapter);
 
-                        spSalaDetalhes.setSelection(adapter.getPosition(String.valueOf(chamado.getComputador().getSala())));
+                            spSalaDetalhes.setSelection(adapter.getPosition(String.valueOf(chamado.getComputador().getSala())));
 
-                        spTipoProblemaDetalhes.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                            @Override
-                            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                                LinkedList<String> nomes_problemas = new LinkedList<>();
+                            spTipoProblemaDetalhes.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                                @Override
+                                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                                    LinkedList<String> nomes_problemas = new LinkedList<>();
 
-                                for (Problema problema : problemas) {
-                                    if (problema.getTipo() == position + 1) {
-                                        nomes_problemas.add(problema.getDescricao());
+                                    for (Problema problema : problemas) {
+                                        if (problema.getTipo() == position + 1) {
+                                            nomes_problemas.add(problema.getDescricao());
+                                        }
                                     }
+
+                                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(DetalhesActivity.this, android.R.layout.simple_spinner_dropdown_item, nomes_problemas);
+                                    spProblemaDetalhes.setAdapter(adapter);
                                 }
 
-                                ArrayAdapter<String> adapter = new ArrayAdapter<String>(DetalhesActivity.this, android.R.layout.simple_spinner_dropdown_item, nomes_problemas);
-                                spProblemaDetalhes.setAdapter(adapter);
-                            }
+                                @Override
+                                public void onNothingSelected(AdapterView<?> parent) {
 
-                            @Override
-                            public void onNothingSelected(AdapterView<?> parent) {
+                                }
+                            });
 
-                            }
-                        });
+                            spSalaDetalhes.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                                @Override
+                                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                                    LinkedList<String> nomes_computadores = new LinkedList<>();
 
-                        spSalaDetalhes.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                            @Override
-                            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                                LinkedList<String> nomes_computadores = new LinkedList<>();
-
-                                for (Computador computador : computadores) {
-                                    if (String.valueOf(computador.getSala()).equals(spSalaDetalhes.getSelectedItem())) {
-                                        nomes_computadores.add(String.valueOf(computador.getNumero()));
+                                    for (Computador computador : computadores) {
+                                        if (String.valueOf(computador.getSala()).equals(spSalaDetalhes.getSelectedItem())) {
+                                            nomes_computadores.add(String.valueOf(computador.getNumero()));
+                                        }
                                     }
+
+                                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(DetalhesActivity.this, android.R.layout.simple_spinner_dropdown_item, nomes_computadores);
+                                    spComputadorDetalhes.setAdapter(adapter);
+
+                                    spComputadorDetalhes.setSelection(adapter.getPosition(String.valueOf(chamado.getComputador().getNumero())) == -1 ? 0 : adapter.getPosition(String.valueOf(chamado.getComputador().getNumero())));
                                 }
 
-                                ArrayAdapter<String> adapter = new ArrayAdapter<String>(DetalhesActivity.this, android.R.layout.simple_spinner_dropdown_item, nomes_computadores);
-                                spComputadorDetalhes.setAdapter(adapter);
+                                @Override
+                                public void onNothingSelected(AdapterView<?> parent) {
 
-                                spComputadorDetalhes.setSelection(adapter.getPosition(String.valueOf(chamado.getComputador().getNumero())) == -1 ? 0 : adapter.getPosition(String.valueOf(chamado.getComputador().getNumero())));
-                            }
+                                }
+                            });
+                        }
+                    });
+                }
+            }).start();
+        } else {
+            spTipoProblemaDetalhes.removeViewAt(chamado.getProblema().getTipo() == 1 ? 1:0);
+            LinkedList<String> tipo = new LinkedList<>();
+            tipo.add(chamado.getProblema().getTipo() == 1 ? "Hardware" : "Software");
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(DetalhesActivity.this, android.R.layout.simple_spinner_dropdown_item, tipo);
+            spTipoProblemaDetalhes.setAdapter(adapter);
 
-                            @Override
-                            public void onNothingSelected(AdapterView<?> parent) {
+            LinkedList<String> problema = new LinkedList<>();
+            problema.add(chamado.getProblema().getDescricao());
+            adapter = new ArrayAdapter<>(DetalhesActivity.this, android.R.layout.simple_spinner_dropdown_item, problema);
+            spProblemaDetalhes.setAdapter(adapter);
 
-                            }
-                        });
-                    }
-                });
-            }
-        }).start();
+            LinkedList<String> sala = new LinkedList<>();
+            sala.add(String.valueOf(chamado.getComputador().getSala()));
+            adapter = new ArrayAdapter<>(DetalhesActivity.this, android.R.layout.simple_spinner_dropdown_item, sala);
+            spSalaDetalhes.setAdapter(adapter);
+
+            LinkedList<String> computador = new LinkedList<>();
+            computador.add(String.valueOf(chamado.getComputador().getNumero()));
+            adapter = new ArrayAdapter<>(DetalhesActivity.this, android.R.layout.simple_spinner_dropdown_item, computador);
+            spComputadorDetalhes.setAdapter(adapter);
+
+            etObservacaoDetalhes.setFocusable(false);
+            etObservacaoDetalhes.setCursorVisible(false);
+        }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_detalhes, menu);
-        return true;
+        if (editavel) {
+            getMenuInflater().inflate(R.menu.menu_detalhes, menu);
+            return true;
+        } else {
+            return super.onCreateOptionsMenu(menu);
+        }
     }
 
     @Override

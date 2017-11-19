@@ -4,83 +4,87 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.example.joaop.fixit.ConfiguracoesActivity"
-    android:orientation="vertical"
     tools:showIn="@layout/activity_configuracoes">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Nome"/>
+        android:text="Nome" />
+
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_height="wrap_content" android:orientation="horizontal"
-        android:layout_width="fill_parent">
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
         <EditText
             android:id="@+id/etConfiguracoesNome"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_width="fill_parent">
-        </EditText>
+            android:layout_weight="1"></EditText>
+
         <Button
             android:id="@+id/btConfiguracoesAlterarNome"
-            android:text="Alterar nome"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@color/colorPrimary"
-            android:layout_marginRight="8dp"
-            android:padding="4dp"
             android:layout_marginLeft="2dp"
-            android:textColor="#ffffff">
-            </Button>
+            android:layout_marginRight="8dp"
+            android:background="@color/colorPrimary"
+            android:padding="4dp"
+            android:text="Alterar nome"
+            android:textColor="#ffffff"></Button>
     </LinearLayout>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Email"/>
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="JoaoPutao@putao.com"
-            android:id="@+id/etConfiguracoesEmail"
-            android:layout_marginBottom="5dp"/>
+        android:text="Email" />
+
+    <EditText
+        android:id="@+id/etConfiguracoesEmail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:text="JoaoPutao@putao.com" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Senha"/>
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/etConfiguracoesSenhaAtual"
-            android:inputType="textPassword"
-            android:hint="Senha atual"/>
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/etConfiguracoesNovaSenha"
-            android:inputType="textPassword"
-            android:hint="Nova senha"/>
+        android:text="Senha" />
 
     <EditText
+        android:id="@+id/etConfiguracoesSenhaAtual"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:hint="Senha atual"
+        android:inputType="textPassword" />
+
+    <EditText
+        android:id="@+id/etConfiguracoesNovaSenha"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Nova senha"
+        android:inputType="textPassword" />
+
+    <EditText
         android:id="@+id/etConfiguracoesConfirmarNovaSenha"
-        android:inputType="textPassword"
-        android:hint="Confirmar senha"/>
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Confirmar senha"
+        android:inputType="textPassword" />
 
     <Button
+        android:id="@+id/btConfiguracoesAlterarSenha"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/btConfiguracoesAlterarSenha"
-        android:layout_marginTop="4dp"
-        android:layout_marginRight="8dp"
         android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="4dp"
         android:background="@color/colorPrimary"
         android:padding="8dp"
-        android:textColor="#ffffff"
-        android:text="Alterar senha"/>
+        android:text="Alterar senha"
+        android:textColor="#ffffff" />
 
 </LinearLayout>

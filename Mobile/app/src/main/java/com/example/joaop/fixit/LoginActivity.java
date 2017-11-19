@@ -40,9 +40,8 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setTheme(R.style.AppTheme_NoActionBar);
         setContentView(R.layout.activity_login);
-        dados = (Dados) getApplicationContext();
 
-        conectar();
+        dados = (Dados) getApplicationContext();
 
         tilEmailLogin = findViewById(R.id.tilEmailLogin);
         tilSenhaLogin = findViewById(R.id.tilSenhaLogin);
@@ -81,12 +80,12 @@ public class LoginActivity extends AppCompatActivity {
                         .setMessage("blabla")
                         .setPositiveButton("Sim", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface arg0, int arg1) {
-                                conectar();
+
                             }
                         })
                         .setNegativeButton("Não", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface arg0, int arg1) {
-                                finish();
+
                             }
                         });
                 AlertDialog alerta = builder.create();
@@ -120,6 +119,8 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(it);
             }
         });
+
+        conectar();
     }
 
     private void login(Usuario usuario) {

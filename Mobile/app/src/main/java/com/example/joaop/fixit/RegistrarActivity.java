@@ -81,6 +81,63 @@ public class RegistrarActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_registrar, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_registrar:
+                validarCampos(etNomeRegistrar);
+                validarCampos(etEmailRegistrar);
+                validarCampos(etSenhaRegistrar);
+                validarCampos(etConfirmarSenhaRegistrar);
+                if (validarCampos(etConfirmarSenhaRegistrar) && validarCampos(etSenhaRegistrar) && validarCampos(etEmailRegistrar) && validarCampos(etNomeRegistrar)) {
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            String senha = new Criptografia(etEmailRegistrar.getText().toString().charAt(0)).criptografar(etSenhaRegistrar.getText().toString());
+                            Usuario usuario = new Usuario(etNomeRegistrar.getText().toString(), etEmailRegistrar.getText().toString(), senha, false);
+                            registrar(usuario);
+                        }
+                    }).start();
+                }
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void registrar(Usuario usuario) {
+        usuario = (Usuario) dados.realizarOperacao("CadastrarUsuario", usuario);
+        dados.setUser(usuario);
+        if (usuario != null) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    startActivity(new Intent(RegistrarActivity.this, PrincipalActivity.class));
+                }
+            });
+        } else {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    final Snackbar snackbar = Snackbar.make(findViewById(R.id.clRegistrar), "Não foi possível cadastrar.", Snackbar.LENGTH_LONG);
+                    snackbar.setAction("Ok", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            snackbar.dismiss();
+                        }
+                    });
+                    snackbar.show();
+                }
+            });
+        }
+    }
+
     private boolean validarCampos(EditText etValidar) {
         if (etValidar.equals(etNomeRegistrar)) {
             tilNomeRegistrar.setError(etNomeRegistrar.getText().toString().equals("") ? "Informe o nome." : null);
@@ -143,59 +200,6 @@ public class RegistrarActivity extends AppCompatActivity {
             return etConfirmarSenhaRegistrar.getText().toString().equals(etSenhaRegistrar.getText().toString());
         } else {
             return false;
-        }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_registrar, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_registrar:
-                validarCampos(etConfirmarSenhaRegistrar);
-                validarCampos(etSenhaRegistrar);
-                validarCampos(etEmailRegistrar);
-                validarCampos(etNomeRegistrar);
-                if (validarCampos(etConfirmarSenhaRegistrar) && validarCampos(etSenhaRegistrar) && validarCampos(etEmailRegistrar) && validarCampos(etNomeRegistrar)) {
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            String senha = new Criptografia(etEmailRegistrar.getText().toString().charAt(0)).criptografar(etSenhaRegistrar.getText().toString());
-                            Usuario usuario = new Usuario(etNomeRegistrar.getText().toString(), etEmailRegistrar.getText().toString(), senha, false);
-                            usuario = (Usuario) dados.realizarOperacao("CadastrarUsuario", usuario);
-                            dados.setUser(usuario);
-                            if (usuario != null) {
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        startActivity(new Intent(RegistrarActivity.this, PrincipalActivity.class));
-                                    }
-                                });
-                            } else {
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        final Snackbar snackbar = Snackbar.make(findViewById(R.id.clRegistrar), "Não foi possível cadastrar.", Snackbar.LENGTH_LONG);
-                                        snackbar.setAction("Ok", new View.OnClickListener() {
-                                            @Override
-                                            public void onClick(View v) {
-                                                snackbar.dismiss();
-                                            }
-                                        });
-                                        snackbar.show();
-                                    }
-                                });
-                            }
-                        }
-                    }).start();
-                }
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
         }
     }
 }
