@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.joaop.fixit.RegistrarActivity">
+    tools:context="com.example.joaop.fixit.RegistrarActivity"
+    android:id="@+id/clRegistrar">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -16,8 +17,8 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay"
-            android:title="Registrar usuário"/>
+            app:title="Registrar-se"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
 
     </android.support.design.widget.AppBarLayout>
 

@@ -4,94 +4,98 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#ffffff"
+    android:orientation="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.example.joaop.fixit.LoginActivity"
-    tools:showIn="@layout/activity_login"
-    android:background="#ffffff"
-    android:orientation="vertical">
+    tools:showIn="@layout/activity_login">
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_marginTop="30dp"
-        android:layout_width="230dp"
-        android:layout_height="230dp"
-        android:layout_gravity="center"
-        android:scaleType="fitStart"
-        android:src="@drawable/logo2" />
-
-    <android.support.design.widget.TextInputLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <EditText
+        android:layout_height="match_parent">
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/etEmail"
-            android:inputType="textEmailAddress"
-            android:hint="Email"/>
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="16dp">
 
-    </android.support.design.widget.TextInputLayout>
+            <ImageView
+                android:layout_width="230dp"
+                android:layout_height="230dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="16dp"
+                android:src="@drawable/logo2" />
 
-    <android.support.design.widget.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/etSenha"
-            android:hint="Senha"
-            android:inputType="textPassword"/>
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/tilEmailLogin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:errorEnabled="true">
 
-    </android.support.design.widget.TextInputLayout>
+                <EditText
+                    android:id="@+id/etEmailLogin"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Email"
+                    android:inputType="textEmailAddress" />
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+            </android.support.design.widget.TextInputLayout>
 
-        <CheckBox
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="2dp"
-            android:text="Manter conectado?"
-            android:buttonTint="#ffffff"
-            android:textColor="#ffffff"
-            android:id="@+id/cbManterConectado"/>
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/tilSenhaLogin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:errorEnabled="true">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="8dp"
-            android:layout_centerVertical="true"
-            android:text="Esqueceu sua senha?"
-            android:textColor="#ffffff"
-            android:id="@+id/tvEsqueceuSenha"/>
-    </RelativeLayout>
+                <EditText
+                    android:id="@+id/etSenhaLogin"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Senha"
+                    android:inputType="textPassword" />
 
-    <Button
-        android:id="@+id/btEntrar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginLeft="8dp"
-        android:background="#008ac9"
-        android:padding="8dp"
-        android:textColor="#ffffff"
-        android:text="Entrar"
-        android:enabled="false"/>
+            </android.support.design.widget.TextInputLayout>
 
-    <Button
-        android:id="@+id/btRegistrar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginLeft="8dp"
-        android:background="#364147"
-        android:padding="8dp"
-        android:text="Registrar"
-        android:textColor="#ffffff"
-        android:enabled="false"/>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <CheckBox
+                    android:id="@+id/cbManterConectadoLogin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Manter conectado?" />
+
+                <TextView
+                    android:id="@+id/tvEsqueceuSenhaLogin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:text="Esqueceu sua senha?" />
+            </RelativeLayout>
+
+            <Button
+                android:id="@+id/btEntrarLogin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/colorPrimary"
+                android:text="Entrar"
+                android:textColor="#ffffff" />
+
+            <Button
+                android:id="@+id/btRegistrarLogin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/colorPrimaryDark"
+                android:text="Registrar"
+                android:textColor="#ffffff" />
+
+        </LinearLayout>
+
+    </ScrollView>
 
 </LinearLayout>

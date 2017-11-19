@@ -109,7 +109,7 @@ public class FXMLRegistrarController implements Initializable {
             }
         };
 
-        ValidatorBase senhaTamanhoValidator = new ValidatorBase("Permitido somente 6-20 caracteres") {
+        ValidatorBase senhaTamanhoValidator = new ValidatorBase("Permitido somente 6-20 caracteres.") {
             @Override
             protected void eval() {
                 TextInputControl textField = (TextInputControl) srcControl.get();

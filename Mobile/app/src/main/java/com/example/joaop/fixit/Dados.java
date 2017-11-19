@@ -2,9 +2,11 @@ package com.example.joaop.fixit;
 
 import android.app.Application;
 
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.LinkedList;
 
 import Classes.Usuario;
 
@@ -17,10 +19,6 @@ public class Dados extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-    }
-
-    public Socket getServidor() {
-        return servidor;
     }
 
     public void setServidor(Socket servidor) {
@@ -49,5 +47,28 @@ public class Dados extends Application {
 
     public void setUser(Usuario user) {
         this.user = user;
+    }
+
+    public Object obterLista(String operacao) {
+        try {
+            out.writeObject(operacao);
+            return in.readObject();
+        } catch (IOException | ClassNotFoundException ex) {
+            ex.printStackTrace();
+            return null;
+        }
+    }
+
+    public Object realizarOperacao(String operacao, Object obj) {
+        try {
+            out.writeObject(operacao);
+            in.readObject();
+            out.reset();
+            out.writeObject(obj);
+            return in.readObject();
+        } catch (IOException | ClassNotFoundException ex) {
+            ex.printStackTrace();
+            return null;
+        }
     }
 }

@@ -281,14 +281,14 @@ public class FXMLComputadoresController implements Initializable {
                     });
                 }
                 Platform.runLater(() -> {
-                    JFXSnackbar.SnackbarEvent barEvent = new JFXSnackbar.SnackbarEvent("Computador" + (pcs.size() == 1 ? "" : "s") + " adicionado" + (pcs.size() == 1 ? "" : "s") + ".", "Ok", 3000, false, (MouseEvent event) -> {
+                    JFXSnackbar.SnackbarEvent barEvent = new JFXSnackbar.SnackbarEvent("Computador" + (pcs.size() == 1 ? "" : "es") + " adicionado" + (pcs.size() == 1 ? "" : "s") + ".", "Ok", 3000, false, (MouseEvent event) -> {
                         snackbar.close();
                     });
                     snackbar.enqueue(barEvent);
                 });
             } else {
                 Platform.runLater(() -> {
-                    JFXSnackbar.SnackbarEvent barEvent = new JFXSnackbar.SnackbarEvent("Não foi possível adicionar o" + (pcs.size() == 1 ? "" : "s") + " computador" + (pcs.size() == 1 ? "" : "s") + ".", "Tentar novamente", 3000, false, (MouseEvent event) -> {
+                    JFXSnackbar.SnackbarEvent barEvent = new JFXSnackbar.SnackbarEvent("Não foi possível adicionar o" + (pcs.size() == 1 ? "" : "s") + " computador" + (pcs.size() == 1 ? "" : "es") + ".", "Tentar novamente", 3000, false, (MouseEvent event) -> {
                         adicionarComputador(pcs);
                         snackbar.close();
                     });

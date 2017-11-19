@@ -148,6 +148,12 @@ public class TrataCliente extends Thread {
                     if (operacao.equals("CadastrarUsuario")) {
                         out.writeObject(1);
                         usuario = (Usuario) in.readObject();
+                        
+                        sql = " SELECT 1"
+                                + " FROM usuarios"
+                                + " WHERE isAdministrador = 1";
+
+                        boolean primeiroAdm = !Servidor.ExecutaSelect(sql).next();
 
                         sql = " INSERT INTO `usuarios`(`Nome`, `Email`, `Senha`, `isAdministrador`)"
                                 + " VALUES ('" + usuario.getNome() + "','" + usuario.getEmail() + "','" + usuario.getSenha() + "'," + (usuario.isAdministrador() ? "1" : "0") + ")";
@@ -158,6 +164,9 @@ public class TrataCliente extends Thread {
                             rs.next();
 
                             usuario.setID_Usuario(rs.getInt("ID"));
+                            if (!usuario.isAdministrador() || primeiroAdm){
+                                user = usuario;
+                            }
                         } else {
                             usuario = null;
                         }

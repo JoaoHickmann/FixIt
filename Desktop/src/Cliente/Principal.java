@@ -12,7 +12,6 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.MulticastSocket;
 import java.net.Socket;
-import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.LinkedList;
 import java.util.logging.Level;
@@ -165,7 +164,7 @@ public class Principal extends Application {
     public static Object obterLista(String operacao) {
         try {
             out.writeObject(operacao);
-            return (LinkedList<Object>) in.readObject();
+            return in.readObject();
         } catch (IOException | ClassNotFoundException ex) {
             Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
             Platform.runLater(() -> {

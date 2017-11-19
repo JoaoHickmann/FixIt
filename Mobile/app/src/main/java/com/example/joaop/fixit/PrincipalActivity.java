@@ -1,6 +1,7 @@
 package com.example.joaop.fixit;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.Snackbar;
@@ -34,7 +35,6 @@ import Classes.Chamado;
 
 public class PrincipalActivity extends AppCompatActivity {
     RecyclerView rvChamados;
-    ChamadoAdapter chamadoAdapter;
     private Dados dados;
     private LinkedList <Chamado> todos_chamados, abertos, finalizados, selecionados;
     private boolean onActionMode = false;
@@ -60,13 +60,6 @@ public class PrincipalActivity extends AppCompatActivity {
         setupViewPager(mViewPager);
         tabLayout = findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
-
-//        if (dados.getUser() != null) {
-////            chamadoAdapter = new ChamadoAdapter (chamadoAdapter.getListaChamados(), trataEvento);
-//            RecyclerView.LayoutManager mlayoutManager = new LinearLayoutManager(this);
-//            rvChamados.setLayoutManager(mlayoutManager);
-//
-//        }
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -110,14 +103,6 @@ public class PrincipalActivity extends AppCompatActivity {
     }
 
 
-    ChamadoAdapter.ChamadoOnClickListener trataEvento = new ChamadoAdapter.ChamadoOnClickListener() {
-            @Override
-            public void onClickAluno(View view, int position) {
-
-            }
-        };
-
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 1 && resultCode == 1) {
@@ -128,7 +113,6 @@ public class PrincipalActivity extends AppCompatActivity {
                     snackbar.dismiss();
                 }
             });
-
             snackbar.show();
         }
     }
@@ -195,7 +179,9 @@ public class PrincipalActivity extends AppCompatActivity {
                             actionMode.setTitle(selecionados.size()+" selecionado"+(selecionados.size() > 1 ? "s" : "")+".");
                             actionMode.getMenu().getItem(0).setVisible(selecionados.size() == 1);
                         } else {
-                            Toast.makeText(PrincipalActivity.this, "Chamado #" + abertos.get(position).getID_Chamado(), Toast.LENGTH_SHORT).show();
+                            Intent it = new Intent(PrincipalActivity.this, DetalhesActivity.class);
+                            it.putExtra("Chamado", abertos.get(position));
+                            startActivity(it);
                         }
                     }
                 }, new ChamadoAdapter.ChamadoOnLongClickListener() {
@@ -220,7 +206,9 @@ public class PrincipalActivity extends AppCompatActivity {
                 rvChamados.setAdapter(new ChamadoAdapter(finalizados, new ChamadoAdapter.ChamadoOnClickListener() {
                     @Override
                     public void onClickAluno(View view, int position) {
-                        Toast.makeText(PrincipalActivity.this, "Chamado #" + finalizados.get(position).getID_Chamado(), Toast.LENGTH_SHORT).show();
+                        Intent it = new Intent(PrincipalActivity.this, DetalhesActivity.class);
+                        it.putExtra("Chamado", finalizados.get(position));
+                        startActivity(it);
                     }
                 }, null));
             }
@@ -248,7 +236,9 @@ public class PrincipalActivity extends AppCompatActivity {
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.action_editar:
-                    Toast.makeText(PrincipalActivity.this, "Editar", Toast.LENGTH_SHORT).show();
+                    Intent it = new Intent(PrincipalActivity.this, DetalhesActivity.class);
+                    it.putExtra("Chamado",selecionados.get(0));
+                    startActivity(it);
                     return true;
                 case R.id.action_excluir:
                     Toast.makeText(PrincipalActivity.this, "Excluir", Toast.LENGTH_SHORT).show();
@@ -286,18 +276,23 @@ public class PrincipalActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == R.id.action_settings) {
-            startActivity(new Intent(PrincipalActivity.this, ConfiguracoesActivity.class));
-            return true;
-        } else if (id == R.id.action_sair) {
-            startActivity(new Intent(PrincipalActivity.this, LoginActivity.class));
-            finish();
-            return true;
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                startActivity(new Intent(PrincipalActivity.this, ConfiguracoesActivity.class));
+                return true;
+            case R.id.action_sair:
+                dados.setUser(null);
+                SharedPreferences sharedPref = getSharedPreferences("com.example.joaop.fixit", dados.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPref.edit();
+                editor.putString("Username", null);
+                editor.putString("Senha", null);
+                editor.commit();
+                startActivity(new Intent(PrincipalActivity.this, LoginActivity.class));
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-
-        return super.onOptionsItemSelected(item);
     }
 
     class ViewPagerAdapter extends FragmentPagerAdapter {

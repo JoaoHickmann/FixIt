@@ -3,12 +3,16 @@ package com.example.joaop.fixit;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -16,96 +20,167 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import Classes.Usuario;
 
 public class LoginActivity extends AppCompatActivity {
     Dados dados;
-    EditText etEmail, etSenha;
-    Button btEntrar, btRegistrar;
-
     ProgressDialog progress;
+
+    TextInputLayout tilEmailLogin, tilSenhaLogin;
+    EditText etEmailLogin, etSenhaLogin;
+    CheckBox cbManterConectadoLogin;
+    TextView tvEsqueceuSenhaLogin;
+    Button btEntrarLogin, btRegistrarLogin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setTheme(R.style.AppTheme_NoActionBar);
         setContentView(R.layout.activity_login);
-
         dados = (Dados) getApplicationContext();
 
-        etEmail = findViewById(R.id.etEmail);
-        etSenha = findViewById(R.id.etSenha);
-
-        btEntrar = findViewById(R.id.btEntrar);
-        btRegistrar = findViewById(R.id.btRegistrar);
-
-        btEntrar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                        if (!etEmail.getText().toString().equals("")) {
-                             if (!etSenha.getText().toString().equals("")) {
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            String senha = new Criptografia(etEmail.getText().toString().charAt(0)).criptografar(etSenha.getText().toString());
-                            Usuario usuario = new Usuario(etEmail.getText().toString(), senha);
-
-                            dados.getOut().writeObject("Login");
-                            dados.getIn().readObject();
-                            dados.getOut().writeObject(usuario);
-                            usuario = (Usuario) dados.getIn().readObject();
-
-                            dados.setUser(usuario);
-
-                            if (usuario == null) {
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        Toast.makeText(LoginActivity.this, "Usuário ou senha incorreta!", Toast.LENGTH_SHORT).show();
-                                    }
-                                });
-                            } else {
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        startActivity(new Intent(LoginActivity.this, PrincipalActivity.class));
-                                        finish();
-                                    }
-                                });
-                            }
-                        } catch (IOException | ClassNotFoundException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }).start();
-             } else {
-                 etSenha.setError("Informe a senha!");
-                 etSenha.requestFocus();
-             }
-        } else {
-            etEmail.setError("Informe o email!");
-            etEmail.requestFocus();
-        }
-            }
-        });
-
-        btRegistrar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Intent it = new Intent(LoginActivity.this, RegistrarActivity.class);
-                        startActivity(it);
-                    }
-                }).start();
-
-            }
-        });
-
         conectar();
+
+        tilEmailLogin = findViewById(R.id.tilEmailLogin);
+        tilSenhaLogin = findViewById(R.id.tilSenhaLogin);
+
+        etEmailLogin = findViewById(R.id.etEmailLogin);
+        etSenhaLogin = findViewById(R.id.etSenhaLogin);
+
+        cbManterConectadoLogin = findViewById(R.id.cbManterConectadoLogin);
+        tvEsqueceuSenhaLogin = findViewById(R.id.tvEsqueceuSenhaLogin);
+
+        btEntrarLogin = findViewById(R.id.btEntrarLogin);
+        btRegistrarLogin = findViewById(R.id.btRegistrarLogin);
+
+        etEmailLogin.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    validarCampos(etEmailLogin);
+                }
+            }
+        });
+        etSenhaLogin.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    validarCampos(etSenhaLogin);
+                }
+            }
+        });
+
+        tvEsqueceuSenhaLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
+                builder.setTitle("Teste")
+                        .setMessage("blabla")
+                        .setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface arg0, int arg1) {
+                                conectar();
+                            }
+                        })
+                        .setNegativeButton("Não", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface arg0, int arg1) {
+                                finish();
+                            }
+                        });
+                AlertDialog alerta = builder.create();
+                alerta.show();
+            }
+        });
+
+        btEntrarLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                validarCampos(etEmailLogin);
+                validarCampos(etSenhaLogin);
+                if (validarCampos(etEmailLogin) && validarCampos(etSenhaLogin)) {
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            String senha = new Criptografia(etEmailLogin.getText().toString().charAt(0)).criptografar(etSenhaLogin.getText().toString());
+                            Usuario usuario = new Usuario(etEmailLogin.getText().toString(), senha);
+
+                            login(usuario);
+                        }
+                    }).start();
+                }
+            }
+        });
+
+        btRegistrarLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent it = new Intent(LoginActivity.this, RegistrarActivity.class);
+                startActivity(it);
+            }
+        });
+    }
+
+    private void login(Usuario usuario) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                progress = new ProgressDialog(LoginActivity.this);
+                progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                progress.setIndeterminate(true);
+                progress.setCancelable(false);
+                progress.setMessage("Entrando");
+                progress.show();
+            }
+        });
+
+        usuario = (Usuario) dados.realizarOperacao("Login", usuario);
+
+        if (usuario == null) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(LoginActivity.this, "Usuário ou senha incorreta!", Toast.LENGTH_SHORT).show();
+                    progress.dismiss();
+                }
+            });
+        } else {
+            dados.setUser(usuario);
+            if (cbManterConectadoLogin.isChecked()) {
+                SharedPreferences sharedPref = getSharedPreferences("com.example.joaop.fixit", dados.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPref.edit();
+                editor.putString("Username", usuario.getEmail());
+                editor.putString("Senha", usuario.getSenha());
+                editor.commit();
+            }
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    startActivity(new Intent(LoginActivity.this, PrincipalActivity.class));
+                    progress.dismiss();
+                    finish();
+                }
+            });
+        }
+    }
+
+    private boolean validarCampos(EditText etValidar) {
+        if (etValidar.equals(etEmailLogin)) {
+            Pattern p = Pattern.compile("^[A-Za-z0-9-]+(\\-[A-Za-z0-9])*@"
+                    + "[A-Za-z0-9-]+(\\.[A-Za-z0-9])");
+            Matcher m = p.matcher(etEmailLogin.getText().toString());
+
+            boolean emailCerto = m.find();
+
+            tilEmailLogin.setError(!emailCerto ? "Email inválido." : null);
+            return emailCerto;
+        } else if (etValidar.equals(etSenhaLogin)) {
+            tilSenhaLogin.setError(etSenhaLogin.getText().toString().equals("") ? "Informe a senha." : null);
+            return !etSenhaLogin.getText().toString().equals("");
+        } else {
+            return false;
+        }
     }
 
     public void conectar() {
@@ -123,9 +198,7 @@ public class LoginActivity extends AppCompatActivity {
                 try {
                     Socket servidor = new Socket();
                     servidor.setSoTimeout(3000);
-                    // meu ip é o de baixo, deixa assim
-                    servidor.connect(new InetSocketAddress("192.168.1.4", 12345), 5000);
-//                    servidor.connect(new InetSocketAddress("192.168.137.1", 12345), 5000);
+                    servidor.connect(new InetSocketAddress("192.168.0.200", 12345), 5000);
 
                     dados.setServidor(servidor);
                     dados.setIn(new ObjectInputStream(servidor.getInputStream()));
@@ -135,10 +208,14 @@ public class LoginActivity extends AppCompatActivity {
                         @Override
                         public void run() {
                             progress.dismiss();
-                            btEntrar.setEnabled(true);
-                            btRegistrar.setEnabled(true);
                         }
                     });
+
+                    SharedPreferences sharedPref = getSharedPreferences("com.example.joaop.fixit", dados.MODE_PRIVATE);
+                    String username = sharedPref.getString("Username", null);
+                    if (username != null) {
+                        login(new Usuario(username, sharedPref.getString("Senha", null)));
+                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                     runOnUiThread(new Runnable() {
