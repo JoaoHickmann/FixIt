@@ -183,8 +183,7 @@ public class PrincipalActivity extends AppCompatActivity {
 
 
     public void attRecycler() throws IOException, ClassNotFoundException {
-        dados.getOut().writeObject("MeusChamados");
-        todos_chamados = (LinkedList<Chamado>) dados.getIn().readObject();
+        todos_chamados = (LinkedList<Chamado>) dados.obterLista("MeusChamados");
 
         finalizados = new LinkedList<>();
         abertos = new LinkedList<>();

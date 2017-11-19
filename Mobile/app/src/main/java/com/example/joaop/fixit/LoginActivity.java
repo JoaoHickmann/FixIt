@@ -279,7 +279,7 @@ public class LoginActivity extends AppCompatActivity {
             public void run() {
                 try {
                     Socket servidor = new Socket();
-                    servidor.setSoTimeout(3000);
+                    servidor.setSoTimeout(5000);
                     servidor.connect(new InetSocketAddress("192.168.0.200", 12345), 5000);
 
                     dados.setServidor(servidor);

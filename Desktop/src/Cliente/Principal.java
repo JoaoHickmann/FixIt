@@ -128,8 +128,8 @@ public class Principal extends Application {
     public static void conectar() {
         try {
             servidor = new Socket();
-            servidor.setSoTimeout(2000);
-            servidor.connect(new InetSocketAddress("localhost", 12345), 2000);
+            servidor.setSoTimeout(5000);
+            servidor.connect(new InetSocketAddress("localhost", 12345), 5000);
             in = new ObjectInputStream(servidor.getInputStream());
             out = new ObjectOutputStream(servidor.getOutputStream());
 
