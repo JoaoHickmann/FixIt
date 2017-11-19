@@ -5,8 +5,8 @@ public class Criptografia {
     private final String alfabetoMatriz = "NhCByfpl#&FEXYaM2*6g@QR$sIjDr-OeKto+Hc7L0nPuG9VbJ8wmTqxi4WkA5ZU3Svd%1z";
     private final String chave = "YPDe6FpaxH&yRNs+jMVB";
     private final String[] alfabetosEixos = {
-        "q4f%JmEjrCQkz7&RYMvWNdeg1Hw6c$pA*F+bVl0ULZ3uhOG5@XPt2s#-TaSoyIKx89DnBi",
-        "m-dHoQOAVtSJxfi#TgEP&LD2hX1M*weq5nWZG9c$ByRs0kv%46uNK7blzp3CrUYF+j8a@I"
+            "q4f%JmEjrCQkz7&RYMvWNdeg1Hw6c$pA*F+bVl0ULZ3uhOG5@XPt2s#-TaSoyIKx89DnBi",
+            "m-dHoQOAVtSJxfi#TgEP&LD2hX1M*weq5nWZG9c$ByRs0kv%46uNK7blzp3CrUYF+j8a@I"
     };
     private String[] matrizLetras;
 

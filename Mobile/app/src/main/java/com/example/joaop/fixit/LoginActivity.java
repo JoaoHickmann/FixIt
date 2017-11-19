@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -22,6 +23,7 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.zip.Inflater;
 
 import Classes.Usuario;
 
@@ -29,8 +31,8 @@ public class LoginActivity extends AppCompatActivity {
     Dados dados;
     ProgressDialog progress;
 
-    TextInputLayout tilEmailLogin, tilSenhaLogin;
-    EditText etEmailLogin, etSenhaLogin;
+    TextInputLayout tilEmailLogin, tilSenhaLogin, tilEmailDialog;
+    EditText etEmailLogin, etSenhaLogin, etEmailDialog;
     CheckBox cbManterConectadoLogin;
     TextView tvEsqueceuSenhaLogin;
     Button btEntrarLogin, btRegistrarLogin;
@@ -76,19 +78,84 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
-                builder.setTitle("Teste")
-                        .setMessage("blabla")
-                        .setPositiveButton("Sim", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface arg0, int arg1) {
+
+                final View dialogView = getLayoutInflater().inflate(R.layout.dialog_esqueceu_senha, null);
+
+                etEmailDialog = dialogView.findViewById(R.id.etEmailDialog);
+                tilEmailDialog = dialogView.findViewById(R.id.tilEmailDialog);
+
+                etEmailDialog.setText(etEmailLogin.getText().toString());
+                etEmailDialog.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                    @Override
+                    public void onFocusChange(View v, boolean hasFocus) {
+                        if (!hasFocus) {
+                            validarCampos(etEmailDialog);
+                        }
+                    }
+                });
+
+                builder.setTitle("Recuperação de senha")
+                        .setView(dialogView)
+                        .setPositiveButton("Enviar email", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
 
                             }
                         })
-                        .setNegativeButton("Não", new DialogInterface.OnClickListener() {
+                        .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface arg0, int arg1) {
 
                             }
                         });
-                AlertDialog alerta = builder.create();
+
+                final AlertDialog alerta = builder.create();
+                alerta.setOnShowListener(new DialogInterface.OnShowListener() {
+                    @Override
+                    public void onShow(DialogInterface dialog) {
+                        alerta.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                if (validarCampos(etEmailDialog)) {
+                                    alerta.dismiss();
+                                    new Thread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            if ((int) dados.realizarOperacao("EsqueceuSenha", etEmailDialog.getText().toString()) == 1) {
+                                                runOnUiThread(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        final Snackbar snackbar = Snackbar.make(findViewById(R.id.clLogin), "Email enviado para " + etEmailDialog.getText().toString() + ".", Snackbar.LENGTH_LONG);
+                                                        snackbar.setAction("Ok", new View.OnClickListener() {
+                                                            @Override
+                                                            public void onClick(View v) {
+                                                                snackbar.dismiss();
+                                                            }
+                                                        });
+                                                        snackbar.show();
+                                                    }
+                                                });
+                                            } else {
+                                                runOnUiThread(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        final Snackbar snackbar = Snackbar.make(findViewById(R.id.clLogin), "Não foi possível enviar o email.", Snackbar.LENGTH_LONG);
+                                                        snackbar.setAction("Ok", new View.OnClickListener() {
+                                                            @Override
+                                                            public void onClick(View v) {
+                                                                snackbar.dismiss();
+                                                            }
+                                                        });
+                                                        snackbar.show();
+                                                    }
+                                                });
+                                            }
+                                        }
+                                    }).start();
+                                }
+                            }
+                        });
+                    }
+                });
                 alerta.show();
             }
         });
@@ -167,20 +234,34 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private boolean validarCampos(EditText etValidar) {
-        if (etValidar.equals(etEmailLogin)) {
-            Pattern p = Pattern.compile("^[A-Za-z0-9-]+(\\-[A-Za-z0-9])*@"
-                    + "[A-Za-z0-9-]+(\\.[A-Za-z0-9])");
-            Matcher m = p.matcher(etEmailLogin.getText().toString());
+        Pattern p;
+        Matcher m;
+        boolean emailCerto;
 
-            boolean emailCerto = m.find();
+        switch (etValidar.getId()) {
+            case R.id.etEmailLogin:
+                p = Pattern.compile("^[A-Za-z0-9-]+(\\-[A-Za-z0-9])*@"
+                        + "[A-Za-z0-9-]+(\\.[A-Za-z0-9])");
+                m = p.matcher(etEmailLogin.getText().toString());
 
-            tilEmailLogin.setError(!emailCerto ? "Email inválido." : null);
-            return emailCerto;
-        } else if (etValidar.equals(etSenhaLogin)) {
-            tilSenhaLogin.setError(etSenhaLogin.getText().toString().equals("") ? "Informe a senha." : null);
-            return !etSenhaLogin.getText().toString().equals("");
-        } else {
-            return false;
+                emailCerto = m.find();
+
+                tilEmailLogin.setError(!emailCerto ? "Email inválido." : null);
+                return emailCerto;
+            case R.id.etEmailDialog:
+                p = Pattern.compile("^[A-Za-z0-9-]+(\\-[A-Za-z0-9])*@"
+                        + "[A-Za-z0-9-]+(\\.[A-Za-z0-9])");
+                m = p.matcher(etEmailDialog.getText().toString());
+
+                emailCerto = m.find();
+
+                tilEmailDialog.setError(!emailCerto ? "Email inválido." : null);
+                return emailCerto;
+            case R.id.etSenhaLogin:
+                tilSenhaLogin.setError(etSenhaLogin.getText().toString().equals("") ? "Informe a senha." : null);
+                return !etSenhaLogin.getText().toString().equals("");
+            default:
+                return false;
         }
     }
 

@@ -9,7 +9,7 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
@@ -40,6 +40,7 @@
         </activity>
         <activity
             android:name=".RegistrarActivity"
+            android:configChanges="keyboard|orientation|locale|fontScale|screenLayout|screenSize|uiMode|navigation|touchscreen|keyboardHidden|layoutDirection|smallestScreenSize"
             android:label="@string/title_activity_registrar"
             android:parentActivityName=".LoginActivity"
             android:theme="@style/AppTheme.NoActionBar">
@@ -49,6 +50,7 @@
         </activity>
         <activity
             android:name=".DetalhesActivity"
+            android:configChanges="keyboard|orientation|locale|fontScale|screenLayout|screenSize|uiMode|navigation|touchscreen|keyboardHidden|layoutDirection|smallestScreenSize"
             android:label="@string/title_activity_detalhes"
             android:parentActivityName=".PrincipalActivity"
             android:theme="@style/AppTheme.NoActionBar">
@@ -58,6 +60,7 @@
         </activity>
         <activity
             android:name=".ConfiguracoesActivity"
+            android:configChanges="keyboard|orientation|locale|fontScale|screenLayout|screenSize|uiMode|navigation|touchscreen|keyboardHidden|layoutDirection|smallestScreenSize"
             android:label="@string/title_activity_configuracoes"
             android:parentActivityName=".PrincipalActivity"
             android:theme="@style/AppTheme.NoActionBar">

@@ -40,7 +40,7 @@ public class ChamadosFragment extends Fragment {
                     @Override
                     public void run() {
                         try {
-                            ((PrincipalActivity)getActivity()).attRecycler();
+                            ((PrincipalActivity) getActivity()).attRecycler();
                             getActivity().runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
