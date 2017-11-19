@@ -112,6 +112,17 @@ public class TrataCliente extends Thread {
                                 + " WHERE id_chamado = " + chamado.getID_Chamado();
 
                         out.writeObject(Servidor.AtualizaTabela(sql));
+                    } else if (operacao.equals("AtualizarChamado")) {
+                        out.writeObject(1);
+                        chamado = (Chamado) in.readObject();
+
+                        sql = "UPDATE chamados"
+                                + " SET id_computador = " + chamado.getComputador().getID()
+                                + "   , id_problema = " + chamado.getProblema().getID()
+                                + "   , observacao = '" + chamado.getObservacao() + "'"
+                                + " WHERE id_chamado = " + chamado.getID_Chamado();
+
+                        out.writeObject(Servidor.AtualizaTabela(sql));
                     } else if (operacao.equals("EmailDisponivel")) {
                         out.writeObject(1);
                         String email = (String) in.readObject();
@@ -148,7 +159,7 @@ public class TrataCliente extends Thread {
                     if (operacao.equals("CadastrarUsuario")) {
                         out.writeObject(1);
                         usuario = (Usuario) in.readObject();
-                        
+
                         sql = " SELECT 1"
                                 + " FROM usuarios"
                                 + " WHERE isAdministrador = 1";
@@ -164,7 +175,7 @@ public class TrataCliente extends Thread {
                             rs.next();
 
                             usuario.setID_Usuario(rs.getInt("ID"));
-                            if (!usuario.isAdministrador() || primeiroAdm){
+                            if (!usuario.isAdministrador() || primeiroAdm) {
                                 user = usuario;
                             }
                         } else {
@@ -213,11 +224,11 @@ public class TrataCliente extends Thread {
                             for (int i = pcs.get(0).getNumero(); i <= pcs.get(1).getNumero(); i++) {
                                 sql += " (" + i + ", " + pcs.get(0).getSala() + "), ";
                             }
-                            sql = sql.substring(0, sql.length()-2);
+                            sql = sql.substring(0, sql.length() - 2);
                         }
-                        
+
                         int result = 0;
-                        
+
                         if (Servidor.AtualizaTabela(sql) != 0) {
                             sql = "SELECT MAX(id_computador)"
                                     + " FROM computadores";
@@ -394,10 +405,14 @@ public class TrataCliente extends Thread {
                     } else if (operacao.equals("ExcluirChamado")) {
                         out.writeObject(1);
 
-                        chamado = (Chamado) in.readObject();
+                        LinkedList<Chamado> chamados = (LinkedList<Chamado>) in.readObject();
 
                         sql = "DELETE FROM chamados"
-                                + " WHERE id_chamado = " + chamado.getID_Chamado();
+                                + " WHERE 1=0";
+
+                        for (Chamado chamadoe : chamados) {
+                            sql += " OR id_chamado = " + chamadoe.getID_Chamado();
+                        }
 
                         out.writeObject(Servidor.AtualizaTabela(sql));
                     } else if (operacao.equals("ExcluirSala")) {

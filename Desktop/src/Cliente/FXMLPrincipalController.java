@@ -2,6 +2,8 @@ package Cliente;
 
 import Classes.Chamado;
 import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXDialog;
+import com.jfoenix.controls.JFXDialogLayout;
 import com.jfoenix.controls.JFXListView;
 import com.jfoenix.controls.JFXNodesList;
 import com.jfoenix.controls.JFXPopup;
@@ -44,7 +46,9 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -480,12 +484,26 @@ public class FXMLPrincipalController implements Initializable {
     }
 
     public void excluirChamado(Chamado chamado) {
-        new Thread(() -> {
-            if ((int) Principal.realizarOperacao("ExcluirChamado", chamado) == 1) {
+        JFXDialogLayout layoutExc = new JFXDialogLayout();
+        JFXDialog dialogExc = new JFXDialog(StackPane, layoutExc, JFXDialog.DialogTransition.CENTER);
+
+        JFXButton btCancelarD = new JFXButton("Cancelar");
+        btCancelarD.setTextFill(Paint.valueOf("#29B6F6"));
+        btCancelarD.setOnAction((ActionEvent event) -> {
+            dialogExc.close();
+        });
+
+        JFXButton btExcluirD = new JFXButton("Excluir");
+        btExcluirD.setTextFill(Paint.valueOf("#FF0000"));
+        btExcluirD.setOnAction((ActionEvent event) -> {
+            new Thread(() -> {
+            LinkedList<Chamado> excluir = new LinkedList<>();
+            excluir.add(chamado);
+            if ((int) Principal.realizarOperacao("ExcluirChamado", excluir) != 0) {
                 Platform.runLater(() -> {
                     lvChamados.getItems().remove(chamados.indexOf(chamado));
                     chamados.remove(chamado);
-                    JFXSnackbar.SnackbarEvent barEvent = new JFXSnackbar.SnackbarEvent("Chamado excluido", "Ok", 3000, false, (MouseEvent event) -> {
+                    JFXSnackbar.SnackbarEvent barEvent = new JFXSnackbar.SnackbarEvent("Chamado excluido", "Ok", 3000, false, (MouseEvent event1) -> {
                         snackbar.close();
                     });
                     snackbar.enqueue(barEvent);
@@ -493,7 +511,7 @@ public class FXMLPrincipalController implements Initializable {
             } else {
                 Platform.runLater(() -> {
                     lvChamados.getItems().remove(chamados.indexOf(chamado));
-                    JFXSnackbar.SnackbarEvent barEvent = new JFXSnackbar.SnackbarEvent("Não foi possível excluir o chamado.", "Tentar novamente", 3000, false, (MouseEvent event) -> {
+                    JFXSnackbar.SnackbarEvent barEvent = new JFXSnackbar.SnackbarEvent("Não foi possível excluir o chamado.", "Tentar novamente", 3000, false, (MouseEvent event1) -> {
                         excluirChamado(chamado);
                         snackbar.close();
                     });
@@ -501,6 +519,17 @@ public class FXMLPrincipalController implements Initializable {
                 });
             }
         }).start();
+            dialogExc.close();
+        });
+
+        LinkedList<Node> actions = new LinkedList<>();
+        actions.add(btCancelarD);
+        actions.add(btExcluirD);
+
+        layoutExc.setHeading(new Text("Deseja realmente excluir este chamado?"));
+        layoutExc.setActions(actions);
+        
+        dialogExc.show();
     }
 
     public void attDados() {

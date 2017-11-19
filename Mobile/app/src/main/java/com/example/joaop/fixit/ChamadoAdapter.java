@@ -21,14 +21,6 @@ public class ChamadoAdapter extends RecyclerView.Adapter<ChamadoAdapter.MyViewHo
     private ChamadoOnLongClickListener chamadoOnLongClickListener;
     private LinkedList<CardView> cardViews;
 
-    public List<Chamado> getListaChamados() {
-        return listaChamados;
-    }
-
-    public void setListaChamados(List<Chamado> listaChamados) {
-        this.listaChamados = listaChamados;
-    }
-
     public ChamadoAdapter(List<Chamado> listaChamados, ChamadoOnClickListener chamadoOnClickListener, ChamadoOnLongClickListener chamadoOnLongClickListener) {
         this.listaChamados = listaChamados;
         this.chamadoOnClickListener = chamadoOnClickListener;

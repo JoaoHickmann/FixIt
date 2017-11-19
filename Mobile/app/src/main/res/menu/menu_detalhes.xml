@@ -3,6 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/action_excluirChamado"
+        android:icon="@drawable/ic_delete"
+        android:title="Excluir"
+        app:showAsAction="always" />
+
+    <item
         android:id="@+id/action_salvar"
         android:icon="@drawable/ic_save"
         android:title="Salvar"

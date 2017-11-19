@@ -1,9 +1,11 @@
 package com.example.joaop.fixit;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -30,7 +32,7 @@ public class DetalhesActivity extends AppCompatActivity {
     Spinner spTipoProblemaDetalhes, spProblemaDetalhes, spSalaDetalhes, spComputadorDetalhes;
 
     boolean editavel = false;
-
+    boolean carregado = false;
     Chamado chamado;
     LinkedList<Problema> problemas;
     LinkedList<Computador> computadores;
@@ -151,12 +153,13 @@ public class DetalhesActivity extends AppCompatActivity {
 
                                 }
                             });
+
+                            carregado = true;
                         }
                     });
                 }
             }).start();
         } else {
-            spTipoProblemaDetalhes.removeViewAt(chamado.getProblema().getTipo() == 1 ? 1:0);
             LinkedList<String> tipo = new LinkedList<>();
             tipo.add(chamado.getProblema().getTipo() == 1 ? "Hardware" : "Software");
             ArrayAdapter<String> adapter = new ArrayAdapter<>(DetalhesActivity.this, android.R.layout.simple_spinner_dropdown_item, tipo);
@@ -196,10 +199,102 @@ public class DetalhesActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_salvar:
-                Toast.makeText(this, "testes", Toast.LENGTH_SHORT).show();
+                if (carregado) {
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            for (Problema problema : problemas) {
+                                if (problema.getTipo() == spTipoProblemaDetalhes.getSelectedItemPosition() + 1 && problema.getDescricao() == spProblemaDetalhes.getSelectedItem()) {
+                                    chamado.setProblema(problema);
+                                    break;
+                                }
+                            }
+
+                            for (Computador computador : computadores) {
+                                if (computador.getSala() == Integer.valueOf((String) spSalaDetalhes.getSelectedItem())
+                                        && computador.getNumero() == Integer.valueOf((String) spComputadorDetalhes.getSelectedItem())) {
+                                    chamado.setComputador(computador);
+                                    break;
+                                }
+                            }
+
+                            chamado.setObservacao(etObservacaoDetalhes.getText().toString());
+
+                            atualizarChamado(chamado);
+                        }
+                    }).start();
+                }
+                return true;
+            case R.id.action_excluirChamado:
+                AlertDialog.Builder builder = new AlertDialog.Builder(DetalhesActivity.this);
+                builder.setTitle("Excluir chamado")
+                        .setMessage("Deseja realmente excluir este chamado?")
+                        .setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface arg0, int arg1) {
+                                new Thread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        LinkedList<Chamado> excluir = new LinkedList<>();
+                                        excluir.add(chamado);
+                                        if ((int) dados.realizarOperacao("ExcluirChamado", excluir) != 0) {
+                                            setResult(1);
+                                            finish();
+                                        } else {
+                                            final Snackbar snackbar = Snackbar.make(findViewById(R.id.clDetalhes), "Não for possível excluir o chamado.", Snackbar.LENGTH_LONG);
+                                            snackbar.setAction("Ok", new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View v) {
+                                                    snackbar.dismiss();
+                                                }
+                                            });
+                                            snackbar.show();
+                                        }
+                                    }
+                                }).start();
+                            }
+                        })
+                        .setNegativeButton("Não", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface arg0, int arg1) {
+
+                            }
+                        });
+                AlertDialog alerta = builder.create();
+                alerta.show();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void atualizarChamado(final Chamado chamado) {
+        if ((int) dados.realizarOperacao("AtualizarChamado", chamado) == 1) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    final Snackbar snackbar = Snackbar.make(findViewById(R.id.clDetalhes), "Chamado atualizado.", Snackbar.LENGTH_LONG);
+                    snackbar.setAction("Ok", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            snackbar.dismiss();
+                        }
+                    });
+                    snackbar.show();
+                }
+            });
+        } else {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    final Snackbar snackbar = Snackbar.make(findViewById(R.id.clDetalhes), "Não foi possível atualizar o chamado", Snackbar.LENGTH_LONG);
+                    snackbar.setAction("Ok", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            snackbar.dismiss();
+                        }
+                    });
+                    snackbar.show();
+                }
+            });
         }
     }
 

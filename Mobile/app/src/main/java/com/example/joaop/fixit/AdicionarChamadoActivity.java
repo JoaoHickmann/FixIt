@@ -20,29 +20,31 @@ import Classes.Computador;
 import Classes.Problema;
 
 public class AdicionarChamadoActivity extends AppCompatActivity {
+    Dados dados;
 
     EditText etObservacao;
     Spinner spTipoProblema, spProblema, spSala, spComputador;
-    LinkedList<Problema> problemas;
-    LinkedList<Computador> computadores;
-    Dados dados;
 
     boolean carregado = false;
+    LinkedList<Problema> problemas;
+    LinkedList<Computador> computadores;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_realizar_chamadas);
+
         final Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        dados = (Dados) getApplicationContext();
 
         spTipoProblema = findViewById(R.id.spTipoProblema);
         spProblema = findViewById(R.id.spProblema);
         spSala = findViewById(R.id.spSala);
         spComputador = findViewById(R.id.spComputador);
         etObservacao = findViewById(R.id.etObservacao);
-        dados = (Dados) getApplicationContext();
 
         new Thread(new Runnable() {
             @Override
