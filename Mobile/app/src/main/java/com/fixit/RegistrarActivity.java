@@ -13,8 +13,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
-import com.example.joaop.fixit.R;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 

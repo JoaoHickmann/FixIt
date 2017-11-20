@@ -9,9 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.joaop.fixit.R;
-
-
 /**
  * A simple {@link Fragment} subclass.
  */

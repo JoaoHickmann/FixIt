@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.joaop.fixit">
+    package="com.fixit">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -43,7 +43,7 @@
 
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.joaop.fixit.com.fixit.PrincipalActivity" />
+                android:value="com.fixit.PrincipalActivity" />
 
         </activity>
 
@@ -56,7 +56,7 @@
 
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.joaop.fixit.com.fixit.LoginActivity" />
+                android:value="com.fixit.LoginActivity" />
 
         </activity>
 
@@ -69,7 +69,7 @@
 
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.joaop.fixit.com.fixit.PrincipalActivity" />
+                android:value="com.fixit.PrincipalActivity" />
 
         </activity>
 
@@ -82,7 +82,7 @@
 
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.joaop.fixit.com.fixit.PrincipalActivity" />
+                android:value="com.fixit.PrincipalActivity" />
 
         </activity>
 

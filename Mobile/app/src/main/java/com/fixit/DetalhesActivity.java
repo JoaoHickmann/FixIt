@@ -15,8 +15,6 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 
-import com.example.joaop.fixit.R;
-
 import java.text.SimpleDateFormat;
 import java.util.LinkedList;
 

@@ -25,8 +25,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.example.joaop.fixit.R;
-
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
