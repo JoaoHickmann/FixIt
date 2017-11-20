@@ -3,6 +3,8 @@ package com.example.joaop.fixit;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TextInputEditText;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -11,72 +13,110 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ConfiguracoesActivity extends AppCompatActivity {
 
-    EditText etConfiguracoesNome, etConfiguracoesEmail, etConfiguracoesSenhaAtual, etConfiguracoesNovaSenha,
-            etConfiguracoesConfirmarSenha;
-    Button btConfiguracoesAlterarNome, btConfiguracoesAlterarSenha;
+    TextInputLayout tilNomeConfiguracoes, tilSenhaAtualConfiguracoes, tilNovaSenhaConfiguracoes, tilConfirmarSenhaConfiguracoes;
+    EditText etNomeConfiguracoes, etEmailConfiguracoes, etSenhaAtualConfiguracoes, etNovaSenhaConfiguracoes,
+            etConfirmarSenhaConfiguracoes;
+    Button btAlterarNomeConfiguracoes, btAlterarSenhaConfiguracoes;
     Dados dados;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_configuracoes);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        etConfiguracoesNome = findViewById(R.id.etConfiguracoesNome);
-        etConfiguracoesEmail = findViewById(R.id.etConfiguracoesEmail);
-        etConfiguracoesSenhaAtual = findViewById(R.id.etConfiguracoesSenhaAtual);
-        etConfiguracoesNovaSenha = findViewById(R.id.etConfiguracoesNovaSenha);
-        etConfiguracoesConfirmarSenha = findViewById(R.id.etConfiguracoesConfirmarNovaSenha);
-        btConfiguracoesAlterarNome = findViewById(R.id.btConfiguracoesAlterarNome);
-        btConfiguracoesAlterarSenha = findViewById(R.id.btConfiguracoesAlterarSenha);
+
+        tilNomeConfiguracoes = findViewById(R.id.tilNomeConfiguracoes);
+        tilSenhaAtualConfiguracoes = findViewById(R.id.tilSenhaAtualConfiguracoes);
+        tilNovaSenhaConfiguracoes = findViewById(R.id.tilNovaSenhaConfiguracoes);
+        tilConfirmarSenhaConfiguracoes = findViewById(R.id.tilConfirmarSenhaConfiguracoes);
+
+        etNomeConfiguracoes = findViewById(R.id.etNomeConfiguracoes);
+        etEmailConfiguracoes = findViewById(R.id.etEmailConfiguracoes);
+        etSenhaAtualConfiguracoes = findViewById(R.id.etSenhaAtualConfiguracoes);
+        etNovaSenhaConfiguracoes = findViewById(R.id.etNovaSenhaConfiguracoes);
+        etConfirmarSenhaConfiguracoes = findViewById(R.id.etConfirmarNovaSenhaConfiguracoes);
+
+        btAlterarNomeConfiguracoes = findViewById(R.id.btAlterarNomeConfiguracoes);
+        btAlterarSenhaConfiguracoes = findViewById(R.id.btAlterarSenhaConfiguracoes);
         dados = (Dados) getApplicationContext();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        btConfiguracoesAlterarNome.setOnClickListener(new View.OnClickListener() {
+        etEmailConfiguracoes.setText(dados.getUser().getEmail());
+        btAlterarNomeConfiguracoes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!etConfiguracoesNome.getText().toString().equals("")) {
-                    final String nome = etConfiguracoesNome.getText().toString();
+                    validarCampos(etNomeConfiguracoes);
 
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                dados.getOut().writeObject("MudarNome");
-                                dados.getIn().readObject();
-                                dados.getOut().writeObject(nome);
+                    if (validarCampos(etNomeConfiguracoes)) {
+                        final String nome = etNomeConfiguracoes.getText().toString();
 
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        Toast.makeText(dados, "Nome alterado com sucesso!", Toast.LENGTH_SHORT).show();
-                                    }
-                                });
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    dados.getOut().writeObject("MudarNome");
+                                    dados.getIn().readObject();
+                                    dados.getOut().writeObject(nome);
 
-                            } catch (IOException | ClassNotFoundException e) {
-                                e.printStackTrace();
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            Toast.makeText(dados, "Nome alterado com sucesso!", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+
+                                } catch (IOException | ClassNotFoundException e) {
+                                    e.printStackTrace();
+                                }
                             }
-                        }
-                    }).start();
+                        }).start();
 
-                } else {
-                    etConfiguracoesNome.setError("Informe o nome!");
-                    etConfiguracoesNome.requestFocus();
-                }
+                    }
             }
         });
 
-        btConfiguracoesAlterarSenha.setOnClickListener(new View.OnClickListener() {
+        btAlterarSenhaConfiguracoes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(dados, "Show de bola", Toast.LENGTH_SHORT).show();
-                Toast.makeText(dados, ""+dados.getUser().getSenha(), Toast.LENGTH_SHORT).show();
-            }
+
+
+                    String senha = new Criptografia(etEmailConfiguracoes.getText().toString().charAt(0)).criptografar(etSenhaAtualConfiguracoes.getText().toString());
+                    final String novaSenha = new Criptografia(etEmailConfiguracoes.getText().toString().charAt(0)).criptografar(etNovaSenhaConfiguracoes.getText().toString());
+                    if (dados.getUser().getSenha().equals(senha)) {
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    dados.getOut().writeObject("MudarSenha");
+                                    dados.getIn().readObject();
+                                    dados.getOut().writeObject(novaSenha);
+
+                                } catch (IOException | ClassNotFoundException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }).start();
+                    } else {
+                        Toast.makeText(dados, "A senha atual está errada!", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            
         });
+    }
+    private boolean validarCampos(EditText etValidar) {
+        if (etValidar.equals(etNomeConfiguracoes)) {
+            tilNomeConfiguracoes.setError(etNomeConfiguracoes.getText().toString().equals("") ? "Informe o nome." : null);
+            return !etNomeConfiguracoes.getText().toString().equals("");
+        }
+        return false;
     }
 
 
-
 }
+
