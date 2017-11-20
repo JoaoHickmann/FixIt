@@ -120,7 +120,7 @@ public class RegistrarActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_registrar:
+            case R.id.action_registrar_registrar:
                 validarCampos(etNomeRegistrar);
                 validarCampos(etEmailRegistrar);
                 validarCampos(etSenhaRegistrar);

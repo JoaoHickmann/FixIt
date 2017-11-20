@@ -25,7 +25,6 @@ public class AdicionarChamadoActivity extends AppCompatActivity {
     EditText etObservacao;
     Spinner spTipoProblema, spProblema, spSala, spComputador;
 
-    boolean carregado = false;
     LinkedList<Problema> problemas;
     LinkedList<Computador> computadores;
 
@@ -40,94 +39,86 @@ public class AdicionarChamadoActivity extends AppCompatActivity {
 
         dados = (Dados) getApplicationContext();
 
-        spTipoProblema = findViewById(R.id.spTipoProblema);
-        spProblema = findViewById(R.id.spProblema);
-        spSala = findViewById(R.id.spSala);
-        spComputador = findViewById(R.id.spComputador);
-        etObservacao = findViewById(R.id.etObservacao);
+        spTipoProblema = findViewById(R.id.spTipoProblemaAdicionar);
+        spProblema = findViewById(R.id.spProblemaAdicionar);
+        spSala = findViewById(R.id.spSalaAdicionar);
+        spComputador = findViewById(R.id.spComputadorAdicionar);
+        etObservacao = findViewById(R.id.etObservacaoAdicionar);
 
         new Thread(new Runnable() {
             @Override
             public void run() {
-                try {
-                    dados.getOut().writeObject("Problemas");
-                    problemas = (LinkedList<Problema>) dados.getIn().readObject();
-                    dados.getOut().writeObject("Computadores");
-                    computadores = (LinkedList<Computador>) dados.getIn().readObject();
+                problemas = (LinkedList<Problema>) dados.obterLista("Problemas");
+                computadores = (LinkedList<Computador>) dados.obterLista("Computadores");
 
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            LinkedList<String> nomes_problemas = new LinkedList<>();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        LinkedList<String> nomes_problemas = new LinkedList<>();
 
-                            for (Problema problema : problemas) {
-                                if (problema.getTipo() == 1) {
-                                    nomes_problemas.add(problema.getDescricao());
-                                }
+                        for (Problema problema : problemas) {
+                            if (problema.getTipo() == 1) {
+                                nomes_problemas.add(problema.getDescricao());
                             }
-
-                            ArrayAdapter<String> adapter = new ArrayAdapter<String>(AdicionarChamadoActivity.this, android.R.layout.simple_spinner_dropdown_item, nomes_problemas);
-                            spProblema.setAdapter(adapter);
-
-                            LinkedList<String> nomes_salas = new LinkedList<>();
-
-                            for (Computador computador : computadores) {
-                                if (!nomes_salas.contains(String.valueOf(computador.getSala()))) {
-                                    nomes_salas.add(String.valueOf(computador.getSala()));
-                                }
-                            }
-
-                            adapter = new ArrayAdapter<String>(AdicionarChamadoActivity.this, android.R.layout.simple_spinner_dropdown_item, nomes_salas);
-                            spSala.setAdapter(adapter);
-
-                            carregado = true;
-
-                            spTipoProblema.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                                @Override
-                                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                                    LinkedList<String> nomes_problemas = new LinkedList<>();
-
-                                    for (Problema problema : problemas) {
-                                        if (problema.getTipo() == position + 1) {
-                                            nomes_problemas.add(problema.getDescricao());
-                                        }
-                                    }
-
-                                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(AdicionarChamadoActivity.this, android.R.layout.simple_spinner_dropdown_item, nomes_problemas);
-                                    spProblema.setAdapter(adapter);
-                                }
-
-                                @Override
-                                public void onNothingSelected(AdapterView<?> parent) {
-
-                                }
-                            });
-
-                            spSala.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                                @Override
-                                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                                    LinkedList<String> nomes_computadores = new LinkedList<>();
-
-                                    for (Computador computador : computadores) {
-                                        if (String.valueOf(computador.getSala()).equals(spSala.getSelectedItem())) {
-                                            nomes_computadores.add(String.valueOf(computador.getNumero()));
-                                        }
-                                    }
-
-                                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(AdicionarChamadoActivity.this, android.R.layout.simple_spinner_dropdown_item, nomes_computadores);
-                                    spComputador.setAdapter(adapter);
-                                }
-
-                                @Override
-                                public void onNothingSelected(AdapterView<?> parent) {
-
-                                }
-                            });
                         }
-                    });
-                } catch (IOException | ClassNotFoundException e) {
-                    e.printStackTrace();
-                }
+
+                        ArrayAdapter<String> adapter = new ArrayAdapter<String>(AdicionarChamadoActivity.this, android.R.layout.simple_spinner_dropdown_item, nomes_problemas);
+                        spProblema.setAdapter(adapter);
+
+                        LinkedList<String> nomes_salas = new LinkedList<>();
+
+                        for (Computador computador : computadores) {
+                            if (!nomes_salas.contains(String.valueOf(computador.getSala()))) {
+                                nomes_salas.add(String.valueOf(computador.getSala()));
+                            }
+                        }
+
+                        adapter = new ArrayAdapter<String>(AdicionarChamadoActivity.this, android.R.layout.simple_spinner_dropdown_item, nomes_salas);
+                        spSala.setAdapter(adapter);
+
+                        spTipoProblema.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                            @Override
+                            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                                LinkedList<String> nomes_problemas = new LinkedList<>();
+
+                                for (Problema problema : problemas) {
+                                    if (problema.getTipo() == position + 1) {
+                                        nomes_problemas.add(problema.getDescricao());
+                                    }
+                                }
+
+                                ArrayAdapter<String> adapter = new ArrayAdapter<String>(AdicionarChamadoActivity.this, android.R.layout.simple_spinner_dropdown_item, nomes_problemas);
+                                spProblema.setAdapter(adapter);
+                            }
+
+                            @Override
+                            public void onNothingSelected(AdapterView<?> parent) {
+
+                            }
+                        });
+
+                        spSala.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                            @Override
+                            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                                LinkedList<String> nomes_computadores = new LinkedList<>();
+
+                                for (Computador computador : computadores) {
+                                    if (String.valueOf(computador.getSala()).equals(spSala.getSelectedItem())) {
+                                        nomes_computadores.add(String.valueOf(computador.getNumero()));
+                                    }
+                                }
+
+                                ArrayAdapter<String> adapter = new ArrayAdapter<String>(AdicionarChamadoActivity.this, android.R.layout.simple_spinner_dropdown_item, nomes_computadores);
+                                spComputador.setAdapter(adapter);
+                            }
+
+                            @Override
+                            public void onNothingSelected(AdapterView<?> parent) {
+
+                            }
+                        });
+                    }
+                });
             }
         }).start();
     }
@@ -141,51 +132,44 @@ public class AdicionarChamadoActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_adicionar:
-                if (carregado) {
+            case R.id.action_adicionar_adicionar:
+                if (spProblema.getCount() != 0 && spSala.getCount() != 0 && spComputador.getCount() != 0) {
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            try {
-                                Computador computador = null;
-                                for (Computador computador1 : computadores) {
-                                    if (computador1.getSala() == Integer.valueOf(spSala.getSelectedItem().toString()) && computador1.getNumero() == Integer.valueOf(spComputador.getSelectedItem().toString())) {
-                                        computador = computador1;
-                                        break;
+                            Computador computador = null;
+                            for (Computador computador1 : computadores) {
+                                if (computador1.getSala() == Integer.valueOf(spSala.getSelectedItem().toString()) && computador1.getNumero() == Integer.valueOf(spComputador.getSelectedItem().toString())) {
+                                    computador = computador1;
+                                    break;
+                                }
+                            }
+
+                            Problema problema = null;
+                            for (Problema problema1 : problemas) {
+                                if (problema1.getTipo() == spTipoProblema.getSelectedItemPosition() + 1 && problema1.getDescricao().equals(spProblema.getSelectedItem().toString())) {
+                                    problema = problema1;
+                                    break;
+                                }
+                            }
+
+                            Chamado chamado = new Chamado(computador, problema, etObservacao.getText().toString());
+
+                            if ((int) dados.realizarOperacao("AdicionarChamado", chamado) == 1) {
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        setResult(1);
+                                        finish();
                                     }
-                                }
-
-                                Problema problema = null;
-                                for (Problema problema1 : problemas) {
-                                    if (problema1.getTipo() == spTipoProblema.getSelectedItemPosition() + 1 && problema1.getDescricao().equals(spProblema.getSelectedItem().toString())) {
-                                        problema = problema1;
-                                        break;
+                                });
+                            } else {
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Toast.makeText(dados, "Não foi possivel adicionar o chamado!\nTente novamente.", Toast.LENGTH_SHORT).show();
                                     }
-                                }
-
-                                Chamado chamado = new Chamado(computador, problema, etObservacao.getText().toString());
-
-                                dados.getOut().writeObject("AdicionarChamado");
-                                dados.getIn().readObject();
-                                dados.getOut().writeObject(chamado);
-                                if ((int) dados.getIn().readObject() == 1) {
-                                    runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            setResult(1);
-                                            finish();
-                                        }
-                                    });
-                                } else {
-                                    runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            Toast.makeText(dados, "Não foi possivel adicionar o chamado!\nTente novamente.", Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
-                                }
-                            } catch (IOException | ClassNotFoundException e) {
-                                e.printStackTrace();
+                                });
                             }
                         }
                     }).start();

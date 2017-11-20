@@ -2,12 +2,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/action_editar"
+        android:id="@+id/action_editar_principal"
         android:icon="@drawable/ic_edit"
         android:title="Editar"
         app:showAsAction="always" />
     <item
-        android:id="@+id/action_excluir"
+        android:id="@+id/action_excluir_principal"
         android:icon="@drawable/ic_delete"
         android:title="Excluir"
         app:showAsAction="always" />

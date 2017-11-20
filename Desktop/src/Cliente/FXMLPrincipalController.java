@@ -324,7 +324,7 @@ public class FXMLPrincipalController implements Initializable {
 
         //<editor-fold defaultstate="collapsed" desc="Chamadas OnChange">
         lvChamados.getSelectionModel().selectedIndexProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
-            if (lvChamados.getSelectionModel().getSelectedIndex() == -1) {
+            if (newValue.intValue() == -1) {
                 tfID.setText("");
                 tfUsuario.setText("");
                 tfAdministrador.setText("");
@@ -342,7 +342,7 @@ public class FXMLPrincipalController implements Initializable {
                 btFinalizarP.setDisable(true);
                 btExcluirP.setDisable(true);
             } else {
-                Chamado chamado = chamados.get(lvChamados.getSelectionModel().getSelectedIndex());
+                Chamado chamado = chamados.get(newValue.intValue());
                 SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
                 tfID.setText(chamado.getID_Chamado() + "");

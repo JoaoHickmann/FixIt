@@ -3,12 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.joaop.fixit.PrincipalActivity">
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/action_configuracoes_principal"
         android:orderInCategory="100"
         android:title="Configurações"
         app:showAsAction="never" />
     <item
-        android:id="@+id/action_sair"
+        android:id="@+id/action_sair_principal"
         android:orderInCategory="100"
         android:title="Sair"
         app:showAsAction="never" />

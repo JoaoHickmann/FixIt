@@ -9,15 +9,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.io.IOException;
-
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class ChamadosFragment extends Fragment {
-    private RecyclerView rvChamados;
-    private SwipeRefreshLayout swipeRefresh;
+    private RecyclerView rvChamadosChamados;
+    private SwipeRefreshLayout swipeRefreshChamados;
 
     public ChamadosFragment() {
         // Required empty public constructor
@@ -29,27 +27,23 @@ public class ChamadosFragment extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_chamados, container, false);
 
-        rvChamados = rootView.findViewById(R.id.rvChamados);
+        rvChamadosChamados = rootView.findViewById(R.id.rvChamados);
 
-        swipeRefresh = rootView.findViewById(R.id.swipeRefresh);
+        swipeRefreshChamados = rootView.findViewById(R.id.swipeRefresh);
 
-        swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        swipeRefreshChamados.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        try {
-                            ((PrincipalActivity) getActivity()).attRecycler();
-                            getActivity().runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    swipeRefresh.setRefreshing(false);
-                                }
-                            });
-                        } catch (IOException | ClassNotFoundException e) {
-                            e.printStackTrace();
-                        }
+                        ((PrincipalActivity) getActivity()).attRecycler();
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                swipeRefreshChamados.setRefreshing(false);
+                            }
+                        });
                     }
                 }).start();
             }
@@ -58,11 +52,7 @@ public class ChamadosFragment extends Fragment {
         return rootView;
     }
 
-    public RecyclerView getRvChamados() {
-        return rvChamados;
-    }
-
-    public SwipeRefreshLayout getSwipeRefresh() {
-        return swipeRefresh;
+    public RecyclerView getRvChamadosChamados() {
+        return rvChamadosChamados;
     }
 }

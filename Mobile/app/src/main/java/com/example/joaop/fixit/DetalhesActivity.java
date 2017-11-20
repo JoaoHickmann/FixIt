@@ -32,7 +32,7 @@ public class DetalhesActivity extends AppCompatActivity {
     Spinner spTipoProblemaDetalhes, spProblemaDetalhes, spSalaDetalhes, spComputadorDetalhes;
 
     boolean editavel = false;
-    boolean carregado = false;
+    boolean pronto = true;
     Chamado chamado;
     LinkedList<Problema> problemas;
     LinkedList<Computador> computadores;
@@ -153,8 +153,6 @@ public class DetalhesActivity extends AppCompatActivity {
 
                                 }
                             });
-
-                            carregado = true;
                         }
                     });
                 }
@@ -198,8 +196,9 @@ public class DetalhesActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_salvar:
-                if (carregado) {
+            case R.id.action_salvar_detalhes:
+                if (spProblemaDetalhes.getCount() != 0 && spSalaDetalhes.getCount() != 0 && spComputadorDetalhes.getCount() != 0 && pronto) {
+                    pronto = false;
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
@@ -221,11 +220,12 @@ public class DetalhesActivity extends AppCompatActivity {
                             chamado.setObservacao(etObservacaoDetalhes.getText().toString());
 
                             atualizarChamado(chamado);
+                            pronto = true;
                         }
                     }).start();
                 }
                 return true;
-            case R.id.action_excluirChamado:
+            case R.id.action_excluir_detalhes:
                 AlertDialog.Builder builder = new AlertDialog.Builder(DetalhesActivity.this);
                 builder.setTitle("Excluir chamado")
                         .setMessage("Deseja realmente excluir este chamado?")

@@ -26,7 +26,7 @@
                 android:text="Tipo do problema:" />
 
             <Spinner
-                android:id="@+id/spTipoProblema"
+                android:id="@+id/spTipoProblemaAdicionar"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:entries="@array/tipo_problema"
@@ -39,7 +39,7 @@
                 android:text="Problema:" />
 
             <Spinner
-                android:id="@+id/spProblema"
+                android:id="@+id/spProblemaAdicionar"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:spinnerMode="dropdown" />
@@ -51,7 +51,7 @@
                 android:text="Sala:" />
 
             <Spinner
-                android:id="@+id/spSala"
+                android:id="@+id/spSalaAdicionar"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:spinnerMode="dropdown" />
@@ -63,7 +63,7 @@
                 android:text="Computador:" />
 
             <Spinner
-                android:id="@+id/spComputador"
+                android:id="@+id/spComputadorAdicionar"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:spinnerMode="dropdown" />
@@ -73,7 +73,7 @@
                 android:layout_height="wrap_content">
 
                 <EditText
-                    android:id="@+id/etObservacao"
+                    android:id="@+id/etObservacaoAdicionar"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:hint="Observação"

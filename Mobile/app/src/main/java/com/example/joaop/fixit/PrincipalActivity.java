@@ -25,7 +25,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -117,10 +116,10 @@ public class PrincipalActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_settings:
+            case R.id.action_configuracoes_principal:
                 startActivity(new Intent(PrincipalActivity.this, ConfiguracoesActivity.class));
                 return true;
-            case R.id.action_sair:
+            case R.id.action_sair_principal:
                 dados.setUser(null);
 
                 SharedPreferences sharedPref = getSharedPreferences("com.example.joaop.fixit", dados.MODE_PRIVATE);
@@ -144,11 +143,7 @@ public class PrincipalActivity extends AppCompatActivity {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    try {
-                        attRecycler();
-                    } catch (IOException | ClassNotFoundException e) {
-                        e.printStackTrace();
-                    }
+                    attRecycler();
                 }
             }).start();
         }
@@ -179,7 +174,7 @@ public class PrincipalActivity extends AppCompatActivity {
     }
 
 
-    public void attRecycler() throws IOException, ClassNotFoundException {
+    public void attRecycler() {
         todos_chamados = (LinkedList<Chamado>) dados.obterLista("MeusChamados");
 
         finalizados = new LinkedList<>();
@@ -200,7 +195,7 @@ public class PrincipalActivity extends AppCompatActivity {
                     actionMode.finish();
                 }
 
-                RecyclerView rvChamados = ((ChamadosFragment) ((ViewPagerAdapter) mViewPager.getAdapter()).getItem(0)).getRvChamados();
+                RecyclerView rvChamados = ((ChamadosFragment) ((ViewPagerAdapter) mViewPager.getAdapter()).getItem(0)).getRvChamadosChamados();
                 RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(PrincipalActivity.this);
                 rvChamados.setLayoutManager(mLayoutManager);
                 rvChamados.setItemAnimator(new DefaultItemAnimator());
@@ -244,7 +239,7 @@ public class PrincipalActivity extends AppCompatActivity {
                     }
                 }));
 
-                rvChamados = ((ChamadosFragment) ((ViewPagerAdapter) mViewPager.getAdapter()).getItem(1)).getRvChamados();
+                rvChamados = ((ChamadosFragment) ((ViewPagerAdapter) mViewPager.getAdapter()).getItem(1)).getRvChamadosChamados();
                 mLayoutManager = new LinearLayoutManager(PrincipalActivity.this);
                 rvChamados.setLayoutManager(mLayoutManager);
                 rvChamados.setItemAnimator(new DefaultItemAnimator());
@@ -264,11 +259,7 @@ public class PrincipalActivity extends AppCompatActivity {
         final boolean plural = chamados.size() > 1;
 
         if ((int) dados.realizarOperacao("ExcluirChamado", chamados) != 0) {
-            try {
-                attRecycler();
-            } catch (IOException | ClassNotFoundException e) {
-                e.printStackTrace();
-            }
+            attRecycler();
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -317,13 +308,13 @@ public class PrincipalActivity extends AppCompatActivity {
         @Override
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             switch (item.getItemId()) {
-                case R.id.action_editar:
+                case R.id.action_editar_principal:
                     Intent it = new Intent(PrincipalActivity.this, DetalhesActivity.class);
                     it.putExtra("Editavel", true);
                     it.putExtra("Chamado", selecionados.get(0));
                     startActivityForResult(it, REQUEST_ATUALIZAR_CHAMADO);
                     return true;
-                case R.id.action_excluir:
+                case R.id.action_excluir_principal:
                     AlertDialog.Builder builder = new AlertDialog.Builder(PrincipalActivity.this);
                     builder.setTitle("Excluir chamado" + (selecionados.size() == 1 ? "" : "s"))
                             .setMessage("Deseja realmente excluir este" + (selecionados.size() == 1 ? "" : "s") + " chamado" + (selecionados.size() == 1 ? "" : "s") + "?")
@@ -349,7 +340,7 @@ public class PrincipalActivity extends AppCompatActivity {
 
         @Override
         public void onDestroyActionMode(ActionMode mode) {
-            RecyclerView rvChamados = ((ChamadosFragment) ((ViewPagerAdapter) mViewPager.getAdapter()).getItem(0)).getRvChamados();
+            RecyclerView rvChamados = ((ChamadosFragment) ((ViewPagerAdapter) mViewPager.getAdapter()).getItem(0)).getRvChamadosChamados();
             for (CardView cardView : ((ChamadoAdapter) rvChamados.getAdapter()).getCardViews()) {
                 cardView.setCardBackgroundColor(Color.WHITE);
             }
