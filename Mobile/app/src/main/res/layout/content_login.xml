@@ -7,7 +7,7 @@
     android:background="#ffffff"
     android:orientation="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.example.joaop.fixit.LoginActivity"
+    tools:context="com.fixit.LoginActivity"
     tools:showIn="@layout/activity_login">
 
     <ScrollView

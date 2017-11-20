@@ -1,4 +1,4 @@
-package com.example.joaop.fixit;
+package com.fixit;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -17,6 +17,8 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.joaop.fixit.R;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -206,7 +208,7 @@ public class LoginActivity extends AppCompatActivity {
         } else {
             dados.setUser(usuario);
             if (cbManterConectadoLogin.isChecked()) {
-                SharedPreferences sharedPref = getSharedPreferences("com.example.joaop.fixit", MODE_PRIVATE);
+                SharedPreferences sharedPref = getSharedPreferences("com.fixit", MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPref.edit();
                 editor.putString("Username", usuario.getEmail());
                 editor.putString("Senha", usuario.getSenha());
@@ -291,7 +293,7 @@ public class LoginActivity extends AppCompatActivity {
                         }
                     });
 
-                    SharedPreferences sharedPref = getSharedPreferences("com.example.joaop.fixit", dados.MODE_PRIVATE);
+                    SharedPreferences sharedPref = getSharedPreferences("com.fixit", MODE_PRIVATE);
                     String username = sharedPref.getString("Username", null);
                     if (username != null) {
                         login(new Usuario(username, sharedPref.getString("Senha", null)));

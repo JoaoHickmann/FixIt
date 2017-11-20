@@ -1,15 +1,16 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.example.joaop.fixit.PrincipalActivity">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
     <item
         android:id="@+id/action_configuracoes_principal"
         android:orderInCategory="100"
         android:title="@string/configurações"
         app:showAsAction="never" />
+
     <item
         android:id="@+id/action_sair_principal"
         android:orderInCategory="100"
         android:title="@string/sair"
         app:showAsAction="never" />
+
 </menu>

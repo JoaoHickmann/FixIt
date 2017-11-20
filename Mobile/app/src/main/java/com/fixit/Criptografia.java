@@ -1,4 +1,4 @@
-package com.example.joaop.fixit;
+package com.fixit;
 
 public class Criptografia {
 

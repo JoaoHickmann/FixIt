@@ -1,4 +1,4 @@
-package com.example.joaop.fixit;
+package com.fixit;
 
 import android.graphics.Color;
 import android.support.v7.widget.CardView;
@@ -8,7 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import com.example.joaop.fixit.R;
 
 import java.util.LinkedList;
 import java.util.List;

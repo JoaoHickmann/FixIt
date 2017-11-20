@@ -1,4 +1,4 @@
-package com.example.joaop.fixit;
+package com.fixit;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -14,6 +14,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
+
+import com.example.joaop.fixit.R;
 
 import java.text.SimpleDateFormat;
 import java.util.LinkedList;

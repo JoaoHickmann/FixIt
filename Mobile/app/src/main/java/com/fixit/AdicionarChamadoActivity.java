@@ -1,4 +1,4 @@
-package com.example.joaop.fixit;
+package com.fixit;
 
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -11,6 +11,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
+
+import com.example.joaop.fixit.R;
 
 import java.util.LinkedList;
 

@@ -1,4 +1,4 @@
-package com.example.joaop.fixit;
+package com.fixit;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -24,6 +24,8 @@ import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+
+import com.example.joaop.fixit.R;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -122,7 +124,7 @@ public class PrincipalActivity extends AppCompatActivity {
             case R.id.action_sair_principal:
                 dados.setUser(null);
 
-                SharedPreferences sharedPref = getSharedPreferences("com.example.joaop.fixit", MODE_PRIVATE);
+                SharedPreferences sharedPref = getSharedPreferences("com.fixit", MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPref.edit();
                 editor.putString("Username", null);
                 editor.putString("Senha", null);

@@ -67,7 +67,7 @@
     <string name="email_invalido_error">Email inválido.</string>
     <string name="email_nao_disponivel_error">Email não disponível.</string>
     <string name="informe_senha">Informe a senha.</string>
-    <string name="senha_tamanho_error">Permitido somente 6-20 caracteres.</string>
+    <string name="senha_tamanho_error">Permitido somente 6&#8211;20 caracteres.</string>
     <string name="senha_diferente_error">Senha diferente.</string>
     <string name="nao_permitido_error">não permitido.</string>
     <string name="nao_permitido_error_plural">não permitidos.</string>

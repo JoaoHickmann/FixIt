@@ -5,69 +5,87 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:name=".Dados"
+        android:name="com.fixit.Dados"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <activity
-            android:name=".LoginActivity"
+            android:name="com.fixit.LoginActivity"
             android:configChanges="keyboard|orientation|locale|fontScale|screenLayout|screenSize|uiMode|navigation|touchscreen|keyboardHidden|layoutDirection|smallestScreenSize"
             android:label="@string/app_name"
             android:theme="@style/SplashTheme">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
+            <intent-filter>
+
+                <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
+
             </intent-filter>
+
         </activity>
+
         <activity
-            android:name=".PrincipalActivity"
+            android:name="com.fixit.PrincipalActivity"
             android:configChanges="keyboard|orientation|locale|fontScale|screenLayout|screenSize|uiMode|navigation|touchscreen|keyboardHidden|layoutDirection|smallestScreenSize"
             android:label="@string/title_activity_principal"
             android:theme="@style/AppTheme.NoActionBar" />
+
         <activity
-            android:name=".AdicionarChamadoActivity"
+            android:name="com.fixit.AdicionarChamadoActivity"
             android:configChanges="keyboard|orientation|locale|fontScale|screenLayout|screenSize|uiMode|navigation|touchscreen|keyboardHidden|layoutDirection|smallestScreenSize"
             android:label="@string/title_activity_adicionar_chamado"
-            android:parentActivityName=".PrincipalActivity"
+            android:parentActivityName="com.fixit.PrincipalActivity"
             android:theme="@style/AppTheme.NoActionBar">
+
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.joaop.fixit.PrincipalActivity" />
+                android:value="com.example.joaop.fixit.com.fixit.PrincipalActivity" />
+
         </activity>
+
         <activity
-            android:name=".RegistrarActivity"
+            android:name="com.fixit.RegistrarActivity"
             android:configChanges="keyboard|orientation|locale|fontScale|screenLayout|screenSize|uiMode|navigation|touchscreen|keyboardHidden|layoutDirection|smallestScreenSize"
             android:label="@string/title_activity_registrar"
-            android:parentActivityName=".LoginActivity"
+            android:parentActivityName="com.fixit.LoginActivity"
             android:theme="@style/AppTheme.NoActionBar">
+
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.joaop.fixit.LoginActivity" />
+                android:value="com.example.joaop.fixit.com.fixit.LoginActivity" />
+
         </activity>
+
         <activity
-            android:name=".DetalhesActivity"
+            android:name="com.fixit.DetalhesActivity"
             android:configChanges="keyboard|orientation|locale|fontScale|screenLayout|screenSize|uiMode|navigation|touchscreen|keyboardHidden|layoutDirection|smallestScreenSize"
             android:label="@string/title_activity_detalhes"
-            android:parentActivityName=".PrincipalActivity"
+            android:parentActivityName="com.fixit.PrincipalActivity"
             android:theme="@style/AppTheme.NoActionBar">
+
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.joaop.fixit.PrincipalActivity" />
+                android:value="com.example.joaop.fixit.com.fixit.PrincipalActivity" />
+
         </activity>
+
         <activity
-            android:name=".ConfiguracoesActivity"
+            android:name="com.fixit.ConfiguracoesActivity"
             android:configChanges="keyboard|orientation|locale|fontScale|screenLayout|screenSize|uiMode|navigation|touchscreen|keyboardHidden|layoutDirection|smallestScreenSize"
             android:label="@string/title_activity_configuracoes"
-            android:parentActivityName=".PrincipalActivity"
+            android:parentActivityName="com.fixit.PrincipalActivity"
             android:theme="@style/AppTheme.NoActionBar">
+
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.joaop.fixit.PrincipalActivity" />
+                android:value="com.example.joaop.fixit.com.fixit.PrincipalActivity" />
+
         </activity>
+
     </application>
 
 </manifest>
