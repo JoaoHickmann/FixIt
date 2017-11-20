@@ -5,7 +5,7 @@
     <item
         android:id="@+id/action_registrar_registrar"
         android:icon="@drawable/ic_done"
-        android:title="Registrar"
+        android:title="@string/registrar"
         app:showAsAction="always" />
 
 </menu>

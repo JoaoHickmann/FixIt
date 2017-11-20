@@ -4,11 +4,11 @@
     <item
         android:id="@+id/action_editar_principal"
         android:icon="@drawable/ic_edit"
-        android:title="Editar"
+        android:title="@string/editar"
         app:showAsAction="always" />
     <item
         android:id="@+id/action_excluir_principal"
         android:icon="@drawable/ic_delete"
-        android:title="Excluir"
+        android:title="@string/excluir"
         app:showAsAction="always" />
 </menu>

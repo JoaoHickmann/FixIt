@@ -7,7 +7,7 @@
     android:orientation="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.example.joaop.fixit.AdicionarChamadoActivity"
-    tools:showIn="@layout/activity_realizar_chamadas">
+    tools:showIn="@layout/activity_adicionar_chamado">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -23,7 +23,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
-                android:text="Tipo do problema:" />
+                android:text="@string/tipo_problema" />
 
             <Spinner
                 android:id="@+id/spTipoProblemaAdicionar"
@@ -36,7 +36,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
-                android:text="Problema:" />
+                android:text="@string/problema" />
 
             <Spinner
                 android:id="@+id/spProblemaAdicionar"
@@ -48,7 +48,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
-                android:text="Sala:" />
+                android:text="@string/sala" />
 
             <Spinner
                 android:id="@+id/spSalaAdicionar"
@@ -60,7 +60,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
-                android:text="Computador:" />
+                android:text="@string/computador" />
 
             <Spinner
                 android:id="@+id/spComputadorAdicionar"
@@ -76,7 +76,7 @@
                     android:id="@+id/etObservacaoAdicionar"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:hint="Observação"
+                    android:hint="@string/observacao"
                     android:inputType="textMultiLine" />
             </android.support.design.widget.TextInputLayout>
 

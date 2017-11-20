@@ -31,7 +31,7 @@
         <activity
             android:name=".AdicionarChamadoActivity"
             android:configChanges="keyboard|orientation|locale|fontScale|screenLayout|screenSize|uiMode|navigation|touchscreen|keyboardHidden|layoutDirection|smallestScreenSize"
-            android:label="@string/title_activity_realizar_chamadas"
+            android:label="@string/title_activity_adicionar_chamado"
             android:parentActivityName=".PrincipalActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data

@@ -5,11 +5,11 @@
     <item
         android:id="@+id/action_configuracoes_principal"
         android:orderInCategory="100"
-        android:title="Configurações"
+        android:title="@string/configurações"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_sair_principal"
         android:orderInCategory="100"
-        android:title="Sair"
+        android:title="@string/sair"
         app:showAsAction="never" />
 </menu>

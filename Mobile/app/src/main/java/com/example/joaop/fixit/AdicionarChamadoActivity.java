@@ -1,6 +1,7 @@
 package com.example.joaop.fixit;
 
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -10,9 +11,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.Toast;
 
-import java.io.IOException;
 import java.util.LinkedList;
 
 import Classes.Chamado;
@@ -31,7 +30,7 @@ public class AdicionarChamadoActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_realizar_chamadas);
+        setContentView(R.layout.activity_adicionar_chamado);
 
         final Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -62,7 +61,7 @@ public class AdicionarChamadoActivity extends AppCompatActivity {
                             }
                         }
 
-                        ArrayAdapter<String> adapter = new ArrayAdapter<String>(AdicionarChamadoActivity.this, android.R.layout.simple_spinner_dropdown_item, nomes_problemas);
+                        ArrayAdapter<String> adapter = new ArrayAdapter<>(AdicionarChamadoActivity.this, android.R.layout.simple_spinner_dropdown_item, nomes_problemas);
                         spProblema.setAdapter(adapter);
 
                         LinkedList<String> nomes_salas = new LinkedList<>();
@@ -87,7 +86,7 @@ public class AdicionarChamadoActivity extends AppCompatActivity {
                                     }
                                 }
 
-                                ArrayAdapter<String> adapter = new ArrayAdapter<String>(AdicionarChamadoActivity.this, android.R.layout.simple_spinner_dropdown_item, nomes_problemas);
+                                ArrayAdapter<String> adapter = new ArrayAdapter<>(AdicionarChamadoActivity.this, android.R.layout.simple_spinner_dropdown_item, nomes_problemas);
                                 spProblema.setAdapter(adapter);
                             }
 
@@ -108,7 +107,7 @@ public class AdicionarChamadoActivity extends AppCompatActivity {
                                     }
                                 }
 
-                                ArrayAdapter<String> adapter = new ArrayAdapter<String>(AdicionarChamadoActivity.this, android.R.layout.simple_spinner_dropdown_item, nomes_computadores);
+                                ArrayAdapter<String> adapter = new ArrayAdapter<>(AdicionarChamadoActivity.this, android.R.layout.simple_spinner_dropdown_item, nomes_computadores);
                                 spComputador.setAdapter(adapter);
                             }
 
@@ -167,7 +166,14 @@ public class AdicionarChamadoActivity extends AppCompatActivity {
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        Toast.makeText(dados, "Não foi possivel adicionar o chamado!\nTente novamente.", Toast.LENGTH_SHORT).show();
+                                        final Snackbar snackbar = Snackbar.make(findViewById(R.id.cl_adicionar), R.string.chamado_adicionado_fail, Snackbar.LENGTH_LONG);
+                                        snackbar.setAction("Ok", new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                snackbar.dismiss();
+                                            }
+                                        });
+                                        snackbar.show();
                                     }
                                 });
                             }

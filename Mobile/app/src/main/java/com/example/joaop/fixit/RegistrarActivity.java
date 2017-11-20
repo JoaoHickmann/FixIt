@@ -155,8 +155,8 @@ public class RegistrarActivity extends AppCompatActivity {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    final Snackbar snackbar = Snackbar.make(findViewById(R.id.clRegistrar), "Não foi possível cadastrar.", Snackbar.LENGTH_LONG);
-                    snackbar.setAction("Ok", new View.OnClickListener() {
+                    final Snackbar snackbar = Snackbar.make(findViewById(R.id.clRegistrar), R.string.cadastrar_usuario_fail, Snackbar.LENGTH_LONG);
+                    snackbar.setAction(R.string.ok, new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             snackbar.dismiss();
@@ -175,7 +175,7 @@ public class RegistrarActivity extends AppCompatActivity {
             case R.id.etNomeRegistrar:
                 valido = !etNomeRegistrar.getText().toString().equals("");
 
-                tilNomeRegistrar.setError(valido ? null : "Informe o nome.");
+                tilNomeRegistrar.setError(valido ? null : getString(R.string.nome_error));
                 if (!valido) {
                     etNomeRegistrar.requestFocus();
                 }
@@ -195,7 +195,7 @@ public class RegistrarActivity extends AppCompatActivity {
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    tilEmailRegistrar.setError(disponivel == 1 ? null : "Email não disponível.");
+                                    tilEmailRegistrar.setError(disponivel == 1 ? null : getString(R.string.email_nao_disponivel_error));
                                 }
                             });
                         }
@@ -213,7 +213,7 @@ public class RegistrarActivity extends AppCompatActivity {
 
                     return tilEmailRegistrar.getError() == null;
                 } else {
-                    tilEmailRegistrar.setError("Email inválido.");
+                    tilEmailRegistrar.setError(getString(R.string.email_invalido_error));
                     etEmailRegistrar.requestFocus();
                     return false;
                 }
@@ -234,20 +234,20 @@ public class RegistrarActivity extends AppCompatActivity {
 
                     valido = caracteresD.length() == 0;
 
-                    tilSenhaRegistrar.setError(valido ? null : (caracteresD + " não permitido" + (caracteresD.length() == 1 ? "" : "s") + "."));
+                    tilSenhaRegistrar.setError(valido ? null : (caracteresD + " " + (caracteresD.length() == 1 ? getString(R.string.nao_permitido_error) : getString(R.string.nao_permitido_error_plural))));
                     if (!valido) {
                         etSenhaRegistrar.requestFocus();
                     }
                     return valido;
                 } else {
-                    tilSenhaRegistrar.setError("Permitido somente 6-20 caracteres.");
+                    tilSenhaRegistrar.setError(getString(R.string.senha_tamanho_error));
                     etSenhaRegistrar.requestFocus();
                     return false;
                 }
             case R.id.etConfirmarSenhaRegistrar:
                 valido = etConfirmarSenhaRegistrar.getText().toString().equals(etSenhaRegistrar.getText().toString());
 
-                tilConfirmarSenhaRegistrar.setError(valido ? null : "Senha diferente.");
+                tilConfirmarSenhaRegistrar.setError(valido ? null : getString(R.string.senha_diferente_error));
                 if (!valido) {
                     etConfirmarSenhaRegistrar.requestFocus();
                 }

@@ -29,7 +29,7 @@
                     android:id="@+id/etNomeRegistrar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Nome"
+                    android:hint="@string/nome"
                     android:inputType="text" />
             </android.support.design.widget.TextInputLayout>
 
@@ -43,7 +43,7 @@
                     android:id="@+id/etEmailRegistrar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Email"
+                    android:hint="@string/email"
                     android:inputType="textEmailAddress" />
             </android.support.design.widget.TextInputLayout>
 
@@ -58,7 +58,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif"
-                    android:hint="Senha"
+                    android:hint="@string/senha"
                     android:inputType="textPassword" />
             </android.support.design.widget.TextInputLayout>
 
@@ -73,7 +73,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif"
-                    android:hint="Confirmar senha"
+                    android:hint="@string/confirmar_senha"
                     android:inputType="textPassword" />
             </android.support.design.widget.TextInputLayout>
 

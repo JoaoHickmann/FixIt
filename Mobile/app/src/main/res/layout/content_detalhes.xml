@@ -29,7 +29,7 @@
                     android:layout_height="wrap_content"
                     android:cursorVisible="false"
                     android:focusable="false"
-                    android:hint="Administrador" />
+                    android:hint="@string/administrador" />
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
@@ -42,7 +42,7 @@
                     android:layout_height="wrap_content"
                     android:cursorVisible="false"
                     android:focusable="false"
-                    android:hint="Data de criação" />
+                    android:hint="@string/data_criacao" />
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
@@ -55,14 +55,14 @@
                     android:layout_height="wrap_content"
                     android:cursorVisible="false"
                     android:focusable="false"
-                    android:hint="Data de finalização" />
+                    android:hint="@string/data_finalizacao" />
             </android.support.design.widget.TextInputLayout>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
-                android:text="Tipo do problema:" />
+                android:text="@string/tipo_problema" />
 
             <Spinner
                 android:id="@+id/spTipoProblemaDetalhes"
@@ -75,7 +75,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
-                android:text="Problema:" />
+                android:text="@string/problema" />
 
             <Spinner
                 android:id="@+id/spProblemaDetalhes"
@@ -87,7 +87,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
-                android:text="Sala:" />
+                android:text="@string/sala" />
 
             <Spinner
                 android:id="@+id/spSalaDetalhes"
@@ -99,7 +99,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
-                android:text="Computador:" />
+                android:text="@string/computador" />
 
             <Spinner
                 android:id="@+id/spComputadorDetalhes"
@@ -115,10 +115,9 @@
                     android:id="@+id/etObservacaoDetalhes"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Observação"
+                    android:hint="@string/observacao"
                     android:inputType="textMultiLine" />
             </android.support.design.widget.TextInputLayout>
-
 
         </LinearLayout>
 

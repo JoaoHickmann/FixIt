@@ -1,20 +1,86 @@
 <resources>
+
     <string name="app_name">FixIt</string>
-    <string name="action_settings">Settings</string>
-    <string name="title_activity_principal">PrincipalActivity</string>
-    <string name="section_format">Hello World from section: %1$d</string>
-    <string name="tab_text_1">Tab 1</string>
-    <string name="tab_text_2">Tab 2</string>
-    <string name="tab_text_3">Tab 3</string>
-    <string name="title_activity_realizar_chamadas">Relatar problema</string>
+
+    <string name="title_activity_principal">Meus chamados</string>
+    <string name="title_activity_adicionar_chamado">Adicionar chamado</string>
+    <string name="title_activity_registrar">Registrar-se</string>
+    <string name="title_activity_detalhes">Detalhes</string>
+    <string name="title_activity_configuracoes">Configurações</string>
+
+    <string name="tab_abertos">Abertos</string>
+    <string name="tab_fechados">Finalizados</string>
+
+    <string name="tipo_problema">Tipo do problema:</string>
+    <string name="problema">Problema:</string>
+    <string name="sala">Sala:</string>
+    <string name="computador">Computador:</string>
+    <string name="observacao">Observação</string>
+    <string name="administrador">Administrador</string>
+    <string name="data_criacao">Data de criação</string>
+    <string name="data_finalizacao">Data de finalização</string>
+    <string name="nome">Nome</string>
+    <string name="email">Email</string>
+    <string name="senha">Senha</string>
+    <string name="confirmar_senha">Confirmar senha</string>
+
+    <string name="manter_conectado">Manter conectado?</string>
+    <string name="esqueceu_sua_senha">Esqueceu sua senha?</string>
+    <string name="entrar">Entrar</string>
+    <string name="registrar">Registrar</string>
+    <string name="editar">Editar</string>
+    <string name="excluir">Excluir</string>
+    <string name="salvar">Salvar</string>
+    <string name="configurações">Configurações</string>
+    <string name="sair">Sair</string>
+    <string name="adicionar">Adicionar</string>
+
+    <string name="chamado">Chamado</string>
+    <string name="chamado_adicionado">Chamado adicionado.</string>
+    <string name="chamado_adicionado_fail">Não foi possivel adicionar o chamado.</string>
+    <string name="chamado_excluido">Chamado excluido.</string>
+    <string name="chamado_excluido_plural">Chamados excluidos.</string>
+    <string name="chamado_excluido_fail">Não foi possível excluir o chamado.</string>
+    <string name="chamado_excluido_fail_plural">Não foi possível excluir os chamados.</string>
+    <string name="confirmar_excluir_chamado">Deseja realmente excluir este chamado?</string>
+    <string name="confirmar_excluir_chamado_plural">Deseja realmente excluir estes chamados?</string>
+    <string name="excluir_chamado">Excluir chamado</string>
+    <string name="excluir_chamado_plural">Excluir chamados</string>
+    <string name="chamado_atualizado">Chamado atualizado.</string>
+    <string name="chamado_atualizado_fail">Não foi possível atualizar o chamado</string>
+
+    <string name="conectando">Conectando</string>
+    <string name="conectando_fail">Não foi possivel se conectar ao servidor</string>
+    <string name="entrando">Entrando</string>
+    <string name="recuperacao_senha">Recuperação de senha</string>
+    <string name="tentar_novamente">Tentar novamente?</string>
+    <string name="ok">OK</string>
+    <string name="nao">Não</string>
+    <string name="sim">Sim</string>
+    <string name="enviar_email">Enviar email</string>
+    <string name="cancelar">Cancelar</string>
+
+    <string name="selecionado">selecionado.</string>
+    <string name="selecionado_plural">selecionados.</string>
+
+    <string name="nome_error">Informe o nome.</string>
+    <string name="email_invalido_error">Email inválido.</string>
+    <string name="email_nao_disponivel_error">Email não disponível.</string>
+    <string name="informe_senha">Informe a senha.</string>
+    <string name="senha_tamanho_error">Permitido somente 6-20 caracteres.</string>
+    <string name="senha_diferente_error">Senha diferente.</string>
+    <string name="nao_permitido_error">não permitido.</string>
+    <string name="nao_permitido_error_plural">não permitidos.</string>
+
+    <string name="cadastrar_usuario_fail">Não foi possível cadastrar.</string>
+    <string name="usuario_senha_incorreta">Usuário ou senha incorreta!</string>
+
+    <string name="email_enviado">Email enviado para</string>
+    <string name="email_enviado_fail">Não foi possível enviar o email.</string>
+
     <string-array name="tipo_problema">
         <item>Hardware</item>
         <item>Software</item>
     </string-array>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_activity_registrar">Cadastrar usuário</string>
-    <string name="title_activity_detalhes">DetalhesActivity</string>
-    <string name="title_activity_configuracoes">ConfiguracoesActivity</string>
 </resources>

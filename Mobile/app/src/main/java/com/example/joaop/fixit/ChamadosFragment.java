@@ -29,7 +29,7 @@ public class ChamadosFragment extends Fragment {
 
         rvChamadosChamados = rootView.findViewById(R.id.rvChamados);
 
-        swipeRefreshChamados = rootView.findViewById(R.id.swipeRefresh);
+        swipeRefreshChamados = rootView.findViewById(R.id.srChamados);
 
         swipeRefreshChamados.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override

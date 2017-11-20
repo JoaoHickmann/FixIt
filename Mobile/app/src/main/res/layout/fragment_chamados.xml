@@ -6,7 +6,7 @@
     tools:context="com.example.joaop.fixit.PrincipalActivity">
 
     <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/swipeRefresh"
+        android:id="@+id/srChamados"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 

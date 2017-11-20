@@ -3,7 +3,6 @@ package com.example.joaop.fixit;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -15,9 +14,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.Toast;
 
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.LinkedList;
 
@@ -64,7 +61,7 @@ public class DetalhesActivity extends AppCompatActivity {
             chamado = (Chamado) it.getSerializableExtra("Chamado");
             SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
-            setTitle("Chamado #" + chamado.getID_Chamado());
+            setTitle(getString(R.string.chamado) + " #" + chamado.getID_Chamado());
 
             etAdministradorDetalhes.setText(chamado.getNome_Administrador());
             etCriacaoDetalhes.setText(sdf.format(chamado.getData_Inicial()));
@@ -227,9 +224,9 @@ public class DetalhesActivity extends AppCompatActivity {
                 return true;
             case R.id.action_excluir_detalhes:
                 AlertDialog.Builder builder = new AlertDialog.Builder(DetalhesActivity.this);
-                builder.setTitle("Excluir chamado")
-                        .setMessage("Deseja realmente excluir este chamado?")
-                        .setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+                builder.setTitle(R.string.excluir_chamado)
+                        .setMessage(R.string.confirmar_excluir_chamado)
+                        .setPositiveButton(R.string.sim, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface arg0, int arg1) {
                                 new Thread(new Runnable() {
                                     @Override
@@ -240,8 +237,8 @@ public class DetalhesActivity extends AppCompatActivity {
                                             setResult(1);
                                             finish();
                                         } else {
-                                            final Snackbar snackbar = Snackbar.make(findViewById(R.id.clDetalhes), "Não for possível excluir o chamado.", Snackbar.LENGTH_LONG);
-                                            snackbar.setAction("Ok", new View.OnClickListener() {
+                                            final Snackbar snackbar = Snackbar.make(findViewById(R.id.clDetalhes), R.string.chamado_excluido_fail, Snackbar.LENGTH_LONG);
+                                            snackbar.setAction(R.string.ok, new View.OnClickListener() {
                                                 @Override
                                                 public void onClick(View v) {
                                                     snackbar.dismiss();
@@ -253,7 +250,7 @@ public class DetalhesActivity extends AppCompatActivity {
                                 }).start();
                             }
                         })
-                        .setNegativeButton("Não", new DialogInterface.OnClickListener() {
+                        .setNegativeButton(R.string.nao, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface arg0, int arg1) {
 
                             }
@@ -271,8 +268,8 @@ public class DetalhesActivity extends AppCompatActivity {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    final Snackbar snackbar = Snackbar.make(findViewById(R.id.clDetalhes), "Chamado atualizado.", Snackbar.LENGTH_LONG);
-                    snackbar.setAction("Ok", new View.OnClickListener() {
+                    final Snackbar snackbar = Snackbar.make(findViewById(R.id.clDetalhes), R.string.chamado_atualizado, Snackbar.LENGTH_LONG);
+                    snackbar.setAction(R.string.ok, new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             snackbar.dismiss();
@@ -285,8 +282,8 @@ public class DetalhesActivity extends AppCompatActivity {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    final Snackbar snackbar = Snackbar.make(findViewById(R.id.clDetalhes), "Não foi possível atualizar o chamado", Snackbar.LENGTH_LONG);
-                    snackbar.setAction("Ok", new View.OnClickListener() {
+                    final Snackbar snackbar = Snackbar.make(findViewById(R.id.clDetalhes), R.string.chamado_atualizado_fail, Snackbar.LENGTH_LONG);
+                    snackbar.setAction(R.string.ok, new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             snackbar.dismiss();

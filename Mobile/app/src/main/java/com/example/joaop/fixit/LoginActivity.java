@@ -120,10 +120,10 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 });
 
-                builder.setTitle("Recuperação de senha")
+                builder.setTitle(R.string.recuperacao_senha)
                         .setView(dialogView)
-                        .setPositiveButton("Enviar email", null)
-                        .setNegativeButton("Cancelar", null);
+                        .setPositiveButton(R.string.enviar_email, null)
+                        .setNegativeButton(R.string.cancelar, null);
 
                 final AlertDialog alerta = builder.create();
 
@@ -188,7 +188,7 @@ public class LoginActivity extends AppCompatActivity {
                 progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
                 progress.setIndeterminate(true);
                 progress.setCancelable(false);
-                progress.setMessage("Entrando");
+                progress.setMessage(getString(R.string.entrando));
                 progress.show();
             }
         });
@@ -199,18 +199,18 @@ public class LoginActivity extends AppCompatActivity {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    Toast.makeText(LoginActivity.this, "Usuário ou senha incorreta!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, R.string.usuario_senha_incorreta, Toast.LENGTH_SHORT).show();
                     progress.dismiss();
                 }
             });
         } else {
             dados.setUser(usuario);
             if (cbManterConectadoLogin.isChecked()) {
-                SharedPreferences sharedPref = getSharedPreferences("com.example.joaop.fixit", dados.MODE_PRIVATE);
+                SharedPreferences sharedPref = getSharedPreferences("com.example.joaop.fixit", MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPref.edit();
                 editor.putString("Username", usuario.getEmail());
                 editor.putString("Senha", usuario.getSenha());
-                editor.commit();
+                editor.apply();
             }
             runOnUiThread(new Runnable() {
                 @Override
@@ -236,7 +236,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 emailCerto = m.find();
 
-                tilEmailLogin.setError(!emailCerto ? "Email inválido." : null);
+                tilEmailLogin.setError(!emailCerto ? getString(R.string.email_invalido_error) : null);
                 if (!emailCerto) {
                     etEmailLogin.requestFocus();
                 }
@@ -248,13 +248,13 @@ public class LoginActivity extends AppCompatActivity {
 
                 emailCerto = m.find();
 
-                tilEmailDialog.setError(!emailCerto ? "Email inválido." : null);
+                tilEmailDialog.setError(!emailCerto ? getString(R.string.email_invalido_error) : null);
                 if (!emailCerto) {
                     etEmailDialog.requestFocus();
                 }
                 return emailCerto;
             case R.id.etSenhaLogin:
-                tilSenhaLogin.setError(etSenhaLogin.getText().toString().equals("") ? "Informe a senha." : null);
+                tilSenhaLogin.setError(etSenhaLogin.getText().toString().equals("") ? getString(R.string.informe_senha) : null);
                 if (etSenhaLogin.getText().toString().equals("")) {
                     etSenhaLogin.requestFocus();
                 }
@@ -269,8 +269,7 @@ public class LoginActivity extends AppCompatActivity {
         progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progress.setIndeterminate(true);
         progress.setCancelable(false);
-        progress.setMessage("Conectando");
-        progress.setTitle("Conectando-se ao servidor");
+        progress.setMessage(getString(R.string.conectando));
         progress.show();
 
         new Thread(new Runnable() {
@@ -303,14 +302,14 @@ public class LoginActivity extends AppCompatActivity {
                         @Override
                         public void run() {
                             AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
-                            builder.setTitle("Não foi possivel se conectar ao servidor")
-                                    .setMessage("Tentar novamente?")
-                                    .setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+                            builder.setTitle(R.string.conectando_fail)
+                                    .setMessage(R.string.tentar_novamente)
+                                    .setPositiveButton(R.string.sim, new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface arg0, int arg1) {
                                             conectar();
                                         }
                                     })
-                                    .setNegativeButton("Não", new DialogInterface.OnClickListener() {
+                                    .setNegativeButton(R.string.nao, new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface arg0, int arg1) {
                                             finish();
                                         }
@@ -332,8 +331,8 @@ public class LoginActivity extends AppCompatActivity {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    final Snackbar snackbar = Snackbar.make(findViewById(R.id.clLogin), "Email enviado para " + email + ".", Snackbar.LENGTH_LONG);
-                    snackbar.setAction("Ok", new View.OnClickListener() {
+                    final Snackbar snackbar = Snackbar.make(findViewById(R.id.clLogin), getString(R.string.email_enviado) + " " + email + ".", Snackbar.LENGTH_LONG);
+                    snackbar.setAction(R.string.ok, new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             snackbar.dismiss();
@@ -346,8 +345,8 @@ public class LoginActivity extends AppCompatActivity {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    final Snackbar snackbar = Snackbar.make(findViewById(R.id.clLogin), "Não foi possível enviar o email.", Snackbar.LENGTH_LONG);
-                    snackbar.setAction("Ok", new View.OnClickListener() {
+                    final Snackbar snackbar = Snackbar.make(findViewById(R.id.clLogin), R.string.email_enviado_fail, Snackbar.LENGTH_LONG);
+                    snackbar.setAction(R.string.ok, new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             snackbar.dismiss();

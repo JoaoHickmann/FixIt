@@ -37,7 +37,7 @@
                     android:id="@+id/etEmailLogin"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Email"
+                    android:hint="@string/email"
                     android:inputType="textEmailAddress" />
 
             </android.support.design.widget.TextInputLayout>
@@ -52,7 +52,7 @@
                     android:id="@+id/etSenhaLogin"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Senha"
+                    android:hint="@string/senha"
                     android:inputType="textPassword" />
 
             </android.support.design.widget.TextInputLayout>
@@ -65,7 +65,7 @@
                     android:id="@+id/cbManterConectadoLogin"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Manter conectado?" />
+                    android:text="@string/manter_conectado" />
 
                 <TextView
                     android:id="@+id/tvEsqueceuSenhaLogin"
@@ -75,7 +75,7 @@
                     android:layout_centerVertical="true"
                     android:background="?android:attr/selectableItemBackground"
                     android:clickable="true"
-                    android:text="Esqueceu sua senha?" />
+                    android:text="@string/esqueceu_sua_senha" />
             </RelativeLayout>
 
             <Button
@@ -83,7 +83,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/colorPrimary"
-                android:text="Entrar"
+                android:text="@string/entrar"
                 android:textColor="#ffffff" />
 
             <Button
@@ -91,11 +91,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/colorPrimaryDark"
-                android:text="Registrar"
+                android:text="@string/registrar"
                 android:textColor="#ffffff" />
 
         </LinearLayout>
-        
+
     </ScrollView>
 
 </LinearLayout>
