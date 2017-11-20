@@ -2,29 +2,27 @@ package com.example.joaop.fixit;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
-import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import Classes.Usuario;
 
 public class RegistrarActivity extends AppCompatActivity {
-    Dados dados;
+    private Dados dados;
 
-    TextInputLayout tilNomeRegistrar, tilEmailRegistrar, tilSenhaRegistrar, tilConfirmarSenhaRegistrar;
-    EditText etNomeRegistrar, etEmailRegistrar, etSenhaRegistrar, etConfirmarSenhaRegistrar;
+    private TextInputLayout tilNomeRegistrar, tilEmailRegistrar, tilSenhaRegistrar, tilConfirmarSenhaRegistrar;
+    private EditText etNomeRegistrar, etEmailRegistrar, etSenhaRegistrar, etConfirmarSenhaRegistrar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,36 +45,68 @@ public class RegistrarActivity extends AppCompatActivity {
         etSenhaRegistrar = findViewById(R.id.etSenhaRegistrar);
         etConfirmarSenhaRegistrar = findViewById(R.id.etConfirmarSenhaRegistrar);
 
-        etNomeRegistrar.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        etNomeRegistrar.addTextChangedListener(new TextWatcher() {
             @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-                    validarCampos(etNomeRegistrar);
-                }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                validarCampos(etNomeRegistrar);
             }
         });
-        etEmailRegistrar.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        etEmailRegistrar.addTextChangedListener(new TextWatcher() {
             @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-                    validarCampos(etEmailRegistrar);
-                }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                validarCampos(etEmailRegistrar);
             }
         });
-        etSenhaRegistrar.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        etSenhaRegistrar.addTextChangedListener(new TextWatcher() {
             @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-                    validarCampos(etSenhaRegistrar);
-                }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                validarCampos(etSenhaRegistrar);
             }
         });
-        etConfirmarSenhaRegistrar.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        etConfirmarSenhaRegistrar.addTextChangedListener(new TextWatcher() {
             @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-                    validarCampos(etConfirmarSenhaRegistrar);
-                }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                validarCampos(etConfirmarSenhaRegistrar);
             }
         });
     }
@@ -95,7 +125,7 @@ public class RegistrarActivity extends AppCompatActivity {
                 validarCampos(etEmailRegistrar);
                 validarCampos(etSenhaRegistrar);
                 validarCampos(etConfirmarSenhaRegistrar);
-                if (validarCampos(etConfirmarSenhaRegistrar) && validarCampos(etSenhaRegistrar) && validarCampos(etEmailRegistrar) && validarCampos(etNomeRegistrar)) {
+                if (validarCampos(etNomeRegistrar) && validarCampos(etEmailRegistrar) && validarCampos(etSenhaRegistrar) && validarCampos(etConfirmarSenhaRegistrar)) {
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
@@ -139,67 +169,91 @@ public class RegistrarActivity extends AppCompatActivity {
     }
 
     private boolean validarCampos(EditText etValidar) {
-        if (etValidar.equals(etNomeRegistrar)) {
-            tilNomeRegistrar.setError(etNomeRegistrar.getText().toString().equals("") ? "Informe o nome." : null);
-            return !etNomeRegistrar.getText().toString().equals("");
-        } else if (etValidar.equals(etEmailRegistrar)) {
-            Pattern p = Pattern.compile("^[A-Za-z0-9-]+(\\-[A-Za-z0-9])*@"
-                    + "[A-Za-z0-9-]+(\\.[A-Za-z0-9])");
-            Matcher m = p.matcher(etEmailRegistrar.getText().toString());
+        boolean valido;
 
-            boolean emailCerto = m.find();
+        switch (etValidar.getId()) {
+            case R.id.etNomeRegistrar:
+                valido = !etNomeRegistrar.getText().toString().equals("");
 
-            if (emailCerto) {
-                Thread t = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        final int disponivel = (int) dados.realizarOperacao("EmailDisponivel", etEmailRegistrar.getText().toString());
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                tilEmailRegistrar.setError(disponivel != 1 ? "Email não disponível." : null);
-                            }
-                        });
-                    }
-                });
-                t.start();
-                try {
-                    t.join();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                tilNomeRegistrar.setError(valido ? null : "Informe o nome.");
+                if (!valido) {
+                    etNomeRegistrar.requestFocus();
                 }
+                return valido;
+            case R.id.etEmailRegistrar:
+                Pattern p = Pattern.compile("^[A-Za-z0-9-]+(\\-[A-Za-z0-9])*@"
+                        + "[A-Za-z0-9-]+(\\.[A-Za-z0-9])");
+                Matcher m = p.matcher(etEmailRegistrar.getText().toString());
 
-                return tilEmailRegistrar.getError() == null;
-            } else {
-                tilEmailRegistrar.setError("Email inválido.");
-                return false;
-            }
+                valido = m.find();
 
-        } else if (etValidar.equals(etSenhaRegistrar)) {
-            boolean tamanhoCerto = !(etSenhaRegistrar.getText().toString().length() > 20 || etSenhaRegistrar.getText().toString().length() < 6);
-            if (tamanhoCerto) {
-                String caracteresD = "";
-                String alfabeto = "YPDe6FpaxH&yRNs+jMVBAOnShoEmg802tQ@r1i-$L%Jq*G3#9XTdW57lUCkzcubwZ4vKfI";
+                if (valido) {
+                    Thread t = new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            final int disponivel = (int) dados.realizarOperacao("EmailDisponivel", etEmailRegistrar.getText().toString());
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    tilEmailRegistrar.setError(disponivel == 1 ? null : "Email não disponível.");
+                                }
+                            });
+                        }
+                    });
+                    t.start();
+                    try {
+                        t.join();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
 
-                for (char letra : etSenhaRegistrar.getText().toString().toCharArray()) {
-                    if (!alfabeto.contains(String.valueOf(letra))) {
-                        if (!caracteresD.contains(String.valueOf(letra))) {
-                            caracteresD += letra;
+                    if (tilEmailRegistrar.getError() != null) {
+                        etEmailRegistrar.requestFocus();
+                    }
+
+                    return tilEmailRegistrar.getError() == null;
+                } else {
+                    tilEmailRegistrar.setError("Email inválido.");
+                    etEmailRegistrar.requestFocus();
+                    return false;
+                }
+            case R.id.etSenhaRegistrar:
+                valido = etSenhaRegistrar.getText().toString().length() >= 6 && etSenhaRegistrar.getText().toString().length() <= 20;
+
+                if (valido) {
+                    String caracteresD = "";
+                    String alfabeto = "YPDe6FpaxH&yRNs+jMVBAOnShoEmg802tQ@r1i-$L%Jq*G3#9XTdW57lUCkzcubwZ4vKfI";
+
+                    for (char letra : etSenhaRegistrar.getText().toString().toCharArray()) {
+                        if (!alfabeto.contains(String.valueOf(letra))) {
+                            if (!caracteresD.contains(String.valueOf(letra))) {
+                                caracteresD += letra;
+                            }
                         }
                     }
-                }
 
-                tilSenhaRegistrar.setError(caracteresD.length() > 0 ? (caracteresD + " não permitido" + (caracteresD.length() == 1 ? "" : "s") + ".") : null);
-                return caracteresD.length() == 0;
-            } else {
-                tilSenhaRegistrar.setError("Permitido somente 6-20 caracteres.");
+                    valido = caracteresD.length() == 0;
+
+                    tilSenhaRegistrar.setError(valido ? null : (caracteresD + " não permitido" + (caracteresD.length() == 1 ? "" : "s") + "."));
+                    if (!valido) {
+                        etSenhaRegistrar.requestFocus();
+                    }
+                    return valido;
+                } else {
+                    tilSenhaRegistrar.setError("Permitido somente 6-20 caracteres.");
+                    etSenhaRegistrar.requestFocus();
+                    return false;
+                }
+            case R.id.etConfirmarSenhaRegistrar:
+                valido = etConfirmarSenhaRegistrar.getText().toString().equals(etSenhaRegistrar.getText().toString());
+
+                tilConfirmarSenhaRegistrar.setError(valido ? null : "Senha diferente.");
+                if (!valido) {
+                    etConfirmarSenhaRegistrar.requestFocus();
+                }
+                return valido;
+            default:
                 return false;
-            }
-        } else if (etValidar.equals(etConfirmarSenhaRegistrar)) {
-            tilConfirmarSenhaRegistrar.setError(!etConfirmarSenhaRegistrar.getText().toString().equals(etSenhaRegistrar.getText().toString()) ? "Senha diferente." : null);
-            return etConfirmarSenhaRegistrar.getText().toString().equals(etSenhaRegistrar.getText().toString());
-        } else {
-            return false;
         }
     }
 }

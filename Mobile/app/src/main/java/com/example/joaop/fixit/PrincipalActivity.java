@@ -8,7 +8,6 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
@@ -25,7 +24,6 @@ import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -33,17 +31,13 @@ import java.util.LinkedList;
 import java.util.List;
 
 import Classes.Chamado;
-import Classes.Problema;
 
 
 public class PrincipalActivity extends AppCompatActivity {
     private final int REQUEST_NOVO_CHAMADO = 1;
     private final int REQUEST_ATUALIZAR_CHAMADO = 2;
 
-    private RecyclerView rvChamados;
     private Dados dados;
-    private LinkedList<Chamado> todos_chamados, abertos, finalizados, selecionados;
-    private boolean onActionMode = false;
 
     private ViewPager mViewPager;
     private TabLayout tabLayout;
@@ -51,6 +45,9 @@ public class PrincipalActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private AppBarLayout appBarLayout;
     private FloatingActionButton fab;
+
+    private LinkedList<Chamado> todos_chamados, abertos, finalizados, selecionados;
+    private boolean onActionMode = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,8 +66,6 @@ public class PrincipalActivity extends AppCompatActivity {
         fab = findViewById(R.id.fab);
 
         dados = (Dados) getApplicationContext();
-
-        rvChamados = findViewById(R.id.rvChamados);
 
         selecionados = new LinkedList<>();
 
@@ -127,11 +122,13 @@ public class PrincipalActivity extends AppCompatActivity {
                 return true;
             case R.id.action_sair:
                 dados.setUser(null);
+
                 SharedPreferences sharedPref = getSharedPreferences("com.example.joaop.fixit", dados.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPref.edit();
                 editor.putString("Username", null);
                 editor.putString("Senha", null);
                 editor.commit();
+
                 startActivity(new Intent(PrincipalActivity.this, LoginActivity.class));
                 finish();
                 return true;
@@ -263,13 +260,49 @@ public class PrincipalActivity extends AppCompatActivity {
         });
     }
 
+    private void excluirChamados(LinkedList<Chamado> chamados) {
+        final boolean plural = chamados.size() > 1;
+
+        if ((int) dados.realizarOperacao("ExcluirChamado", chamados) != 0) {
+            try {
+                attRecycler();
+            } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    final Snackbar snackbar = Snackbar.make(findViewById(R.id.main_content), "Chamado" + (plural ? "s" : "") + " excluido" + (plural ? "s" : "") + ".", Snackbar.LENGTH_LONG);
+                    snackbar.setAction("Ok", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            snackbar.dismiss();
+                        }
+                    });
+                    snackbar.show();
+                }
+            });
+        } else {
+            final Snackbar snackbar = Snackbar.make(findViewById(R.id.main_content), "Não foi possível excluir o" + (plural ? "s" : "") + " chamado" + (plural ? "s" : "") + ".", Snackbar.LENGTH_LONG);
+            snackbar.setAction("Ok", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    snackbar.dismiss();
+                }
+            });
+            snackbar.show();
+        }
+    }
+
     class MyActionMode implements ActionMode.Callback {
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-            selecionados.clear();
             mode.getMenuInflater().inflate(R.menu.menu_contextual_principal, menu);
+
+            selecionados.clear();
             onActionMode = true;
             fab.hide();
+
             return true;
         }
 
@@ -277,6 +310,7 @@ public class PrincipalActivity extends AppCompatActivity {
         public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
             tabLayout.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
             toolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
+
             return true;
         }
 
@@ -298,46 +332,13 @@ public class PrincipalActivity extends AppCompatActivity {
                                     new Thread(new Runnable() {
                                         @Override
                                         public void run() {
-                                            if ((int) dados.realizarOperacao("ExcluirChamado", selecionados) != 0) {
-                                                try {
-                                                    attRecycler();
-                                                } catch (IOException e) {
-                                                    e.printStackTrace();
-                                                } catch (ClassNotFoundException e) {
-                                                    e.printStackTrace();
-                                                }
-                                                runOnUiThread(new Runnable() {
-                                                    @Override
-                                                    public void run() {
-                                                        final Snackbar snackbar = Snackbar.make(findViewById(R.id.main_content), "Chamado" + (selecionados.size() == 1 ? "" : "s") + " excluido" + (selecionados.size() == 1 ? "" : "s") + ".", Snackbar.LENGTH_LONG);
-                                                        snackbar.setAction("Ok", new View.OnClickListener() {
-                                                            @Override
-                                                            public void onClick(View v) {
-                                                                snackbar.dismiss();
-                                                            }
-                                                        });
-                                                        snackbar.show();
-                                                    }
-                                                });
-                                            } else {
-                                                final Snackbar snackbar = Snackbar.make(findViewById(R.id.main_content), "Não foi possível excluir o" + (selecionados.size() == 1 ? "" : "s") + " chamado" + (selecionados.size() == 1 ? "" : "s") + ".", Snackbar.LENGTH_LONG);
-                                                snackbar.setAction("Ok", new View.OnClickListener() {
-                                                    @Override
-                                                    public void onClick(View v) {
-                                                        snackbar.dismiss();
-                                                    }
-                                                });
-                                                snackbar.show();
-                                            }
+                                            excluirChamados(selecionados);
                                         }
                                     }).start();
                                 }
                             })
-                            .setNegativeButton("Não", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface arg0, int arg1) {
+                            .setNegativeButton("Não", null);
 
-                                }
-                            });
                     AlertDialog alerta = builder.create();
                     alerta.show();
                     return true;
@@ -352,10 +353,12 @@ public class PrincipalActivity extends AppCompatActivity {
             for (CardView cardView : ((ChamadoAdapter) rvChamados.getAdapter()).getCardViews()) {
                 cardView.setCardBackgroundColor(Color.WHITE);
             }
-            onActionMode = false;
+
             tabLayout.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
             toolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
             fab.show();
+
+            onActionMode = false;
         }
     }
 

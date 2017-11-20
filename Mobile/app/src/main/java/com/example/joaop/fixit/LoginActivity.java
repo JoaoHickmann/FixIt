@@ -9,6 +9,8 @@ import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -23,19 +25,19 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.zip.Inflater;
 
 import Classes.Usuario;
 
 public class LoginActivity extends AppCompatActivity {
-    Dados dados;
-    ProgressDialog progress;
+    private Dados dados;
 
-    TextInputLayout tilEmailLogin, tilSenhaLogin, tilEmailDialog;
-    EditText etEmailLogin, etSenhaLogin, etEmailDialog;
-    CheckBox cbManterConectadoLogin;
-    TextView tvEsqueceuSenhaLogin;
-    Button btEntrarLogin, btRegistrarLogin;
+    private TextInputLayout tilEmailLogin, tilSenhaLogin, tilEmailDialog;
+    private EditText etEmailLogin, etSenhaLogin, etEmailDialog;
+    private CheckBox cbManterConectadoLogin;
+    private TextView tvEsqueceuSenhaLogin;
+    private Button btEntrarLogin, btRegistrarLogin;
+
+    private ProgressDialog progress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,20 +59,36 @@ public class LoginActivity extends AppCompatActivity {
         btEntrarLogin = findViewById(R.id.btEntrarLogin);
         btRegistrarLogin = findViewById(R.id.btRegistrarLogin);
 
-        etEmailLogin.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        etEmailLogin.addTextChangedListener(new TextWatcher() {
             @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-                    validarCampos(etEmailLogin);
-                }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                validarCampos(etEmailLogin);
             }
         });
-        etSenhaLogin.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        etSenhaLogin.addTextChangedListener(new TextWatcher() {
             @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-                    validarCampos(etSenhaLogin);
-                }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                validarCampos(etSenhaLogin);
             }
         });
 
@@ -85,30 +103,30 @@ public class LoginActivity extends AppCompatActivity {
                 tilEmailDialog = dialogView.findViewById(R.id.tilEmailDialog);
 
                 etEmailDialog.setText(etEmailLogin.getText().toString());
-                etEmailDialog.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                etEmailDialog.addTextChangedListener(new TextWatcher() {
                     @Override
-                    public void onFocusChange(View v, boolean hasFocus) {
-                        if (!hasFocus) {
-                            validarCampos(etEmailDialog);
-                        }
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        validarCampos(etEmailDialog);
                     }
                 });
 
                 builder.setTitle("Recuperação de senha")
                         .setView(dialogView)
-                        .setPositiveButton("Enviar email", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-
-                            }
-                        })
-                        .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface arg0, int arg1) {
-
-                            }
-                        });
+                        .setPositiveButton("Enviar email", null)
+                        .setNegativeButton("Cancelar", null);
 
                 final AlertDialog alerta = builder.create();
+
                 alerta.setOnShowListener(new DialogInterface.OnShowListener() {
                     @Override
                     public void onShow(DialogInterface dialog) {
@@ -120,35 +138,7 @@ public class LoginActivity extends AppCompatActivity {
                                     new Thread(new Runnable() {
                                         @Override
                                         public void run() {
-                                            if ((int) dados.realizarOperacao("EsqueceuSenha", etEmailDialog.getText().toString()) == 1) {
-                                                runOnUiThread(new Runnable() {
-                                                    @Override
-                                                    public void run() {
-                                                        final Snackbar snackbar = Snackbar.make(findViewById(R.id.clLogin), "Email enviado para " + etEmailDialog.getText().toString() + ".", Snackbar.LENGTH_LONG);
-                                                        snackbar.setAction("Ok", new View.OnClickListener() {
-                                                            @Override
-                                                            public void onClick(View v) {
-                                                                snackbar.dismiss();
-                                                            }
-                                                        });
-                                                        snackbar.show();
-                                                    }
-                                                });
-                                            } else {
-                                                runOnUiThread(new Runnable() {
-                                                    @Override
-                                                    public void run() {
-                                                        final Snackbar snackbar = Snackbar.make(findViewById(R.id.clLogin), "Não foi possível enviar o email.", Snackbar.LENGTH_LONG);
-                                                        snackbar.setAction("Ok", new View.OnClickListener() {
-                                                            @Override
-                                                            public void onClick(View v) {
-                                                                snackbar.dismiss();
-                                                            }
-                                                        });
-                                                        snackbar.show();
-                                                    }
-                                                });
-                                            }
+                                            esqueceuSenha(etEmailDialog.getText().toString());
                                         }
                                     }).start();
                                 }
@@ -247,6 +237,9 @@ public class LoginActivity extends AppCompatActivity {
                 emailCerto = m.find();
 
                 tilEmailLogin.setError(!emailCerto ? "Email inválido." : null);
+                if (!emailCerto) {
+                    etEmailLogin.requestFocus();
+                }
                 return emailCerto;
             case R.id.etEmailDialog:
                 p = Pattern.compile("^[A-Za-z0-9-]+(\\-[A-Za-z0-9])*@"
@@ -256,16 +249,22 @@ public class LoginActivity extends AppCompatActivity {
                 emailCerto = m.find();
 
                 tilEmailDialog.setError(!emailCerto ? "Email inválido." : null);
+                if (!emailCerto) {
+                    etEmailDialog.requestFocus();
+                }
                 return emailCerto;
             case R.id.etSenhaLogin:
                 tilSenhaLogin.setError(etSenhaLogin.getText().toString().equals("") ? "Informe a senha." : null);
+                if (etSenhaLogin.getText().toString().equals("")) {
+                    etSenhaLogin.requestFocus();
+                }
                 return !etSenhaLogin.getText().toString().equals("");
             default:
                 return false;
         }
     }
 
-    public void conectar() {
+    private void conectar() {
         progress = new ProgressDialog(LoginActivity.this);
         progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progress.setIndeterminate(true);
@@ -326,5 +325,37 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         }).start();
+    }
+
+    private void esqueceuSenha(final String email) {
+        if ((int) dados.realizarOperacao("EsqueceuSenha", email) == 1) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    final Snackbar snackbar = Snackbar.make(findViewById(R.id.clLogin), "Email enviado para " + email + ".", Snackbar.LENGTH_LONG);
+                    snackbar.setAction("Ok", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            snackbar.dismiss();
+                        }
+                    });
+                    snackbar.show();
+                }
+            });
+        } else {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    final Snackbar snackbar = Snackbar.make(findViewById(R.id.clLogin), "Não foi possível enviar o email.", Snackbar.LENGTH_LONG);
+                    snackbar.setAction("Ok", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            snackbar.dismiss();
+                        }
+                    });
+                    snackbar.show();
+                }
+            });
+        }
     }
 }
