@@ -164,7 +164,7 @@ public class FXMLLoginController implements Initializable {
         tfEmailEsqueceuSenha.setOnKeyReleased((event) -> {
             tfEmailEsqueceuSenha.validate();
         });
-        
+
         AnchorPane.setLeftAnchor(tfEmailEsqueceuSenha, 0.0);
         AnchorPane.setRightAnchor(tfEmailEsqueceuSenha, 0.0);
         content.getChildren().add(tfEmailEsqueceuSenha);

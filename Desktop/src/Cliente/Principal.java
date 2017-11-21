@@ -67,6 +67,7 @@ public class Principal extends Application {
             JOptionPane.showConfirmDialog(null, "Tente novamente mais tarde.", "Não foi possível se conectar!", JOptionPane.CLOSED_OPTION, JOptionPane.ERROR_MESSAGE);
             System.exit(0);
         }
+        //</editor-fold>
 
         //<editor-fold defaultstate="collapsed" desc="Thread Notificações">
         Thread t = new Thread(() -> {
@@ -121,8 +122,6 @@ public class Principal extends Application {
         t.setDaemon(true);
         t.start();
         //</editor-fold>
-
-        //</editor-fold>
     }
 
     public static void conectar() {
@@ -140,7 +139,7 @@ public class Principal extends Application {
                 scene.getStylesheets().add(classe.getResource("cssSnackbar.css").toExternalForm());
                 stg.setScene(scene);
                 stg.show();
-                ((FXMLPrincipalController)loader.getController()).reconnect();
+                ((FXMLPrincipalController) loader.getController()).reconnect();
             }
         } catch (IOException ex) {
             Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);

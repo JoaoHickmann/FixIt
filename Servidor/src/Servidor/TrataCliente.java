@@ -38,7 +38,7 @@ public class TrataCliente extends Thread {
             while (true) {
                 try {
                     String operacao = (String) in.readObject();
-                    System.out.println("Operação: " + operacao);
+                    System.out.println(cliente.getInetAddress().getHostAddress() + " - Operação: " + operacao);
 
                     String sql;
                     ResultSet rs;
@@ -166,7 +166,7 @@ public class TrataCliente extends Thread {
 
                         boolean primeiroAdm = !Servidor.ExecutaSelect(sql).next();
 
-                        sql = " INSERT INTO `usuarios`(`Nome`, `Email`, `Senha`, `isAdministrador`)"
+                        sql = " INSERT INTO usuarios(Nome, Email, Senha, isAdministrador)"
                                 + " VALUES ('" + usuario.getNome() + "','" + usuario.getEmail() + "','" + usuario.getSenha() + "'," + (usuario.isAdministrador() ? "1" : "0") + ")";
 
                         if (Servidor.AtualizaTabela(sql) == 1) {
@@ -190,7 +190,7 @@ public class TrataCliente extends Thread {
                         sql = "INSERT INTO chamados(id_usuario, id_computador, id_problema, observacao)"
                                 + " VALUES (" + user.getID_Usuario() + ", " + chamado.getComputador().getID() + ", " + chamado.getProblema().getID() + ", '" + chamado.getObservacao() + "')";
 
-                        Servidor.NotificacaoDesktop("Novo chamado;Clique para abrir;Principal");
+                        Servidor.NotificacaoDesktop("Novo chamado;Clique para abrir");
 
                         out.writeObject(Servidor.AtualizaTabela(sql));
                     } else if (operacao.equals("AdicionarProblema")) {
@@ -317,8 +317,8 @@ public class TrataCliente extends Thread {
                         out.writeObject(chamados);
                     } else if (operacao.equals("MeusChamados")) {
                         sql = " SELECT C.id_chamado, U.nome, C.data_inicial, C.data_final,"
-                                + "    C.id_computador, CO.id_sala, P.tipo,"
-                                + "    P.descricao, C.observacao, C.status, A.nome, CO.numero"
+                                + "    C.id_computador, CO.id_sala, P.tipo, P.descricao,"
+                                + "    C.observacao, C.status, A.nome, CO.numero"
                                 + " FROM chamados C"
                                 + " INNER JOIN usuarios U ON U.id_usuario = C.id_usuario"
                                 + " INNER JOIN computadores CO ON CO.id_computador = C.id_computador"
@@ -433,17 +433,16 @@ public class TrataCliente extends Thread {
                                 + " WHERE id_computador = " + computador.getID();
 
                         out.writeObject(Servidor.AtualizaTabela(sql));
-                    } //</editor-fold>
+                    }
+                    //</editor-fold>
 
-                } catch (ClassNotFoundException ex) {
+                } catch (ClassNotFoundException | SQLException ex) {
                     Logger.getLogger(TrataCliente.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (SQLException ex) {
-                    Logger.getLogger(TrataCliente.class.getName()).log(Level.SEVERE, null, ex);
-                    out.writeObject(ex.getErrorCode());
                 }
             }
         } catch (IOException ex) {
             Logger.getLogger(TrataCliente.class.getName()).log(Level.SEVERE, null, ex);
         }
+        System.out.println("Cliente " + cliente.getInetAddress().getHostAddress() + " desconectado.");
     }
 }
