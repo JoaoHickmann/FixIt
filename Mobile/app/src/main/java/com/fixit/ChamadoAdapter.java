@@ -53,7 +53,7 @@ public class ChamadoAdapter extends RecyclerView.Adapter<ChamadoAdapter.MyViewHo
         holder.tvProblema.setText((chamado.getProblema().getTipo() == 1 ? "Hardware" : "Software") + " - " + chamado.getProblema().getDescricao());
         holder.tvSala.setText(chamado.getComputador().getSala() + " - " + chamado.getComputador().getNumero());
         if (chamado.getStatus() == 3) {
-            holder.ivStatus.setVisibility(View.INVISIBLE);
+            holder.ivStatus.setColorFilter(Color.parseColor("#00ff00"));
         } else if (chamado.getStatus() == 2) {
             holder.ivStatus.setColorFilter(Color.parseColor("#ffff00"));
         } else {
