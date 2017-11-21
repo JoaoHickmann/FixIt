@@ -5,7 +5,6 @@
 <?import com.jfoenix.controls.JFXTextArea?>
 <?import com.jfoenix.controls.JFXTextField?>
 <?import com.jfoenix.controls.JFXToolbar?>
-<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <?import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
@@ -47,7 +46,7 @@
                <right>
                   <JFXButton fx:id="btMenu" contentDisplay="GRAPHIC_ONLY" BorderPane.alignment="CENTER">
                      <graphic>
-                        <FontAwesomeIconView glyphName="ELLIPSIS_V" glyphStyle="-fx-fill: #FFFFFF" size="30" />
+                        <MaterialDesignIconView fill="WHITE" glyphName="DOTS_VERTICAL" size="30" />
                      </graphic>
                   </JFXButton>
                </right>
