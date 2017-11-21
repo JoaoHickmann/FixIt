@@ -61,7 +61,7 @@ public class Principal extends Application {
             scene.getStylesheets().add(getClass().getResource("cssSnackbar.css").toExternalForm());
             stage.setScene(scene);
             stage.setTitle("FixIt");
-            stage.getIcons().add(new Image(getClass().getResourceAsStream("/Imagens/logo-sem-fundo.png")));
+            stage.getIcons().add(new Image(getClass().getResourceAsStream("/Imagens/ic_launcher_round.png")));
             stage.show();
         } catch (IOException ex) {
             JOptionPane.showConfirmDialog(null, "Tente novamente mais tarde.", "Não foi possível se conectar!", JOptionPane.CLOSED_OPTION, JOptionPane.ERROR_MESSAGE);
