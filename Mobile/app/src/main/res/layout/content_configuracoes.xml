@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/clConfiguracoes"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -9,103 +10,63 @@
     tools:context="com.fixit.ConfiguracoesActivity"
     tools:showIn="@layout/activity_configuracoes">
 
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/tilNomeConfiguracoes"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:errorEnabled="true">
+        android:layout_height="match_parent">
 
-        <EditText
-            android:id="@+id/etNomeConfiguracoes"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:hint="Nome" />
-
-    </android.support.design.widget.TextInputLayout>
-
-    <Button
-        android:id="@+id/btAlterarNomeConfiguracoes"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="2dp"
-        android:layout_marginRight="8dp"
-        android:background="@color/colorPrimary"
-        android:padding="4dp"
-        android:text="Alterar nome"
-        android:textColor="#ffffff" />
-
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/tilEmailConfiguracoes"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:errorEnabled="true">
-
-        <EditText
-            android:id="@+id/etEmailConfiguracoes"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
-            android:editable="false"
-            android:hint="Email" />
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="16dp">
 
-    </android.support.design.widget.TextInputLayout>
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/tilNomeConfiguracoes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:errorEnabled="true">
 
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/tilSenhaAtualConfiguracoes"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:errorEnabled="true">
+                <EditText
+                    android:id="@+id/etNomeConfiguracoes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/nome" />
 
-        <EditText
-            android:id="@+id/etSenhaAtualConfiguracoes"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Senha atual"
-            android:inputType="textPassword" />
+            </android.support.design.widget.TextInputLayout>
 
-    </android.support.design.widget.TextInputLayout>
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/btAlterarNomeConfiguracoes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="4dp"
+                android:text="@string/alterar_nome"
+                android:textColor="#ffffff"
+                app:backgroundTint="@color/colorPrimary" />
 
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/tilNovaSenhaConfiguracoes"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:errorEnabled="true">
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-        <EditText
-            android:id="@+id/etNovaSenhaConfiguracoes"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Nova senha"
-            android:inputType="textPassword" />
+                <EditText
+                    android:id="@+id/etEmailConfiguracoes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:cursorVisible="false"
+                    android:focusable="false"
+                    android:hint="@string/email" />
 
-    </android.support.design.widget.TextInputLayout>
+            </android.support.design.widget.TextInputLayout>
 
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/tilConfirmarSenhaConfiguracoes"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:errorEnabled="true">
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/btAlterarSenhaConfiguracoes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/alterar_senha"
+                android:textColor="#ffffff"
+                app:backgroundTint="@color/colorPrimary" />
 
-        <EditText
-            android:id="@+id/etConfirmarNovaSenhaConfiguracoes"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Confirmar senha"
-            android:inputType="textPassword" />
+        </LinearLayout>
 
-    </android.support.design.widget.TextInputLayout>
-
-    <Button
-        android:id="@+id/btAlterarSenhaConfiguracoes"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="4dp"
-        android:background="@color/colorPrimary"
-        android:padding="8dp"
-        android:text="Alterar senha"
-        android:textColor="#ffffff" />
+    </ScrollView>
 
 </LinearLayout>

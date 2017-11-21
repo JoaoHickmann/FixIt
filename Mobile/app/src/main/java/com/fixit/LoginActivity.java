@@ -16,7 +16,6 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -199,8 +198,15 @@ public class LoginActivity extends AppCompatActivity {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    Toast.makeText(LoginActivity.this, R.string.usuario_senha_incorreta, Toast.LENGTH_SHORT).show();
                     progress.dismiss();
+                    final Snackbar snackbar = Snackbar.make(findViewById(R.id.clLogin), R.string.usuario_senha_incorreto, Snackbar.LENGTH_LONG);
+                    snackbar.setAction(R.string.ok, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            snackbar.dismiss();
+                        }
+                    });
+                    snackbar.show();
                 }
             });
         } else {
@@ -293,6 +299,7 @@ public class LoginActivity extends AppCompatActivity {
 
                     SharedPreferences sharedPref = getSharedPreferences("com.fixit", MODE_PRIVATE);
                     String username = sharedPref.getString("Username", null);
+                    String senha = sharedPref.getString("Senha", null);
                     if (username != null) {
                         login(new Usuario(username, sharedPref.getString("Senha", null)));
                     }

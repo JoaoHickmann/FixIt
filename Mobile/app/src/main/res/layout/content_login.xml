@@ -78,19 +78,19 @@
                     android:text="@string/esqueceu_sua_senha" />
             </RelativeLayout>
 
-            <Button
+            <android.support.v7.widget.AppCompatButton
                 android:id="@+id/btEntrarLogin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:backgroundTint="@color/colorPrimary"
                 android:text="@string/entrar"
-                android:textColor="#ffffff" />
+                android:textColor="#ffffff"
+                app:backgroundTint="@color/colorPrimary" />
 
-            <Button
+            <android.support.v7.widget.AppCompatButton
                 android:id="@+id/btRegistrarLogin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:backgroundTint="@color/colorPrimaryDark"
+                app:backgroundTint="@color/colorPrimaryDark"
                 android:text="@string/registrar"
                 android:textColor="#ffffff" />
 

@@ -175,7 +175,7 @@ public class RegistrarActivity extends AppCompatActivity {
             case R.id.etNomeRegistrar:
                 valido = !etNomeRegistrar.getText().toString().equals("");
 
-                tilNomeRegistrar.setError(valido ? null : getString(R.string.nome_error));
+                tilNomeRegistrar.setError(valido ? null : getString(R.string.informe_nome));
                 if (!valido) {
                     etNomeRegistrar.requestFocus();
                 }

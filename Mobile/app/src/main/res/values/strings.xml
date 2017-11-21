@@ -23,6 +23,8 @@
     <string name="email">Email</string>
     <string name="senha">Senha</string>
     <string name="confirmar_senha">Confirmar senha</string>
+    <string name="senha_atual">Senha atual</string>
+    <string name="nova_senha">Nova senha</string>
 
     <string name="manter_conectado">Manter conectado?</string>
     <string name="esqueceu_sua_senha">Esqueceu sua senha?</string>
@@ -63,7 +65,7 @@
     <string name="selecionado">selecionado.</string>
     <string name="selecionado_plural">selecionados.</string>
 
-    <string name="nome_error">Informe o nome.</string>
+    <string name="informe_nome">Informe o nome.</string>
     <string name="email_invalido_error">Email inválido.</string>
     <string name="email_nao_disponivel_error">Email não disponível.</string>
     <string name="informe_senha">Informe a senha.</string>
@@ -73,10 +75,19 @@
     <string name="nao_permitido_error_plural">não permitidos.</string>
 
     <string name="cadastrar_usuario_fail">Não foi possível cadastrar.</string>
-    <string name="usuario_senha_incorreta">Usuário ou senha incorreta!</string>
+    <string name="usuario_senha_incorreto">Usuário ou senha incorreto!</string>
 
     <string name="email_enviado">Email enviado para</string>
     <string name="email_enviado_fail">Não foi possível enviar o email.</string>
+    <string name="alterar_nome">Alterar nome</string>
+    <string name="alterar_senha">Alterar senha</string>
+    <string name="alterar">Alterar</string>
+    <string name="alteracao_senha">Alteração de senha</string>
+    <string name="nome_alterado">Nome alterado.</string>
+    <string name="nome_alterador_fail">Não foi possível alterar o nome.</string>
+    <string name="senha_alterada">Senha alterada.</string>
+    <string name="senha_alterada_fail">Não foi possível alterar a senha.</string>
+    <string name="senha_incorreta">Senha incorreta.</string>
 
     <string-array name="tipo_problema">
         <item>Hardware</item>
