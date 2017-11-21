@@ -10,6 +10,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,7 +21,7 @@ public class ConfiguracoesActivity extends AppCompatActivity {
 
     TextInputLayout tilNomeConfiguracoes, tilSenhaAtualDialog, tilNovaSenhaDialog, tilConfirmarSenhaDialog;
     EditText etNomeConfiguracoes, etEmailConfiguracoes, etSenhaAtualDialog, etNovaSenhaDialog, etConfirmarSenhaDialog;
-    Button btAlterarNomeConfiguracoes, btAlterarSenhaConfiguracoes;
+    Button btAlterarSenhaConfiguracoes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +38,6 @@ public class ConfiguracoesActivity extends AppCompatActivity {
         etNomeConfiguracoes = findViewById(R.id.etNomeConfiguracoes);
         etEmailConfiguracoes = findViewById(R.id.etEmailConfiguracoes);
 
-        btAlterarNomeConfiguracoes = findViewById(R.id.btAlterarNomeConfiguracoes);
         btAlterarSenhaConfiguracoes = findViewById(R.id.btAlterarSenhaConfiguracoes);
 
         etNomeConfiguracoes.setText(dados.getUser().getNome());
@@ -56,48 +57,6 @@ public class ConfiguracoesActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 validarCampos(etNomeConfiguracoes);
-            }
-        });
-
-        btAlterarNomeConfiguracoes.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (validarCampos(etNomeConfiguracoes)) {
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            if ((int) dados.realizarOperacao("MudarNome", etNomeConfiguracoes.getText().toString()) == 1) {
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        final Snackbar snackbar = Snackbar.make(findViewById(R.id.clConfiguracoes), R.string.nome_alterado, Snackbar.LENGTH_LONG);
-                                        snackbar.setAction(R.string.ok, new View.OnClickListener() {
-                                            @Override
-                                            public void onClick(View v) {
-                                                snackbar.dismiss();
-                                            }
-                                        });
-                                        snackbar.show();
-                                    }
-                                });
-                            } else {
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        final Snackbar snackbar = Snackbar.make(findViewById(R.id.clConfiguracoes), R.string.nome_alterador_fail, Snackbar.LENGTH_LONG);
-                                        snackbar.setAction(R.string.ok, new View.OnClickListener() {
-                                            @Override
-                                            public void onClick(View v) {
-                                                snackbar.dismiss();
-                                            }
-                                        });
-                                        snackbar.show();
-                                    }
-                                });
-                            }
-                        }
-                    }).start();
-                }
             }
         });
 
@@ -183,10 +142,13 @@ public class ConfiguracoesActivity extends AppCompatActivity {
                                             String senha = new Criptografia(dados.getUser().getEmail().charAt(0)).criptografar(etNovaSenhaDialog.getText().toString());
 
                                             if ((int) dados.realizarOperacao("MudarSenha", senha) == 1) {
+                                                dados.getUser().setSenha(senha);
+
                                                 SharedPreferences sharedPref = getSharedPreferences("com.fixit", MODE_PRIVATE);
                                                 SharedPreferences.Editor editor = sharedPref.edit();
                                                 editor.putString("Senha", senha);
                                                 editor.apply();
+
                                                 runOnUiThread(new Runnable() {
                                                     @Override
                                                     public void run() {
@@ -225,6 +187,59 @@ public class ConfiguracoesActivity extends AppCompatActivity {
                 alerta.show();
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_configuracoes, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_salvar_configuracoes:
+                if (validarCampos(etNomeConfiguracoes)) {
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if ((int) dados.realizarOperacao("MudarNome", etNomeConfiguracoes.getText().toString()) == 1) {
+                                dados.getUser().setNome(etNomeConfiguracoes.getText().toString());
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        final Snackbar snackbar = Snackbar.make(findViewById(R.id.clConfiguracoes), R.string.nome_alterado, Snackbar.LENGTH_LONG);
+                                        snackbar.setAction(R.string.ok, new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                snackbar.dismiss();
+                                            }
+                                        });
+                                        snackbar.show();
+                                    }
+                                });
+                            } else {
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        final Snackbar snackbar = Snackbar.make(findViewById(R.id.clConfiguracoes), R.string.nome_alterador_fail, Snackbar.LENGTH_LONG);
+                                        snackbar.setAction(R.string.ok, new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                snackbar.dismiss();
+                                            }
+                                        });
+                                        snackbar.show();
+                                    }
+                                });
+                            }
+                        }
+                    }).start();
+                }
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     private boolean validarCampos(EditText etValidar) {

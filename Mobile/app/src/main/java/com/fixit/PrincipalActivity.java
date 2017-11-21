@@ -17,7 +17,9 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.ActionMode;
@@ -196,9 +198,6 @@ public class PrincipalActivity extends AppCompatActivity {
                 }
 
                 RecyclerView rvChamadosChamados = ((ChamadosFragment) ((ViewPagerAdapter) viewpagerPrincipal.getAdapter()).getItem(0)).getRvChamadosChamados();
-                RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(PrincipalActivity.this);
-                rvChamadosChamados.setLayoutManager(mLayoutManager);
-                rvChamadosChamados.setItemAnimator(new DefaultItemAnimator());
                 rvChamadosChamados.setAdapter(new ChamadoAdapter(abertos, new ChamadoAdapter.ChamadoOnClickListener() {
                     @Override
                     public void onClickAluno(View view, int position) {
@@ -240,9 +239,6 @@ public class PrincipalActivity extends AppCompatActivity {
                 }));
 
                 rvChamadosChamados = ((ChamadosFragment) ((ViewPagerAdapter) viewpagerPrincipal.getAdapter()).getItem(1)).getRvChamadosChamados();
-                mLayoutManager = new LinearLayoutManager(PrincipalActivity.this);
-                rvChamadosChamados.setLayoutManager(mLayoutManager);
-                rvChamadosChamados.setItemAnimator(new DefaultItemAnimator());
                 rvChamadosChamados.setAdapter(new ChamadoAdapter(finalizados, new ChamadoAdapter.ChamadoOnClickListener() {
                     @Override
                     public void onClickAluno(View view, int position) {

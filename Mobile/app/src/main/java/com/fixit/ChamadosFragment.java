@@ -4,6 +4,10 @@ package com.fixit;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,16 +21,20 @@ public class ChamadosFragment extends Fragment {
     private SwipeRefreshLayout swipeRefreshChamados;
 
     public ChamadosFragment() {
-        // Required empty public constructor
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_chamados, container, false);
 
         rvChamadosChamados = rootView.findViewById(R.id.rvChamados);
+
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
+        rvChamadosChamados.setLayoutManager(mLayoutManager);
+        rvChamadosChamados.setItemAnimator(new DefaultItemAnimator());
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(rvChamadosChamados.getContext(), OrientationHelper.VERTICAL);
+        rvChamadosChamados.addItemDecoration(dividerItemDecoration);
 
         swipeRefreshChamados = rootView.findViewById(R.id.srChamados);
 
