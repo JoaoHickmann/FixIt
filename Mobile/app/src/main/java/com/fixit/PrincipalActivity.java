@@ -107,6 +107,21 @@ public class PrincipalActivity extends AppCompatActivity {
                 startActivityForResult(it, REQUEST_NOVO_CHAMADO);
             }
         });
+
+        Intent it = getIntent();
+        if (it!=null){
+            boolean reconexao = it.getBooleanExtra("Reconexão", false);
+            if (reconexao) {
+                final Snackbar snackbar = Snackbar.make(findViewById(R.id.cl_principal), R.string.conexao_reestabelecida, Snackbar.LENGTH_LONG);
+                snackbar.setAction(R.string.ok, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        snackbar.dismiss();
+                    }
+                });
+                snackbar.show();
+            }
+        }
     }
 
     @Override

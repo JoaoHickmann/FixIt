@@ -88,6 +88,7 @@
     <string name="senha_alterada">Senha alterada.</string>
     <string name="senha_alterada_fail">Não foi possível alterar a senha.</string>
     <string name="senha_incorreta">Senha incorreta.</string>
+    <string name="conexao_reestabelecida">Conexão com o servidor reestabelecida.</string>
 
     <string-array name="tipo_problema">
         <item>Hardware</item>

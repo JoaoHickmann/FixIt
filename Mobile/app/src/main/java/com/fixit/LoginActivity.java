@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -37,6 +38,8 @@ public class LoginActivity extends AppCompatActivity {
     private Button btEntrarLogin, btRegistrarLogin;
 
     private ProgressDialog progress;
+
+    private boolean reconexao = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -176,6 +179,15 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        Intent it = getIntent();
+        if (it != null) {
+            reconexao = it.getBooleanExtra("Reconexão", false);
+            dados.setUser((Usuario) it.getSerializableExtra("Usuario"));
+            if (reconexao) {
+                Toast.makeText(dados, "Conexão com o servidor interrompida.", Toast.LENGTH_LONG).show();
+            }
+        }
+
         conectar();
     }
 
@@ -221,7 +233,9 @@ public class LoginActivity extends AppCompatActivity {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    startActivity(new Intent(LoginActivity.this, PrincipalActivity.class));
+                    Intent it = new Intent(LoginActivity.this, PrincipalActivity.class);
+                    it.putExtra("Reconexão", reconexao);
+                    startActivity(it);
                     progress.dismiss();
                     finish();
                 }
@@ -300,9 +314,18 @@ public class LoginActivity extends AppCompatActivity {
                     SharedPreferences sharedPref = getSharedPreferences("com.fixit", MODE_PRIVATE);
                     String username = sharedPref.getString("Username", null);
                     String senha = sharedPref.getString("Senha", null);
-                    if (username != null) {
-                        login(new Usuario(username, sharedPref.getString("Senha", null)));
+
+                    if (reconexao && dados.getUser() != null) {
+                        username = dados.getUser().getEmail();
+                        senha = dados.getUser().getSenha();
+                    } else {
+                        reconexao = false;
                     }
+
+                    if (username != null && senha != null) {
+                        login(new Usuario(username, senha));
+                    }
+
                 } catch (IOException e) {
                     e.printStackTrace();
                     runOnUiThread(new Runnable() {
