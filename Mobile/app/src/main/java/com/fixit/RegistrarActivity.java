@@ -27,8 +27,7 @@ public class RegistrarActivity extends AppCompatActivity {
     private EditText etNomeRegistrar, etEmailRegistrar, etSenhaRegistrar, etConfirmarSenhaRegistrar;
 
     private Timer timer = new Timer();
-    private boolean emailValido = false;
-    private boolean pronto = true;
+    private boolean emailValido = false, pronto = true, emailPronto = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +79,7 @@ public class RegistrarActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
+                emailPronto = false;
                 timer.cancel();
                 timer = new Timer();
                 timer.schedule(
@@ -87,6 +87,7 @@ public class RegistrarActivity extends AppCompatActivity {
                             @Override
                             public void run() {
                                 emailValido = validarCampos(etEmailRegistrar);
+                                emailPronto = true;
                             }
                         },
                         500
@@ -140,9 +141,12 @@ public class RegistrarActivity extends AppCompatActivity {
                 boolean valido = validarCampos(etConfirmarSenhaRegistrar);
                 valido = validarCampos(etSenhaRegistrar) && valido;
 
+                while (!emailPronto) {
+                }
+
                 if (!emailValido) {
                     etEmailRegistrar.requestFocus();
-                    if (tilEmailRegistrar.getError() == null){
+                    if (tilEmailRegistrar.getError() == null) {
                         tilEmailRegistrar.setError(getString(R.string.email_invalido_error));
                     }
                 }

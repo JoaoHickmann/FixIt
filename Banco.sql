@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: 21-Nov-2017 às 19:02
+-- Generation Time: 20-Nov-2017 às 03:19
 -- Versão do servidor: 10.1.25-MariaDB
 -- PHP Version: 5.6.31
 
@@ -19,10 +19,8 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `fixit`
+-- Database: `trabalhofinal`
 --
-CREATE DATABASE IF NOT EXISTS `fixit` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
-USE `fixit`;
 
 -- --------------------------------------------------------
 
@@ -47,11 +45,12 @@ CREATE TABLE `chamados` (
 --
 
 INSERT INTO `chamados` (`ID_Chamado`, `ID_Usuario`, `ID_Usuario_Administrador`, `Data_Inicial`, `Data_Final`, `ID_Computador`, `ID_Problema`, `Observacao`, `Status`) VALUES
-(150, 7, NULL, '2017-11-21 15:56:54', NULL, 133, 25, 'PC explodiu', 1),
-(151, 7, NULL, '2017-11-21 15:57:05', NULL, 204, 22, '', 1),
-(152, 7, NULL, '2017-11-21 15:57:13', NULL, 174, 23, 'quebrou', 1),
-(153, 7, NULL, '2017-11-21 15:57:30', NULL, 198, 29, 'windows bugou', 1),
-(154, 7, NULL, '2017-11-21 15:57:50', NULL, 179, 27, 'não abre', 1);
+(78, 5, NULL, '2017-11-18 19:19:37', NULL, 1, 6, '', 1),
+(79, 5, 4, '2017-11-18 19:19:40', NULL, 1, 6, '', 2),
+(82, 4, 4, '2017-11-18 21:12:42', '2017-11-18 22:37:11', 1, 6, '', 3),
+(88, 4, 4, '2017-11-18 23:23:04', '2017-11-19 13:11:57', 132, 2, '', 3),
+(109, 4, 4, '2017-11-19 16:09:07', NULL, 103, 6, '', 2),
+(124, 4, NULL, '2017-11-20 00:18:17', NULL, 103, 6, '', 1);
 
 -- --------------------------------------------------------
 
@@ -70,96 +69,39 @@ CREATE TABLE `computadores` (
 --
 
 INSERT INTO `computadores` (`ID_Computador`, `Numero`, `ID_Sala`) VALUES
-(133, 1, 101),
-(163, 1, 202),
-(193, 1, 303),
-(134, 2, 101),
-(164, 2, 202),
-(194, 2, 303),
-(135, 3, 101),
-(165, 3, 202),
-(195, 3, 303),
-(136, 4, 101),
-(166, 4, 202),
-(196, 4, 303),
-(137, 5, 101),
-(167, 5, 202),
-(197, 5, 303),
-(138, 6, 101),
-(168, 6, 202),
-(198, 6, 303),
-(139, 7, 101),
-(169, 7, 202),
-(199, 7, 303),
-(140, 8, 101),
-(170, 8, 202),
-(200, 8, 303),
-(141, 9, 101),
-(171, 9, 202),
-(201, 9, 303),
-(142, 10, 101),
-(172, 10, 202),
-(202, 10, 303),
-(143, 11, 101),
-(173, 11, 202),
-(203, 11, 303),
-(144, 12, 101),
-(174, 12, 202),
-(204, 12, 303),
-(145, 13, 101),
-(175, 13, 202),
-(205, 13, 303),
-(146, 14, 101),
-(176, 14, 202),
-(206, 14, 303),
-(147, 15, 101),
-(177, 15, 202),
-(207, 15, 303),
-(148, 16, 101),
-(178, 16, 202),
-(208, 16, 303),
-(149, 17, 101),
-(179, 17, 202),
-(209, 17, 303),
-(150, 18, 101),
-(180, 18, 202),
-(210, 18, 303),
-(151, 19, 101),
-(181, 19, 202),
-(211, 19, 303),
-(152, 20, 101),
-(182, 20, 202),
-(212, 20, 303),
-(153, 21, 101),
-(183, 21, 202),
-(213, 21, 303),
-(154, 22, 101),
-(184, 22, 202),
-(214, 22, 303),
-(155, 23, 101),
-(185, 23, 202),
-(215, 23, 303),
-(156, 24, 101),
-(186, 24, 202),
-(216, 24, 303),
-(157, 25, 101),
-(187, 25, 202),
-(217, 25, 303),
-(158, 26, 101),
-(188, 26, 202),
-(218, 26, 303),
-(159, 27, 101),
-(189, 27, 202),
-(219, 27, 303),
-(160, 28, 101),
-(190, 28, 202),
-(220, 28, 303),
-(161, 29, 101),
-(191, 29, 202),
-(221, 29, 303),
-(162, 30, 101),
-(192, 30, 202),
-(222, 30, 303);
+(103, 1, 100),
+(1, 1, 101),
+(2, 1, 202),
+(3, 1, 303),
+(104, 2, 100),
+(105, 3, 100),
+(106, 4, 100),
+(107, 5, 100),
+(108, 6, 100),
+(109, 7, 100),
+(110, 8, 100),
+(111, 9, 100),
+(112, 10, 100),
+(113, 11, 100),
+(114, 12, 100),
+(115, 13, 100),
+(116, 14, 100),
+(117, 15, 100),
+(118, 16, 100),
+(119, 17, 100),
+(120, 18, 100),
+(121, 19, 100),
+(122, 20, 100),
+(123, 21, 100),
+(124, 22, 100),
+(125, 23, 100),
+(126, 24, 100),
+(127, 25, 100),
+(128, 26, 100),
+(129, 27, 100),
+(130, 28, 100),
+(131, 29, 100),
+(132, 30, 100);
 
 -- --------------------------------------------------------
 
@@ -178,14 +120,10 @@ CREATE TABLE `problemas` (
 --
 
 INSERT INTO `problemas` (`ID_Problema`, `Descricao`, `Tipo`) VALUES
-(24, 'Monitor', 1),
-(22, 'Mouse', 1),
-(25, 'Outros', 1),
-(23, 'Teclado', 1),
-(26, 'Android Studio', 2),
-(27, 'Netbeans', 2),
-(29, 'Outros', 2),
-(28, 'Xampp', 2);
+(6, 'Mouse', 1),
+(18, 'Outros', 1),
+(2, 'Netbeans', 2),
+(19, 'Outros', 2);
 
 -- --------------------------------------------------------
 
@@ -202,6 +140,7 @@ CREATE TABLE `salas` (
 --
 
 INSERT INTO `salas` (`ID_Sala`) VALUES
+(100),
 (101),
 (202),
 (303);
@@ -225,9 +164,12 @@ CREATE TABLE `usuarios` (
 --
 
 INSERT INTO `usuarios` (`ID_Usuario`, `Nome`, `Email`, `Senha`, `isAdministrador`) VALUES
-(1, 'a', 'a@a.a', 'OM#90o', 1),
-(2, 'Joao', 'joaophickmann@outlook.com', '0rJ-DbXrcj@xm-dS#', 0),
-(3, 'Guilherme', 'guikipper1@gmail.com', '+@Yw9L', 0);
+(1, 'João', 'joaophickmann@outlook.com', '123456', 0),
+(2, 'Gordo da TI', 'bacon@carne.com', 'coxinha', 0),
+(3, 'Guilherme', 'guikipper1@gmail.com', 'sougay', 0),
+(4, 'foda', 'a@a.a', 'OM#90o', 1),
+(5, 'joao', 'ze@bol.a', 'P0yFN277', 0),
+(6, 'fernando', 'gui@gay.boiologo', '+@Yw9L', 0);
 
 --
 -- Indexes for dumped tables
@@ -279,22 +221,22 @@ ALTER TABLE `usuarios`
 -- AUTO_INCREMENT for table `chamados`
 --
 ALTER TABLE `chamados`
-  MODIFY `ID_Chamado` smallint(5) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=155;
+  MODIFY `ID_Chamado` smallint(5) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=125;
 --
 -- AUTO_INCREMENT for table `computadores`
 --
 ALTER TABLE `computadores`
-  MODIFY `ID_Computador` smallint(4) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=223;
+  MODIFY `ID_Computador` smallint(4) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=133;
 --
 -- AUTO_INCREMENT for table `problemas`
 --
 ALTER TABLE `problemas`
-  MODIFY `ID_Problema` tinyint(3) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+  MODIFY `ID_Problema` tinyint(3) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 --
 -- AUTO_INCREMENT for table `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `ID_Usuario` tinyint(3) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `ID_Usuario` tinyint(3) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 --
 -- Constraints for dumped tables
 --

@@ -274,6 +274,7 @@ public class LoginActivity extends AppCompatActivity {
                 }
                 return emailCerto;
             case R.id.etSenhaLogin:
+
                 tilSenhaLogin.setError(etSenhaLogin.getText().toString().equals("") ? getString(R.string.informe_senha) : null);
                 if (etSenhaLogin.getText().toString().equals("")) {
                     etSenhaLogin.requestFocus();
@@ -298,7 +299,7 @@ public class LoginActivity extends AppCompatActivity {
                 try {
                     Socket servidor = new Socket();
                     servidor.setSoTimeout(5000);
-                    servidor.connect(new InetSocketAddress("192.168.0.200", 12345), 5000);
+                    servidor.connect(new InetSocketAddress("192.168.0.201", 12345), 5000);
 
                     dados.setServidor(servidor);
                     dados.setIn(new ObjectInputStream(servidor.getInputStream()));

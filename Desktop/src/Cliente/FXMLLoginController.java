@@ -87,22 +87,12 @@ public class FXMLLoginController implements Initializable {
         RequiredFieldValidator requiredValidator = new RequiredFieldValidator();
         requiredValidator.setMessage("O campo deve ser preenchido.");
 
-        ValidatorBase senhaTamanhoValidator = new ValidatorBase("Máximo de 20 caracteres.") {
-            @Override
-            protected void eval() {
-                TextInputControl textField = (TextInputControl) srcControl.get();
-
-                hasErrors.set(textField.getText().length() > 20);
-            }
-        };
-
         tfEmail.getValidators().add(emailValidator);
         tfEmail.setOnKeyReleased((event) -> {
             tfEmail.validate();
         });
 
         pfSenha.getValidators().add(requiredValidator);
-        pfSenha.getValidators().add(senhaTamanhoValidator);
         pfSenha.setOnKeyReleased((event) -> {
             pfSenha.validate();
         });

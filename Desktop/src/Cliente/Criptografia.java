@@ -27,12 +27,22 @@ public class Criptografia {
     }
 
     public String criptografar(String texto) {
+        if (texto.length() > 20) {
+            return "";
+        }
+
         String textoCriptografado = "";
-        int x = 0, y = 0;
+        int x, y;
 
         for (int i = 0; i < texto.length(); i++) {
             x = alfabetosEixos[0].indexOf(texto.charAt(i));
+
+            if (x == -1) {
+                return "";
+            }
+
             y = alfabetosEixos[1].indexOf(chave.charAt(i));
+
 
             textoCriptografado += matrizLetras[y].charAt(x);
         }
