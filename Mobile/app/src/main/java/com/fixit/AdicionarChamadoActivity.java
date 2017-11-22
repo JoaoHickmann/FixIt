@@ -26,6 +26,8 @@ public class AdicionarChamadoActivity extends AppCompatActivity {
     LinkedList<Problema> problemas;
     LinkedList<Computador> computadores;
 
+    private boolean pronto = true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -131,7 +133,8 @@ public class AdicionarChamadoActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_adicionar_adicionar:
-                if (spProblema.getCount() != 0 && spSala.getCount() != 0 && spComputador.getCount() != 0) {
+                if (spProblema.getCount() != 0 && spSala.getCount() != 0 && spComputador.getCount() != 0 && pronto) {
+                    pronto = false;
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
@@ -176,6 +179,7 @@ public class AdicionarChamadoActivity extends AppCompatActivity {
                                     }
                                 });
                             }
+                            pronto = true;
                         }
                     }).start();
                     return true;

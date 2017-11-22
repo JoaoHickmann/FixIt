@@ -13,6 +13,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -23,6 +25,10 @@ public class RegistrarActivity extends AppCompatActivity {
 
     private TextInputLayout tilNomeRegistrar, tilEmailRegistrar, tilSenhaRegistrar, tilConfirmarSenhaRegistrar;
     private EditText etNomeRegistrar, etEmailRegistrar, etSenhaRegistrar, etConfirmarSenhaRegistrar;
+
+    private Timer timer = new Timer();
+    private boolean emailValido = false;
+    private boolean pronto = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +80,17 @@ public class RegistrarActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                validarCampos(etEmailRegistrar);
+                timer.cancel();
+                timer = new Timer();
+                timer.schedule(
+                        new TimerTask() {
+                            @Override
+                            public void run() {
+                                emailValido = validarCampos(etEmailRegistrar);
+                            }
+                        },
+                        500
+                );
             }
         });
         etSenhaRegistrar.addTextChangedListener(new TextWatcher() {
@@ -121,17 +137,27 @@ public class RegistrarActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_registrar_registrar:
-                validarCampos(etNomeRegistrar);
-                validarCampos(etEmailRegistrar);
-                validarCampos(etSenhaRegistrar);
-                validarCampos(etConfirmarSenhaRegistrar);
-                if (validarCampos(etNomeRegistrar) && validarCampos(etEmailRegistrar) && validarCampos(etSenhaRegistrar) && validarCampos(etConfirmarSenhaRegistrar)) {
+                boolean valido = validarCampos(etConfirmarSenhaRegistrar);
+                valido = validarCampos(etSenhaRegistrar) && valido;
+
+                if (!emailValido) {
+                    etEmailRegistrar.requestFocus();
+                    if (tilEmailRegistrar.getError() == null){
+                        tilEmailRegistrar.setError(getString(R.string.email_invalido_error));
+                    }
+                }
+
+                valido = emailValido && valido;
+                valido = validarCampos(etNomeRegistrar) && valido;
+                if (valido && pronto) {
+                    pronto = false;
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
                             String senha = new Criptografia(etEmailRegistrar.getText().toString().charAt(0)).criptografar(etSenhaRegistrar.getText().toString());
                             Usuario usuario = new Usuario(etNomeRegistrar.getText().toString(), etEmailRegistrar.getText().toString(), senha, false);
                             registrar(usuario);
+                            pronto = true;
                         }
                     }).start();
                 }
@@ -187,7 +213,7 @@ public class RegistrarActivity extends AppCompatActivity {
 
                 valido = m.find();
 
-                if (valido) {
+                if (valido && pronto) {
                     Thread t = new Thread(new Runnable() {
                         @Override
                         public void run() {
@@ -207,14 +233,14 @@ public class RegistrarActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
 
-                    if (tilEmailRegistrar.getError() != null) {
-                        etEmailRegistrar.requestFocus();
-                    }
-
                     return tilEmailRegistrar.getError() == null;
                 } else {
-                    tilEmailRegistrar.setError(getString(R.string.email_invalido_error));
-                    etEmailRegistrar.requestFocus();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            tilEmailRegistrar.setError(getString(R.string.email_invalido_error));
+                        }
+                    });
                     return false;
                 }
             case R.id.etSenhaRegistrar:

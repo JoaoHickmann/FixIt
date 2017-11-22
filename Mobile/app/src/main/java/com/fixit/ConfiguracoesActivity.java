@@ -23,6 +23,8 @@ public class ConfiguracoesActivity extends AppCompatActivity {
     EditText etNomeConfiguracoes, etEmailConfiguracoes, etSenhaAtualDialog, etNovaSenhaDialog, etConfirmarSenhaDialog;
     Button btAlterarSenhaConfiguracoes;
 
+    private boolean pronto = true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -135,7 +137,6 @@ public class ConfiguracoesActivity extends AppCompatActivity {
                                     etSenhaAtualDialog.requestFocus();
                                 }
                                 if (validarCampos(etSenhaAtualDialog) && validarCampos(etNovaSenhaDialog) && validarCampos(etConfirmarSenhaDialog)) {
-                                    alerta.dismiss();
                                     new Thread(new Runnable() {
                                         @Override
                                         public void run() {
@@ -177,6 +178,13 @@ public class ConfiguracoesActivity extends AppCompatActivity {
                                                     }
                                                 });
                                             }
+
+                                            runOnUiThread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    alerta.dismiss();
+                                                }
+                                            });
                                         }
                                     }).start();
                                 }
@@ -199,7 +207,8 @@ public class ConfiguracoesActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_salvar_configuracoes:
-                if (validarCampos(etNomeConfiguracoes)) {
+                if (validarCampos(etNomeConfiguracoes) && !etNomeConfiguracoes.getText().toString().equals(dados.getUser().getNome()) && pronto) {
+                    pronto = false;
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
@@ -233,6 +242,7 @@ public class ConfiguracoesActivity extends AppCompatActivity {
                                     }
                                 });
                             }
+                            pronto = true;
                         }
                     }).start();
                 }
