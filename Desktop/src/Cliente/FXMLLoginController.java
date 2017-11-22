@@ -51,6 +51,8 @@ public class FXMLLoginController implements Initializable {
     private StackPane stack;
 
     JFXSnackbar snackbar;
+    
+    private boolean pronto = true;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -102,7 +104,8 @@ public class FXMLLoginController implements Initializable {
         EventHandler entrar = (EventHandler) (Event event) -> {
             tfEmail.validate();
             pfSenha.validate();
-            if (tfEmail.validate() && pfSenha.validate()) {
+            if (tfEmail.validate() && pfSenha.validate() && pronto) {
+                pronto = false;
                 new Thread(() -> {
                     String senha = new Criptografia(tfEmail.getText().charAt(0)).criptografar(pfSenha.getText());
                     Usuario usuario = new Usuario(tfEmail.getText(), senha);
@@ -131,6 +134,7 @@ public class FXMLLoginController implements Initializable {
                     } catch (IOException ex) {
                         Logger.getLogger(FXMLLoginController.class.getName()).log(Level.SEVERE, null, ex);
                     }
+                    pronto = true;
                 }).start();
             }
         };

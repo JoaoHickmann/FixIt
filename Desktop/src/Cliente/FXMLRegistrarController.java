@@ -42,6 +42,8 @@ public class FXMLRegistrarController implements Initializable {
     private StackPane StackPane;
 
     JFXSnackbar snackbar;
+    
+    private boolean pronto = true;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -159,7 +161,8 @@ public class FXMLRegistrarController implements Initializable {
             pfSenha.validate();
             pfConfirmarSenha.validate();
 
-            if (tfNome.validate() && tfEmail.validate() && pfSenha.validate() && pfConfirmarSenha.validate()) {
+            if (tfNome.validate() && tfEmail.validate() && pfSenha.validate() && pfConfirmarSenha.validate() && pronto) {
+                pronto = false;
                 new Thread(() -> {
                     String senha = new Criptografia(tfEmail.getText().charAt(0)).criptografar(pfSenha.getText());
                     Usuario user = new Usuario(tfNome.getText(), tfEmail.getText(), senha, true);
@@ -187,6 +190,7 @@ public class FXMLRegistrarController implements Initializable {
                     } catch (IOException ex) {
                         Logger.getLogger(FXMLRegistrarController.class.getName()).log(Level.SEVERE, null, ex);
                     }
+                    pronto = true;
                 }).start();
             }
         });

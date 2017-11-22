@@ -28,7 +28,7 @@ public class Criptografia {
 
     public String descriptografar(String textoCriptografado) {
         String textoDescriptografado = "";
-        int x = 0, y = 0;
+        int x, y;
 
         for (int i = 0; i < textoCriptografado.length(); i++) {
             x = alfabetosEixos[1].indexOf(String.valueOf(chave.charAt(i)));

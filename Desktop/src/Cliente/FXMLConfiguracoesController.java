@@ -120,7 +120,7 @@ public class FXMLConfiguracoesController implements Initializable {
 
         //<editor-fold defaultstate="collapsed" desc="Alterar Nome">
         btAlterarNome.setOnAction((ActionEvent event) -> {
-            if (tfNome.validate()) {
+            if (tfNome.validate() && !tfNome.getText().equals(Principal.getUser().getNome())) {
                 new Thread(() -> {
                     if ((int) Principal.realizarOperacao("MudarNome", tfNome.getText()) == 1) {
                         Principal.getUser().setNome(tfNome.getText());
