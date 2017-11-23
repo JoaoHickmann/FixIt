@@ -37,6 +37,7 @@ public class ChamadosFragment extends Fragment {
         rvChamadosChamados.addItemDecoration(dividerItemDecoration);
 
         swipeRefreshChamados = rootView.findViewById(R.id.srChamados);
+        swipeRefreshChamados.setColorSchemeColors(getResources().getColor(R.color.colorPrimaryDark));
 
         swipeRefreshChamados.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
