@@ -269,7 +269,20 @@ public class FXMLConfiguracoesController implements Initializable {
             dialogExc.close();
             new Thread(() -> {
                 if ((int) Principal.realizarOperacao("ExcluirConta", Principal.getUser()) == 1) {
-                    
+                    Platform.runLater(() -> {
+                        try {
+                            Principal.setUser(null);
+                            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                            FXMLLoader loader = new FXMLLoader(getClass().getResource("FXMLLogin.fxml"));
+                            Scene scene = new Scene(loader.load(), stage.getScene().getWidth(), stage.getScene().getHeight());
+                            scene.getStylesheets().add(getClass().getResource("cssSnackbar.css").toExternalForm());
+                            stage.setScene(scene);
+                            stage.show();
+                            ((FXMLLoginController) loader.getController()).contaExcluida();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    });
                 } else {
                     Platform.runLater(() -> {
                         JFXSnackbar.SnackbarEvent barEvent = new JFXSnackbar.SnackbarEvent("Não foi possível excluir a conta.", "Ok", 3000, false, (MouseEvent event2) -> {

@@ -199,4 +199,11 @@ public class FXMLLoginController implements Initializable {
         });
         //</editor-fold>
     }
+    
+    public void contaExcluida() {
+        JFXSnackbar.SnackbarEvent barEvent = new JFXSnackbar.SnackbarEvent("Conta excluida.", "Ok", 3000, false, (MouseEvent event) -> {
+            snackbar.close();
+        });
+        snackbar.enqueue(barEvent);
+    }
 }
