@@ -1,6 +1,7 @@
 package com.fixit;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -15,13 +16,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class ConfiguracoesActivity extends AppCompatActivity {
     Dados dados;
 
     TextInputLayout tilNomeConfiguracoes, tilSenhaAtualDialog, tilNovaSenhaDialog, tilConfirmarSenhaDialog;
     EditText etNomeConfiguracoes, etEmailConfiguracoes, etSenhaAtualDialog, etNovaSenhaDialog, etConfirmarSenhaDialog;
-    Button btAlterarSenhaConfiguracoes;
+    Button btAlterarSenhaConfiguracoes, btExcluirContaConfiguracoes;
 
     private boolean pronto = true;
 
@@ -41,6 +43,7 @@ public class ConfiguracoesActivity extends AppCompatActivity {
         etEmailConfiguracoes = findViewById(R.id.etEmailConfiguracoes);
 
         btAlterarSenhaConfiguracoes = findViewById(R.id.btAlterarSenhaConfiguracoes);
+        btExcluirContaConfiguracoes = findViewById(R.id.btExcluirContaConfiguracoes);
 
         etNomeConfiguracoes.setText(dados.getUser().getNome());
         etEmailConfiguracoes.setText(dados.getUser().getEmail());
@@ -193,6 +196,62 @@ public class ConfiguracoesActivity extends AppCompatActivity {
                     }
                 });
                 alerta.show();
+            }
+        });
+
+        btExcluirContaConfiguracoes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(ConfiguracoesActivity.this);
+                builder.setTitle(R.string.excluir_conta_dialog)
+                        .setMessage(R.string.excluir_dialog_message)
+                        .setPositiveButton(R.string.excluir, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                new Thread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        if ((int) dados.realizarOperacao("ExcluirConta", dados.getUser()) == 1) {
+                                            runOnUiThread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    dados.setUser(null);
+
+                                                    SharedPreferences sharedPref = getSharedPreferences("com.fixit", MODE_PRIVATE);
+                                                    SharedPreferences.Editor editor = sharedPref.edit();
+                                                    editor.putString("Username", null);
+                                                    editor.putString("Senha", null);
+                                                    editor.apply();
+
+                                                    Intent it = new Intent(ConfiguracoesActivity.this, LoginActivity.class);
+                                                    it.putExtra("Exclusao", true);
+                                                    startActivity(it);
+                                                    finish();
+                                                }
+                                            });
+                                        } else {
+                                            runOnUiThread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    final Snackbar snackbar = Snackbar.make(findViewById(R.id.clConfiguracoes), R.string.excluir_conta_fail, Snackbar.LENGTH_LONG);
+                                                    snackbar.setAction(R.string.ok, new View.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(View v) {
+                                                            snackbar.dismiss();
+                                                        }
+                                                    });
+                                                    snackbar.show();
+                                                }
+                                            });
+                                        }
+                                    }
+                                }).start();
+                            }
+                        })
+                        .setNegativeButton(R.string.cancelar, null);
+
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
             }
         });
     }

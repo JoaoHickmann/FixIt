@@ -89,6 +89,11 @@
     <string name="senha_alterada_fail">Não foi possível alterar a senha.</string>
     <string name="senha_incorreta">Senha incorreta.</string>
     <string name="conexao_reestabelecida">Conexão com o servidor reestabelecida.</string>
+    <string name="excluir_conta">Excluir Conta</string>
+    <string name="excluir_conta_dialog">Excluir conta?</string>
+    <string name="excluir_dialog_message">Após a exclusão a conta não poderá ser recuperada.</string>
+    <string name="excluir_conta_fail">Não foi possível excluir a conta.</string>
+    <string name="conta_excluida">Conta excluida.</string>
 
     <string-array name="tipo_problema">
         <item>Hardware</item>

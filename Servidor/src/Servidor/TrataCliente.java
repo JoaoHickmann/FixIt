@@ -424,6 +424,15 @@ public class TrataCliente extends Thread {
                                 + " WHERE id_sala = " + sala.getID();
 
                         out.writeObject(Servidor.AtualizaTabela(sql));
+                    } else if (operacao.equals("ExcluirConta")) {
+                        out.writeObject(1);
+
+                        usuario = (Usuario) in.readObject();
+
+                        sql = "DELETE FROM usuarios"
+                                + " WHERE id_usuario = " + usuario.getID_Usuario();
+
+                        out.writeObject(Servidor.AtualizaTabela(sql));
                     } else if (operacao.equals("ExcluirComputador")) {
                         out.writeObject(1);
 

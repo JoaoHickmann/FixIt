@@ -179,6 +179,7 @@ public class RegistrarActivity extends AppCompatActivity {
                 @Override
                 public void run() {
                     startActivity(new Intent(RegistrarActivity.this, PrincipalActivity.class));
+                    finish();
                 }
             });
         } else {
@@ -218,26 +219,15 @@ public class RegistrarActivity extends AppCompatActivity {
                 valido = m.find();
 
                 if (valido && pronto) {
-                    Thread t = new Thread(new Runnable() {
+                    final int disponivel = (int) dados.realizarOperacao("EmailDisponivel", etEmailRegistrar.getText().toString());
+                    runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            final int disponivel = (int) dados.realizarOperacao("EmailDisponivel", etEmailRegistrar.getText().toString());
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    tilEmailRegistrar.setError(disponivel == 1 ? null : getString(R.string.email_nao_disponivel_error));
-                                }
-                            });
+                            tilEmailRegistrar.setError(disponivel == 1 ? null : getString(R.string.email_nao_disponivel_error));
                         }
                     });
-                    t.start();
-                    try {
-                        t.join();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
 
-                    return tilEmailRegistrar.getError() == null;
+                    return disponivel == 1;
                 } else {
                     runOnUiThread(new Runnable() {
                         @Override

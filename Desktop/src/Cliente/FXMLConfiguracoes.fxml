@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 
-<StackPane fx:id="StackPane" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Cliente.FXMLConfiguracoesController">
+<StackPane fx:id="StackPane" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Cliente.FXMLConfiguracoesController">
    <children>
       <AnchorPane id="AnchorPane">
          <children>
@@ -46,6 +46,7 @@
                         <JFXTextField fx:id="tfEmail" editable="false" focusColor="#29b6f6" labelFloat="true" layoutX="10.0" layoutY="99.0" prefHeight="25.0" prefWidth="280.0" promptText="Email" />
                         <JFXButton fx:id="btAlterarNome" buttonType="RAISED" layoutX="300.0" layoutY="37.0" prefHeight="25.0" prefWidth="90.0" style="-fx-background-color: #29B6F6;" text="Alterar" textFill="WHITE" />
                         <JFXButton fx:id="btAlterarSenha" buttonType="RAISED" layoutX="10.0" layoutY="144.0" prefHeight="25.0" prefWidth="380.0" style="-fx-background-color: #29B6F6;" text="Alterar senha" textFill="WHITE" />
+                        <JFXButton fx:id="btExcluirConta" buttonType="RAISED" layoutX="11.0" layoutY="181.0" prefHeight="25.0" prefWidth="380.0" style="-fx-background-color: #FF0000;" text="Excluir conta" textFill="WHITE" />
                      </children>
                   </Pane>
                </children>

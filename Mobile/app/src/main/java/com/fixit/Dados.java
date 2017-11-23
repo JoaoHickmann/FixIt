@@ -61,6 +61,7 @@ public class Dados extends Application {
             Intent it = new Intent(Dados.this, LoginActivity.class);
             it.putExtra("Reconexão", true);
             it.putExtra("Usuario", user);
+            it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(it);
             System.exit(0);
             return null;
@@ -79,6 +80,7 @@ public class Dados extends Application {
             Intent it = new Intent(Dados.this, LoginActivity.class);
             it.putExtra("Reconexão", true);
             it.putExtra("Usuario", user);
+            it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(it);
             System.exit(0);
             return null;

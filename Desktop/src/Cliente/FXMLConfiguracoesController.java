@@ -45,6 +45,8 @@ public class FXMLConfiguracoesController implements Initializable {
     private StackPane StackPane;
     @FXML
     private JFXTextField tfEmail;
+    @FXML
+    private JFXButton btExcluirConta;
 
     JFXSnackbar snackbar;
 
@@ -248,6 +250,47 @@ public class FXMLConfiguracoesController implements Initializable {
 
         btAlterarSenha.setOnAction((ActionEvent event) -> {
             dialog.show();
+        });
+        //</editor-fold>
+
+        //<editor-fold defaultstate="collapsed" desc="Excluir Conta">
+        JFXDialogLayout layoutExc = new JFXDialogLayout();
+        JFXDialog dialogExc = new JFXDialog(StackPane, layoutExc, JFXDialog.DialogTransition.CENTER);
+
+        JFXButton btCancelarD = new JFXButton("Cancelar");
+        btCancelarD.setTextFill(Paint.valueOf("#29B6F6"));
+        btCancelarD.setOnAction((ActionEvent event) -> {
+            dialogExc.close();
+        });
+
+        JFXButton btExcluirD = new JFXButton("Excluir");
+        btExcluirD.setTextFill(Paint.valueOf("#FF0000"));
+        btExcluirD.setOnAction((ActionEvent event) -> {
+            dialogExc.close();
+            new Thread(() -> {
+                if ((int) Principal.realizarOperacao("ExcluirConta", Principal.getUser()) == 1) {
+                    
+                } else {
+                    Platform.runLater(() -> {
+                        JFXSnackbar.SnackbarEvent barEvent = new JFXSnackbar.SnackbarEvent("Não foi possível excluir a conta.", "Ok", 3000, false, (MouseEvent event2) -> {
+                            snackbar.close();
+                        });
+                        snackbar.enqueue(barEvent);
+                    });
+                }
+            }).start();
+        });
+
+        LinkedList<Node> actions1 = new LinkedList<>();
+        actions1.add(btCancelarD);
+        actions1.add(btExcluirD);
+
+        layoutExc.setHeading(new Text("Excluir conta?"));
+        layoutExc.setBody(new Text("Após a exclusão a conta não poderá ser recuperada."));
+        layoutExc.setActions(actions1);
+
+        btExcluirConta.setOnAction((ActionEvent event) -> {
+            dialogExc.show();
         });
         //</editor-fold>
     }
