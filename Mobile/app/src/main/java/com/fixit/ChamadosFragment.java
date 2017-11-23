@@ -13,9 +13,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class ChamadosFragment extends Fragment {
     private RecyclerView rvChamadosChamados;
     private SwipeRefreshLayout swipeRefreshChamados;

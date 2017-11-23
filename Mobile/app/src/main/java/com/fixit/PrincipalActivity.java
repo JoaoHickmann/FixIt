@@ -16,10 +16,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.ActionMode;
@@ -109,7 +105,7 @@ public class PrincipalActivity extends AppCompatActivity {
         });
 
         Intent it = getIntent();
-        if (it!=null){
+        if (it != null) {
             boolean reconexao = it.getBooleanExtra("Reconexão", false);
             if (reconexao) {
                 final Snackbar snackbar = Snackbar.make(findViewById(R.id.cl_principal), R.string.conexao_reestabelecida, Snackbar.LENGTH_LONG);

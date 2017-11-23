@@ -94,6 +94,7 @@
     <string name="excluir_dialog_message">Após a exclusão a conta não poderá ser recuperada.</string>
     <string name="excluir_conta_fail">Não foi possível excluir a conta.</string>
     <string name="conta_excluida">Conta excluida.</string>
+    <string name="conexao_interrompida">Conexão com o servidor interrompida.</string>
 
     <string-array name="tipo_problema">
         <item>Hardware</item>

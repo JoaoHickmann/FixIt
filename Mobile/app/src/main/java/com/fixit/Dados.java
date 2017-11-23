@@ -2,9 +2,6 @@ package com.fixit;
 
 import android.app.Application;
 import android.content.Intent;
-import android.os.Handler;
-import android.os.Looper;
-import android.widget.Toast;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -58,12 +55,15 @@ public class Dados extends Application {
             return in.readObject();
         } catch (IOException | ClassNotFoundException ex) {
             ex.printStackTrace();
+
             Intent it = new Intent(Dados.this, LoginActivity.class);
             it.putExtra("Reconexão", true);
             it.putExtra("Usuario", user);
             it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(it);
+
             System.exit(0);
+
             return null;
         }
     }
@@ -77,12 +77,15 @@ public class Dados extends Application {
             return in.readObject();
         } catch (IOException | ClassNotFoundException ex) {
             ex.printStackTrace();
+
             Intent it = new Intent(Dados.this, LoginActivity.class);
             it.putExtra("Reconexão", true);
             it.putExtra("Usuario", user);
             it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(it);
+
             System.exit(0);
+
             return null;
         }
     }

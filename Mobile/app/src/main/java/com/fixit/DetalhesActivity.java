@@ -23,16 +23,17 @@ import Classes.Computador;
 import Classes.Problema;
 
 public class DetalhesActivity extends AppCompatActivity {
-    Dados dados;
+    private Dados dados;
 
-    EditText etAdministradorDetalhes, etCriacaoDetalhes, etFinalizacaoDetalhes, etObservacaoDetalhes;
-    Spinner spTipoProblemaDetalhes, spProblemaDetalhes, spSalaDetalhes, spComputadorDetalhes;
+    private EditText etAdministradorDetalhes, etCriacaoDetalhes, etFinalizacaoDetalhes, etObservacaoDetalhes;
+    private Spinner spTipoProblemaDetalhes, spProblemaDetalhes, spSalaDetalhes, spComputadorDetalhes;
 
-    boolean editavel = false;
-    boolean pronto = true;
-    Chamado chamado;
-    LinkedList<Problema> problemas;
-    LinkedList<Computador> computadores;
+    private Chamado chamado;
+    private LinkedList<Problema> problemas;
+    private LinkedList<Computador> computadores;
+
+    private boolean editavel = false;
+    private boolean pronto = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -250,11 +251,7 @@ public class DetalhesActivity extends AppCompatActivity {
                                 }).start();
                             }
                         })
-                        .setNegativeButton(R.string.nao, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface arg0, int arg1) {
-
-                            }
-                        });
+                        .setNegativeButton(R.string.nao, null);
                 AlertDialog alerta = builder.create();
                 alerta.show();
                 return true;
@@ -294,5 +291,4 @@ public class DetalhesActivity extends AppCompatActivity {
             });
         }
     }
-
 }

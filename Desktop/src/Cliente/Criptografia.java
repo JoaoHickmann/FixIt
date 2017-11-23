@@ -43,7 +43,6 @@ public class Criptografia {
 
             y = alfabetosEixos[1].indexOf(chave.charAt(i));
 
-
             textoCriptografado += matrizLetras[y].charAt(x);
         }
 
