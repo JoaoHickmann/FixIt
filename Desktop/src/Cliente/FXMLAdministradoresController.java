@@ -287,6 +287,10 @@ public class FXMLAdministradoresController implements Initializable {
         layoutAdd.setActions(actions1);
 
         btAdicionar.setOnAction((ActionEvent event) -> {
+            tfNomeD.setText("");
+            tfEmailD.setText("");
+            pfSenhaD.setText("");
+            pfConfirmaSenhaD.setText("");
             dialogAdd.show();
         });
         //</editor-fold>

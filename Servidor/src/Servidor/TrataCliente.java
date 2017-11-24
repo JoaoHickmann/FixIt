@@ -190,9 +190,13 @@ public class TrataCliente extends Thread {
                         sql = "INSERT INTO chamados(id_usuario, id_computador, id_problema, observacao)"
                                 + " VALUES (" + user.getID_Usuario() + ", " + chamado.getComputador().getID() + ", " + chamado.getProblema().getID() + ", '" + chamado.getObservacao() + "')";
 
-                        Servidor.NotificacaoDesktop("Novo chamado;Clique para abrir");
+                        int resultado = Servidor.AtualizaTabela(sql);
 
-                        out.writeObject(Servidor.AtualizaTabela(sql));
+                        if (resultado == 1) {
+                            Servidor.NotificacaoDesktop("Novo chamado;Clique para abrir");
+                        }
+
+                        out.writeObject(resultado);
                     } else if (operacao.equals("AdicionarProblema")) {
                         out.writeObject(1);
                         problema = (Problema) in.readObject();

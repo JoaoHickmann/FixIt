@@ -249,6 +249,9 @@ public class FXMLConfiguracoesController implements Initializable {
         layout.setActions(actions);
 
         btAlterarSenha.setOnAction((ActionEvent event) -> {
+            pfSenhaAtual.setText("");
+            pfNovaSenha.setText("");
+            pfConfirmarSenha.setText("");
             dialog.show();
         });
         //</editor-fold>

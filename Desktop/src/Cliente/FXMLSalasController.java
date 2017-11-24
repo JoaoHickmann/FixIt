@@ -156,7 +156,6 @@ public class FXMLSalasController implements Initializable {
         btAdicionarD1.setOnAction((ActionEvent event) -> {
             if (tfSalaD.validate()) {
                 adicionarSala(new Sala(Integer.parseInt(tfSalaD.getText())));
-                tfSalaD.setText("");
                 dialogExc.close();
             }
         });
@@ -170,6 +169,7 @@ public class FXMLSalasController implements Initializable {
         layoutExc.setActions(actions1);
 
         btAdicionar.setOnAction((ActionEvent event) -> {
+            tfSalaD.setText("");
             dialogExc.show();
         });
         //</editor-fold>
